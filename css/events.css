@@ -1,0 +1,27 @@
+button.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+}
+
+button.share-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+img.image-relative {
+    width: 100%;
+    height: auto;
+}
+
+.event {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button.map-button {
+    position: absolute;
+    right: 10px;
+}
