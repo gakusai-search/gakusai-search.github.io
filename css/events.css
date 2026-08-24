@@ -83,3 +83,40 @@ div p {
 .event-hr {
     margin-block-start: 0.5em;
 }
+
+@media screen and (min-width: 768px) {
+
+    /* display columns side-by-side */
+    .event-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 40px;
+        width: 90%;
+        max-width: 1440px;
+        margin: 0 auto;
+        padding-top: 60px;
+    }
+
+    .event-left-col {
+        flex: 2;
+        position: sticky;
+        top: 120px;
+        height: fit-content;
+    }
+
+    .event-right-col {
+        flex: 1;
+    }
+
+    img.image-relative {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 0;
+    }
+
+    .mobile-only {
+        margin-block-start: 0em;
+    }
+}
