@@ -99,7 +99,7 @@ p.link-1 {
 .main-btn:active::before {
     opacity: 1;
     background-color: rgba(0, 0, 0, 0.4);
-    transition: none;
+    transition: background-color 0.1s ease;
 }
 /* apply hover effect only on devices that support hover like PC */
 @media (hover: hover) {
