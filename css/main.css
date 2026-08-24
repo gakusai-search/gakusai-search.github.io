@@ -6,6 +6,8 @@
 
     --color-background-body: #121212;
     --color-text-main: #ffffff;
+    --color-btn-main: #1E1C1C;
+    --color-border-main: #ffffff33;
 
     --color-background-navbar: var(--main-gradient);
     --color-border-navbar: #ffffff4d;
@@ -70,6 +72,40 @@ a {
 p.link-1 {
     color: #1c87ed;
     text-align: center;
+}
+
+.main-btn {
+    position: relative;
+    font-size: 16px;
+    color: var(--color-text-main);
+    background-color: var(--color-btn-main);
+    border: 1px solid var(--color-border-main);
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0.4em;
+    height: 32px;
+    border-radius: 16px;
+}
+.main-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+.main-btn:active::before {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: none;
+}
+/* apply hover effect only on devices that support hover like PC */
+@media (hover: hover) {
+    .main-btn:hover::before {
+        opacity: 1;
+    }
 }
 
 hr {
