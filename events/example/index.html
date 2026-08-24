@@ -4,38 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>企画例｜学祭ポータル</title>
-    <link rel="stylesheet" href="../../css/main.css">
-    <link rel="stylesheet" href="../../css/events.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/events.css">
 </head>
 <body>
-    <button onclick="location.href='../../events/'" class="back-button">←戻る</button>
-    <button class="share-button">共有</button>
-    <img class="image-relative" src="../../img/events/events_hero_example.jpg" alt="画像">
-    <div class="event">
-        <h1>イベント</h1>
-        <p>日付</p>
+    <header id="header-container"></header>
+
+    <button onclick="location.href='/events/'" class="back-button">←戻る</button>
+    <button class="share-button"><img src="/img/icons/share.svg"></button>
+    <img class="image-relative" src="/img/events/events_hero_example.jpg" alt="画像">
+    <div class="title">
+        <img class="campus-icon" src="/img/icons/campus_icon_test.svg"><h1>企画紹介</h1>
     </div>
-    <section class="button-list">
-        <button>ボタン1</button>
-        <button>ボタン2</button>
-        <button>ボタン3</button>
-        <hr>
-    </section>
+    <hr>
+    <div class="event">
+        <h2>企画名</h2>
+        <p class="event-name">qwertyuiopasdfghjkl</p>
+        <section class="button-list">
+            <button>ボタン1</button>
+            <button>ボタン2</button>
+            <button>ボタン3</button>
+        </section>
+    </div>
+    <hr>
     <div class="date">
         <h2>開催日時</h2>
-        　 <p>2026年xx月xx日(曜)xx:xx~xx:xx</p>
-        <hr>
+        <p>2026年 10月31日(土) 10:00~13:00</p>
     </div>
+    <hr>
     <div class="place">
         <h2>場所</h2>
         <button class="map-button">MAP</button>
-        <p>中央大学</p>
-        <p>xxキャンパス</p>
-        <p>xF</p>
-        <p>xx教室</p>
+        <p>○○大学　△キャンパス</p>
+        <p>○F　○○教室</p>
     </div>
     <hr>
-    <h3>このイベントについて</h3>
-    <p>イベント内容の詳しい説明</p>
+    <div class="info">
+        <h2>このイベントについて</h2>
+        <p>イベント内容の詳しい説明</p>
+    </div>
+    <hr>
+    <div class="accounts">
+        <h2>公式アカウント</h2>
+        <p>アカウント</p>
+    </div>
+
+    <footer></footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
 </body>
 </html>

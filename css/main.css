@@ -1,11 +1,11 @@
 @charset "UTF-8";
 
 :root {
-    --main-gradient: linear-gradient(135deg, #FF1B13, #FF914D);
+    --main-gradient: linear-gradient(90deg, #FF1B13, #FF914D);
+    --color-main: #FF623E;
 
     --color-background-body: #121212;
     --color-text-main: #ffffff;
-    --color-icon-default: #FF623E;
 
     --color-background-navbar: var(--main-gradient);
     --color-border-navbar: #ffffff4d;
@@ -29,8 +29,8 @@ body {
     padding-top: 60px;
     padding-bottom: 96px;
     background-color: var(--color-background-body);
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: 20px;
+    margin-right: 20px;
     margin-top: 0px;
 }
 
@@ -70,6 +70,11 @@ a {
 p.link-1 {
     color: #1c87ed;
     text-align: center;
+}
+
+hr {
+    border-color: var(--color-main);
+    margin-block-start: 1.8em;
 }
 
 /* header start */
@@ -206,5 +211,4 @@ p.footer_text {
     text-align: center;
     font-size: 10pt;
 }
-
 /* footer text end　*/

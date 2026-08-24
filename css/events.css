@@ -1,24 +1,73 @@
+body {
+    padding-bottom: 0px;
+}
+
 button.back-button {
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: 70px;
+    left: 10px;
+    font-size: 20px;
+    padding: 8px 8px;
+    background: var(--main-gradient);
+    color: var(--color-text-main);
+    border: none;
+    border-radius: 10px;
 }
 
 button.share-button {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    display: flex;
+    align-items: center;
+    top: 70px;
+    right: 10px;
+    padding: 8px 8px;
+    background: var(--main-gradient);
+    color: var(--color-text-main);
+    border: none;
+    border-radius: 32px;
+}
+.share-button img {
+    height: 28px;
+    padding: 1px;
+    width: auto;
 }
 
 img.image-relative {
-    width: 100%;
+    width: 100vw;
     height: auto;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-top: -8px;
+}
+
+img.campus-icon {
+    padding-right: 8px;
+}
+
+.title {
+    display: flex;
+    text-align: left;
 }
 
 .event {
+    margin-bottom: 0.83em;
+}
+
+h1 {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: left;
+}
+
+h2 {
+    display: flex;
+    text-align: left;
+    font-weight: normal;
+    margin-block-start: 0.4em;
+}
+
+div p {
+    display: flex;
+    text-align: left;
 }
 
 button.map-button {
