@@ -125,6 +125,9 @@ hr {
     top: 0;
     left: 0;
     box-sizing: border-box;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.04),
+        0 12px 30px rgba(0, 0, 0, 0.08);
     z-index: 9999;
     border-radius: 0 0 8px 8px;
 }

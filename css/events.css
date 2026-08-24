@@ -12,6 +12,10 @@ button.back-button {
     color: var(--color-text-main);
     border: none;
     border-radius: 10px;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.08),
+        0 12px 30px rgba(0, 0, 0, 0.16);
+    z-index: 9998;
 }
 
 button.share-button {
@@ -25,6 +29,10 @@ button.share-button {
     color: var(--color-text-main);
     border: none;
     border-radius: 32px;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.08),
+        0 12px 30px rgba(0, 0, 0, 0.16);
+    z-index: 9998;
 }
 .share-button img {
     height: 28px;
