@@ -3,10 +3,14 @@
 :root {
     --main-gradient: linear-gradient(135deg, #FF1B13, #FF914D);
 
-    --background-navbar: var(--main-gradient);
-    --background-navbar-border: #ffffff4d;
+    --color-background-body: #121212;
+    --color-text-main: #ffffff;
+    --color-icon-default: #FF623E;
 
-    --footer-color: #727272;
+    --color-background-navbar: var(--main-gradient);
+    --color-border-navbar: #ffffff4d;
+
+    --color-footer: #727272;
 }
 
 html {
@@ -24,39 +28,39 @@ html {
 body {
     padding-top: 60px;
     padding-bottom: 96px;
-    background-color: #000000;
+    background-color: var(--color-background-body);
     margin-left: 0px;
     margin-right: 0px;
     margin-top: 0px;
 }
 
 h1 {
-    color: #ffffff;
+    color: var(--color-text-main);
     text-align: center;
 }
 
 h2 {
-    color: #ffffff;
+    color: var(--color-text-main);
     text-align: center;
 }
 
 h3 {
-    color: #ffffff;
+    color: var(--color-text-main);
     text-align: center;
 }
 
 h4 {
-    color: #ffffff;
+    color: var(--color-text-main);
     text-align: center;
 }
 
 h5 {
-    color: #ffffff;
+    color: var(--color-text-main);
     text-align: center;
 }
 
 p {
-    color: #ffffff;
+    color: var(--color-text-main);
     text-align: center;
 }
 a {
@@ -128,9 +132,9 @@ div.menu {
     width: calc(100% - 24px);
     max-width: 320px;
     height: 64px;
-    background: var(--background-navbar);
+    background: var(--color-background-navbar);
     backdrop-filter: blur(10px);
-    border: 1.5px solid var(--background-navbar-border);
+    border: 1.5px solid var(--color-border-navbar);
     border-radius: 32px;
     box-sizing: border-box;
     z-index: 10000;
@@ -159,11 +163,11 @@ div.menu {
     text-decoration: none;
     color: #ffffff;
     transition: background-color 0.2s, color 0.2s;
-    border-radius: 16px;
+    border-radius: 32px;
 }
 
 .nav_item:active {
-    background-color: #ffffff1a;
+    background-color: #ffffff26;
     color: #ffffff;
 }
 
@@ -198,7 +202,7 @@ div.empty_space {
 
 /* footer text start*/
 p.footer_text {
-    color: var(--footer-color);
+    color: var(--color-footer);
     text-align: center;
     font-size: 10pt;
 }
