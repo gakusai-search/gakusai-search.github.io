@@ -6,7 +6,7 @@
     background-color: var(--color-btn-main);
     border: 1px solid var(--color-border-main);
     box-sizing: border-box;
-    width: 323px;
+    width: 323px; /*widthで横のピクセル幅を固定せずに、全てのボタンの文字が左揃えになり、かつ同じピクセル幅で並ぶようにする方法がわからないので、一旦スマホ版に合わせた*/
     height: 25px;
     border-radius: 5px;
     padding-left: 12px;
