@@ -1,0 +1,82 @@
+--- import Layout from '../layouts/Layout.astro'; import '../styles/index.css';
+---
+
+<Layout title="ホーム｜学祭ポータル">
+  <Fragment slot="head">
+    <link
+      href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
+      rel="stylesheet"
+    />
+  </Fragment>
+
+  <h1>学祭ポータル</h1>
+  <h2>おすすめイベント</h2>
+
+  <div class="pc_top_pics_container">
+    <div class="pc_top_pics">
+      <a href="#"><img src="/img/test/test-1.png" alt="テスト1" /></a>
+      <a href="#"><img src="/img/test/test-2.png" alt="テスト2" /></a>
+      <a href="#"><img src="/img/test/test-3.png" alt="テスト3" /></a>
+    </div>
+  </div>
+
+  <div class="mobile_top_pics_container">
+    <section id="image-carousel" class="splide" aria-label="top_pics">
+      <div class="splide__track">
+        <ul class="splide__list">
+          <li class="splide__slide">
+            <a href="#">
+              <img src="/img/test/test-1.png" alt="テスト1" />
+            </a>
+          </li>
+          <li class="splide__slide">
+            <a href="#">
+              <img src="/img/test/test-2.png" alt="テスト2" />
+            </a>
+          </li>
+          <li class="splide__slide">
+            <a href="#">
+              <img src="/img/test/test-3.png" alt="テスト3" />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <main>
+    <h2>#〇〇〇〇</h2>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+    <p>あいうえお</p>
+  </main>
+
+  <script
+    is:inline
+    src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"
+  ></script>
+
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", function () {
+      var el = document.querySelector(".splide");
+      if (el) {
+        new Splide(el, {
+          autoplay: true,
+          type: "loop",
+          pauseOnHover: false,
+          pauseOnFocus: false,
+          interval: 4000, // auto play interval
+          speed: 1000, // slider transition time
+        }).mount();
+      }
+    });
+  </script>
+</Layout>
