@@ -1,0 +1,80 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/events.css";
+import projects from "../../data/events.json";
+
+// generate a unique page for each item in events.json
+export async function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { id: project.id }, // url path
+    props: { project }, // page data
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={`${project.name}｜学祭ポータル`} hideNav={true}>
+  <button onclick="location.href='/events/'" class="back-button">←戻る</button>
+  <button class="share-button"
+    ><img src="/img/icons/share.svg" alt="シェア" /></button
+  >
+
+  <div class="event-container">
+    <div class="event-left-col">
+      <img class="image-relative" src={project.image} alt={project.name} />
+      <div class="title">
+        <img
+          class="campus-icon"
+          src="/img/icons/campus_icon_test.svg"
+          alt="アイコン"
+        />
+        <h1>企画紹介</h1>
+      </div>
+      <button class="main-btn" id="tutorial-btn-event-introduction">
+        このページの使い方
+      </button>
+    </div>
+
+    <div class="event-right-col">
+      <hr class="event-hr mobile-only" />
+      <div class="event">
+        <h2>企画名</h2>
+        <p class="event-name">{project.name}</p>
+        <section class="button-list">
+          <!-- generate tag buttons from the array data -->
+          {project.tags.map((tag) => <button class="main-btn">#{tag}</button>)}
+        </section>
+      </div>
+      <hr />
+      <div class="date">
+        <h2>開催日時</h2>
+        <p>{project.datetime}</p>
+      </div>
+      <hr />
+      <div class="place">
+        <h2>場所</h2>
+        <p>{project.place.campus}</p>
+        <p>{project.place.room}</p>
+        <button class="main-btn" id="maps-btn">キャンパスマップ →</button>
+      </div>
+      <hr />
+      <div class="info">
+        <h2>このイベントについて</h2>
+        <p>{project.description}</p>
+      </div>
+      <hr />
+      <div class="accounts">
+        <h2>公式アカウント</h2>
+        <!-- loop through the accounts object to display keys and values -->
+        {
+          Object.entries(project.accounts).map(([service, accountId]) => (
+            <p>
+              {service}: {accountId}
+            </p>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

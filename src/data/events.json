@@ -1,0 +1,34 @@
+[
+  {
+    "id": "example-event",
+    "name": "qwertyuiopasdfghjkl",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": ["タグ1", "タグ2", "タグ3"],
+    "datetime": "2026年 10月31日(土) 10:00~13:00",
+    "place": {
+      "campus": "○○大学　△キャンパス",
+      "room": "○F　○○教室"
+    },
+    "description": "イベント内容の詳しい説明",
+    "accounts": {
+      "X": "@example_tw",
+      "Instagram": "example_ig"
+    }
+  },
+  {
+    "id": "dance-stage",
+    "name": "メインステージ ダンスパフォーマンス",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": ["ダンス", "ステージ", "タグ1"],
+    "datetime": "2026年 11月1日(日) 14:00~15:00",
+    "place": {
+      "campus": "○○大学　△キャンパス",
+      "room": "中庭 メインステージ"
+    },
+    "description": "ダンスサークルによる圧巻のパフォーマンスです！",
+    "accounts": {
+      "X": "@dance_circle",
+      "YouTube": "DanceChannel"
+    }
+  }
+]
