@@ -1,0 +1,54 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/roomguide.css";
+---
+
+<Layout title="教室案内｜学祭ポータル">
+  <div class="roomguide-container">
+    <div class="roomguide-upside-col">
+      <div class="title">
+        <img class="campus-icon" src="../../../img/roomguide/roomguide.svg" />
+        <h1>教室案内</h1>
+      </div>
+      <button class="main-btn" id="tutorial-btn-event-introduction">
+        このページの使い方
+      </button>
+    </div>
+    <div class="roomguide-middle-col">
+      <h2>出発地</h2>
+      <button class="roomguide-btn" disabled> キャンパス入口（正門） </button>
+      <h2>到着地</h2>
+      <button class="roomguide-btn" popovertarget="campus_select">
+        キャンパスを選択
+      </button>
+      <div id="campus_select" popover>
+        <select>
+          <option>市ヶ谷田町キャンパス</option>
+          <option>多摩キャンパス</option>
+          <option>後楽園キャンパス</option>
+          <option>茗荷谷キャンパス</option>
+        </select>
+      </div>
+      <button class="roomguide-btn" popovertarget="buildings_select">
+        建物を選択
+      </button>
+      <div id="buildings_select" popover>
+        <select>
+          <option>
+            ここでの上の選択肢に基づく条件分岐のやり方全然わからない助けて
+          </option>
+        </select>
+      </div>
+      <button class="roomguide-btn" popovertarget="classrooms_select">
+        教室を選択
+      </button>
+      <div id="classrooms_select" popover>
+        <select>
+          <option>寝室</option>
+        </select>
+      </div>
+      <button class="roomguide-search-btn"> 案内を見る </button>
+    </div>
+    <div class="roomguide-downside-col"></div>
+  </div>
+</Layout>
