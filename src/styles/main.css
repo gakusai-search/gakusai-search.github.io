@@ -65,10 +65,12 @@ p {
     color: var(--color-text-main);
     text-align: center;
 }
+
 a {
     color: #1c87ed;
     text-decoration-thickness: 0.5px;
 }
+
 p.link-1 {
     color: #1c87ed;
     text-align: center;
@@ -86,6 +88,7 @@ p.link-1 {
     height: 32px;
     border-radius: 16px;
 }
+
 .main-btn::before {
     content: "";
     position: absolute;
@@ -96,11 +99,13 @@ p.link-1 {
     transition: opacity 0.25s ease;
     pointer-events: none;
 }
+
 .main-btn:active::before {
     opacity: 1;
     background-color: rgba(0, 0, 0, 0.4);
     transition: background-color 0.1s ease;
 }
+
 /* apply hover effect only on devices that support hover like PC */
 @media (hover: hover) {
     .main-btn:hover::before {
@@ -250,4 +255,43 @@ p.footer_text {
     text-align: center;
     font-size: 10pt;
 }
+
 /* footer text end　*/
+
+/* page header common styles */
+.page-header {
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.4em;
+}
+
+.page-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.page-title h1 {
+    color: var(--color-text-main);
+    font-size: 32px;
+    margin: 0;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.tutorial-btn {
+    margin-bottom: 0.8em;
+}
+
+.section-title {
+    text-align: left;
+    font-weight: normal;
+    margin-top: 0px;
+}

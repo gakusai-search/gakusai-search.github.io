@@ -1,0 +1,122 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/misc.css";
+
+const partnerUniversities = [
+  {
+    name: "中央大学 市ヶ谷田町キャンパス",
+    festivalName: "iTLFest.2026",
+    links: [
+      {
+        type: "web",
+        label: "学祭公式サイト",
+        text: "itlfest.com",
+        url: "https://itlfest.com/",
+      },
+      {
+        type: "instagram",
+        label: "Instagram",
+        text: "@festival_itl",
+        url: "https://www.instagram.com/festival_itl",
+      },
+      {
+        type: "x",
+        label: "X (Twitter)",
+        text: "@Festival_iTL",
+        url: "https://x.com/Festival_iTL",
+      },
+      {
+        type: "line",
+        label: "LINE",
+        text: "@513fripZ",
+        url: "https://line.me/R/ti/p/@513fripZ",
+      },
+      {
+        type: "threads",
+        label: "Threads",
+        text: "@festival_itl",
+        url: "https://www.threads.net/@festival_itl",
+      },
+    ],
+  },
+];
+---
+
+<Layout title="その他｜学祭ポータル">
+  <div class="page-header">
+    <div class="page-title">
+      <img src="/img/misc/misc.svg" alt="その他アイコン" class="page-icon" />
+      <h1>その他</h1>
+    </div>
+    <button class="main-btn tutorial-btn" id="tutorial-btn-event-introduction">
+      このページの使い方
+    </button>
+  </div>
+
+  <hr />
+
+  <h2 class="section-title">サイト外観の設定</h2>
+  <div class="setting-card">
+    <label class="radio-option">
+      <input type="radio" name="theme" value="system" checked />
+      <span class="custom-radio"></span>
+      <span class="radio-text">端末での設定にあわせる</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="theme" value="light" />
+      <span class="custom-radio"></span>
+      <span class="radio-text">ライトモード</span>
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="theme" value="dark" />
+      <span class="custom-radio"></span>
+      <span class="radio-text">ダークモード</span>
+    </label>
+  </div>
+
+  <hr />
+
+  <h2 class="section-title">協力大学 学祭公式サイト</h2>
+  <div class="partner-list">
+    {
+      partnerUniversities.map((partner) => (
+        <div class="partner-card">
+          <div class="partner-header">
+            <div class="partner-icon" />
+            <div class="partner-title-group">
+              <div class="partner-name">{partner.name}</div>
+              <div class="partner-fest">{partner.festivalName}</div>
+            </div>
+          </div>
+          {partner.links && partner.links.length > 0 && (
+            <div class="partner-links">
+              {partner.links.map((link) => (
+                <div class="partner-link-row">
+                  <div class="link-label-group">
+                    <img
+                      src={`/img/icons/social-icon_${link.type}.svg`}
+                      alt={link.label}
+                      class="link-icon"
+                    />
+                    <span class="link-label-text">{link.label}</span>
+                  </div>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="link-url-text"
+                  >
+                    {link.text}
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))
+    }
+  </div>
+  <hr />
+  <h2 class="section-title">お問い合わせ</h2>
+  <p>準備中</p>
+</Layout>
