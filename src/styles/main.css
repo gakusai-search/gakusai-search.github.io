@@ -144,7 +144,8 @@ p.link-1 {
 }
 
 hr {
-    border-color: var(--color-main);
+    border: none;
+    border-top: 1.5px solid var(--color-main);
     margin-block-start: 1.8em;
 }
 
