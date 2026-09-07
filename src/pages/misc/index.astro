@@ -119,4 +119,28 @@ const partnerUniversities = [
   <hr />
   <h2 class="section-title">お問い合わせ</h2>
   <p>準備中</p>
+
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedTheme = localStorage.getItem("theme") || "system";
+      const radioInputs = document.querySelectorAll('input[name="theme"]');
+
+      radioInputs.forEach((radio) => {
+        if (radio.value === savedTheme) {
+          radio.checked = true;
+        }
+
+        radio.addEventListener("change", (e) => {
+          const selectedTheme = e.target.value;
+          localStorage.setItem("theme", selectedTheme);
+
+          if (selectedTheme === "light" || selectedTheme === "dark") {
+            document.documentElement.setAttribute("data-theme", selectedTheme);
+          } else {
+            document.documentElement.removeAttribute("data-theme");
+          }
+        });
+      });
+    });
+  </script>
 </Layout>

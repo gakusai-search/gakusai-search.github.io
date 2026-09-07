@@ -113,7 +113,7 @@ const allTags = [...new Set(projects.flatMap((project) => project.tags))];
     }
     .campus-text {
       font-size: 14px;
-      color: #ccc;
+      color: color-mix(in srgb, var(--color-text-main) 60%, transparent);
       text-align: left;
       margin-bottom: 12px;
     }
@@ -125,7 +125,11 @@ const allTags = [...new Set(projects.flatMap((project) => project.tags))];
     .tag-span {
       font-size: 12px;
       color: var(--color-text-main);
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: color-mix(
+        in srgb,
+        var(--color-text-main) 10%,
+        transparent
+      );
       padding: 4px 8px;
       border-radius: 4px;
     }
