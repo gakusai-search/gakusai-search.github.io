@@ -2,6 +2,7 @@ const buttons = document.querySelectorAll('.roomguide-btn');
 
 buttons.forEach(btn => {
   const targetId = btn.getAttribute('popovertarget');
+  if (!targetId) return;
   const popover = document.getElementById(targetId);
   if (!popover) return;
 
@@ -16,6 +17,7 @@ buttons.forEach(btn => {
   });
 
   const select = popover.querySelector('select');
+  if (!select) return;
   select.addEventListener('change', () => {
     const selectedText = select.options[select.selectedIndex].text;
     btn.textContent = selectedText;
