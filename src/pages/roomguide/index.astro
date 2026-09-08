@@ -7,12 +7,20 @@ import "../../styles/roomguide.css";
   <div class="roomguide-container">
     <div class="roomguide-upside-col page-header">
       <div class="page-title">
-        <img class="page-icon" src="/img/roomguide/roomguide.svg" alt="教室案内アイコン" />
+        <img
+          class="page-icon"
+          src="/img/roomguide/roomguide.svg"
+          alt="教室案内アイコン"
+        />
         <h1>教室案内</h1>
       </div>
-      <button class="main-btn tutorial-btn" id="tutorial-btn-event-introduction">
+      <button
+        class="main-btn tutorial-btn"
+        id="tutorial-btn-event-introduction"
+      >
         このページの使い方
       </button>
+      <hr />
     </div>
     <div class="roomguide-middle-col">
       <h2>出発地</h2>
@@ -29,26 +37,61 @@ import "../../styles/roomguide.css";
           <option>茗荷谷キャンパス</option>
         </select>
       </div>
+      <br />
       <button class="roomguide-btn" popovertarget="buildings_select">
         建物を選択
       </button>
       <div id="buildings_select" popover>
         <select>
-          <option>
-            ここでの上の選択肢に基づく条件分岐のやり方全然わからない助けて
-          </option>
+          <option>本館</option>
+          <option>別館</option>
+          <option>イティエルの家</option>
         </select>
       </div>
+      <br />
       <button class="roomguide-btn" popovertarget="classrooms_select">
         教室を選択
       </button>
       <div id="classrooms_select" popover>
         <select>
-          <option>寝室</option>
+          <option>ベランダ</option>
+          <option>301</option>
+          <option>309カフェ</option>
+          <option>ヘリポートなんかねえよ</option>
         </select>
       </div>
+      <br />
       <button class="roomguide-search-btn"> 案内を見る </button>
     </div>
     <div class="roomguide-downside-col"></div>
   </div>
 </Layout>
+
+<script>
+  const buttons = document.querySelectorAll(".roomguide-btn");
+
+  buttons.forEach((btn) => {
+    const targetId = btn.getAttribute("popovertarget");
+    if (!targetId) return;
+    const popover = document.getElementById(targetId);
+    if (!popover) return;
+
+    popover.addEventListener("beforetoggle", (event) => {
+      if (event.newState === "open") {
+        const rect = btn.getBoundingClientRect();
+        popover.style.position = "fixed";
+        popover.style.top = rect.bottom + "px";
+        popover.style.left = rect.left + "px";
+        popover.style.margin = "0";
+      }
+    });
+
+    const select = popover.querySelector("select");
+    if (!select) return;
+    select.addEventListener("change", () => {
+      const selectedText = select.options[select.selectedIndex].text;
+      btn.textContent = selectedText;
+      popover.hidePopover();
+    });
+  });
+</script>
