@@ -1,4 +1,10 @@
-@charset "UTF=8";
+body{
+    padding-bottom: 0px;
+}
+[popover] {
+  margin: 0;
+  inset: unset;
+}
 .roomguide-btn {
     position: relative;
     font-size: 16px;
