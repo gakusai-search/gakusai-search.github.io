@@ -26,8 +26,13 @@ buttons.forEach((btn, index) => {
     btn.textContent = selectedText;
     popover.hidePopover();
     const nextBtn = buttons[index + 1];
+    const selectedvalue = select.value
     if (nextBtn) {
-      nextBtn.disabled = false;
-    }
+      if (selectedvalue ==="none"){
+        nextBtn.disabled = true;
+      }
+      else if (selectedvalue ==="chudai"){ /*お試しとしてuniv-selectのvalueタグをchudaiで実装した名残 */
+        nextBtn.disabled = false;
+      }}
   });
 });
