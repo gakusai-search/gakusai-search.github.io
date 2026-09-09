@@ -1,6 +1,9 @@
 const buttons = document.querySelectorAll('.roomguide-btn');
 
-buttons.forEach(btn => {
+buttons.forEach((btn, index) => {
+  if (index !== 0) {
+    btn.disabled = true;
+  }
   const targetId = btn.getAttribute('popovertarget');
   if (!targetId) return;
   const popover = document.getElementById(targetId);
@@ -22,5 +25,9 @@ buttons.forEach(btn => {
     const selectedText = select.options[select.selectedIndex].text;
     btn.textContent = selectedText;
     popover.hidePopover();
+    const nextBtn = buttons[index + 1];
+    if (nextBtn) {
+      nextBtn.disabled = false;
+    }
   });
 });

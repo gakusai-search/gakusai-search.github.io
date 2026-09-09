@@ -23,19 +23,25 @@
         </div>
         <div class="roomguide-middle-col">
             <h2>出発地</h2>
-            <button class="roomguide-btn" disabled>
+            <button class="roomguide-osenai-btn" disabled>
                 キャンパス入口（正門）
             </button>
             <h2>到着地</h2>
+            <button class="roomguide-btn" popovertarget="univ_select">
+                大学を選択
+            </button>
+            <div id="univ_select" popover>
+                <select>
+                    <option>中央大学</option>
+                </select>
+            </div>
+            <br>
             <button class="roomguide-btn" popovertarget="campus_select">
                 キャンパスを選択
             </button>
             <div id="campus_select" popover>
                 <select>
                     <option>市ヶ谷田町キャンパス</option>
-                    <option>多摩キャンパス</option>
-                    <option>後楽園キャンパス</option>
-                    <option>茗荷谷キャンパス</option>
                 </select>
             </div>
             <br>
@@ -44,9 +50,26 @@
             </button>
             <div id="buildings_select" popover>
                 <select>
-                    <option>本館</option>
-                    <option>別館</option>
-                    <option>イティエルの家</option>
+                    <option>ミドルブリッジ</option>
+                </select>
+            </div>
+            <br>
+            <button class="roomguide-btn" popovertarget="fl_select">
+                階数を選択
+            </button>
+            <div id="fl_select" popover>
+                <select>
+                    <option>1階</option>
+                    <option>2階</option>
+                    <option>3階</option>
+                    <option>4階</option>
+                    <option>5階</option>
+                    <option>6階</option>
+                    <option>7階</option>
+                    <option>8階</option>
+                    <option>9階</option>
+                    <option>10階</option>
+                    <option>11階</option>
                 </select>
             </div>
             <br>
