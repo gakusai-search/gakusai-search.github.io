@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企画|学祭ポータル</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/roomguide.css">
+</head>
+<body>
+    <header id="header-container"></header>
+
+    <div class="roomguide-container">
+        <div class="roomguide-upside-col">
+            <div class="title">
+                <img class="campus-icon" src="/img/nav/roomguide.svg">
+                <h1>教室案内</h1>
+            </div>
+            <button class="main-btn" id="tutorial-btn-event-introduction">
+                このページの使い方
+            </button>
+        </div>
+        <div class="roomguide-middle-col">
+            <h2>出発地</h2>
+            <button class="roomguide-btn" disabled>
+                キャンパス入口（正門）
+            </button>
+            <h2>到着地</h2>
+            <button class="roomguide-btn" popovertarget="campus_select">
+                キャンパスを選択
+            </button>
+            <div id="campus_select" popover>
+                <select>
+                    <option>市ヶ谷田町キャンパス</option>
+                    <option>多摩キャンパス</option>
+                    <option>後楽園キャンパス</option>
+                    <option>茗荷谷キャンパス</option>
+                </select>
+            </div>
+            <button class="roomguide-btn" popovertarget="buildings_select">
+                建物を選択
+            </button>
+            <div id="buildings_select" popover>
+                <select>
+                    <option>
+                        ここでの上の選択肢に基づく条件分岐のやり方全然わからない助けて
+                    </option>
+                </select>
+            </div>
+            <button class="roomguide-btn" popovertarget="classrooms_select">
+                教室を選択
+            </button>
+            <div id="classrooms_select" popover>
+                <select>
+                    <option>寝室</option>
+                </select>
+            </div>
+            <button class="roomguide-search-btn">
+                案内を見る
+            </button>
+        </div>
+        <div class="roomguide-downside-col">
+
+        </div>
+    </div>
+
+    <footer></footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+</body>
+</html>
