@@ -27,7 +27,7 @@ body{
     position:relative;
     font-size: 20px;
     background: linear-gradient(to right, #FF1B13 0%, #FF914D 100%);
-    color: #FFFFFF;
+    color: var(--color-text-main);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 5px;
     width: 323px;
