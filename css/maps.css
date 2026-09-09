@@ -1,1 +1,23 @@
 @charset "UTF-8";
+
+header{
+    background: linear-gradient(to right, #ff1a1a, #ff8c3a);
+    color: #ffffff;
+    padding: 16px 20px;
+}
+
+.title-container{
+    display: flex;
+    gap: 12px;
+}
+
+.map-icon {
+  width: 40px; 
+  height: auto;
+}
+
+.title-container h2 {
+  color: #ffffff;
+  margin: 0;      
+  font-size: 28px;      
+}

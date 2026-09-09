@@ -8,17 +8,48 @@
     <link rel="stylesheet" href="/css/maps.css">
 </head>
 <body>
-   <div>
-      <div class="logo">
-        <p>サイトロゴ</p>
-      </div>
-      
-      <img src="Vector.svg">
+   <div class="global-header">
+    <div class="header-logo">
+        <a href="/">
+            <img src="/img/nav/logo.png" alt="サイトロゴ" class="logo-img">
+        </a>
+    </div>
+    <div class="header-search">
+        <a href="#">
+            <img src="/img/nav/search.svg" alt="検索" class="search-img">
+        </a>
+    </div>
    </div>
    
-   <img src="location.svg">
+   <div class="menu">
+        <nav class="global-nav">
+            <a href="/" class="nav_item">
+                <span class="nav_icon" style="-webkit-mask-image: url('/img/nav/home.svg'); mask-image: url('/img/nav/home.svg');"></span>
+                <span class="nav_label">ホーム</span>
+            </a>
+            <a href="/maps/" class="nav_item">
+                <span class="nav_icon"
+                    style="-webkit-mask-image: url('/img/nav/map.svg'); mask-image: url('/img/nav/map.svg');"></span>
+                <span class="nav_label">マップ</span>
+            </a>
+            <a href="/roomguide/" class="nav_item">
+                <span class="nav_icon"
+                    style="-webkit-mask-image: url('/img/nav/univ.svg'); mask-image: url('/img/nav/univ.svg');"></span>
+                <span class="nav_label">教室案内</span>
+            </a>
+            <a href="#" class="nav_item">
+                <span class="nav_icon"
+                    style="-webkit-mask-image: url('/img/nav/others.svg'); mask-image: url('/img/nav/others.svg');"></span>
+                <span class="nav_label">その他</span>
+            </a>
+        </nav>
+    </div>
+    <div class="empty_space"></div>
 
-   <h1>キャンパスマップ</h1> 
+   <div class="title-container">
+     <img src="location.svg" class="map-icon">
+     <h1>キャンパスマップ</h1> 
+   </div>
    
    <div class="info">
     <button>このページの使い方</button>
@@ -28,7 +59,7 @@
    
    <h2>ご来場の際のご案内</h2>
    
-   <button class="access info1">
+   <button class="access-info1">
     <img src="wheelchair.svg">
     
     <div class="text1">  
@@ -41,7 +72,7 @@
    
    <hr>
    
-   <button class="access info2">
+   <button class="access-info2">
     <img src="red icon.svg">
     
     <div class="text2">
@@ -53,5 +84,12 @@
     
     <img src="map.svg" alt="map">
    </button>
+
+   <p class="footer_text">
+        Ⓒ2026 Unknown
+        <br>
+        Under Construction
+    </p>
+
 </body>
 </html>
