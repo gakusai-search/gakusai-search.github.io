@@ -24,17 +24,27 @@ import "../../styles/roomguide.css";
     </div>
     <div class="roomguide-middle-col">
       <h2>出発地</h2>
-      <button class="roomguide-btn" disabled> キャンパス入口（正門） </button>
+      <button class="roomguide-osenai-btn" disabled>
+        キャンパス入口（正門）
+      </button>
       <h2>到着地</h2>
+      <button class="roomguide-btn" popovertarget="univ_select">
+        大学を選択
+      </button>
+      <div id="univ_select" popover>
+        <select>
+          <option value="none">大学を選択</option>
+          <option value="chudai">中央大学</option>
+        </select>
+      </div>
+      <br />
       <button class="roomguide-btn" popovertarget="campus_select">
         キャンパスを選択
       </button>
       <div id="campus_select" popover>
         <select>
-          <option>市ヶ谷田町キャンパス</option>
-          <option>多摩キャンパス</option>
-          <option>後楽園キャンパス</option>
-          <option>茗荷谷キャンパス</option>
+          <option value="none">キャンパスを選択</option>
+          <option value="chudai">市ヶ谷田町キャンパス</option>
         </select>
       </div>
       <br />
@@ -43,9 +53,28 @@ import "../../styles/roomguide.css";
       </button>
       <div id="buildings_select" popover>
         <select>
-          <option>本館</option>
-          <option>別館</option>
-          <option>イティエルの家</option>
+          <option value="none">建物を選択</option>
+          <option value="chudai">ミドルブリッジ</option>
+        </select>
+      </div>
+      <br />
+      <button class="roomguide-btn" popovertarget="fl_select">
+        階数を選択
+      </button>
+      <div id="fl_select" popover>
+        <select>
+          <option>階数を選択</option>
+          <option>1階</option>
+          <option>2階</option>
+          <option>3階</option>
+          <option>4階</option>
+          <option>5階</option>
+          <option>6階</option>
+          <option>7階</option>
+          <option>8階</option>
+          <option>9階</option>
+          <option>10階</option>
+          <option>11階</option>
         </select>
       </div>
       <br />
@@ -54,6 +83,7 @@ import "../../styles/roomguide.css";
       </button>
       <div id="classrooms_select" popover>
         <select>
+          <option>教室を選択</option>
           <option>ベランダ</option>
           <option>301</option>
           <option>309カフェ</option>
@@ -70,7 +100,10 @@ import "../../styles/roomguide.css";
 <script>
   const buttons = document.querySelectorAll(".roomguide-btn");
 
-  buttons.forEach((btn) => {
+  buttons.forEach((btn, index) => {
+    if (index !== 0) {
+      btn.disabled = true;
+    }
     const targetId = btn.getAttribute("popovertarget");
     if (!targetId) return;
     const popover = document.getElementById(targetId);
@@ -92,6 +125,16 @@ import "../../styles/roomguide.css";
       const selectedText = select.options[select.selectedIndex].text;
       btn.textContent = selectedText;
       popover.hidePopover();
+      const nextBtn = buttons[index + 1];
+      const selectedvalue = select.value;
+      if (nextBtn) {
+        if (selectedvalue === "none") {
+          nextBtn.disabled = true;
+        } else if (selectedvalue === "chudai") {
+          /*お試しとしてuniv-selectのvalueタグをchudaiで実装した名残 */
+          nextBtn.disabled = false;
+        }
+      }
     });
   });
 </script>
