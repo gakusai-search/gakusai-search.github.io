@@ -29,12 +29,24 @@ const categories = [
 <Layout title="検索結果｜学祭ポータル">
   <div class="page-header">
     <div class="page-title">
-      <img src="/img/events/search_page.svg" alt="検索結果アイコン" class="page-icon" />
+      <img
+        src="/img/events/search_page.svg"
+        alt="検索結果アイコン"
+        class="page-icon"
+      />
       <h1>検索結果</h1>
     </div>
-    <button class="main-btn tutorial-btn" id="tutorial-btn-event-introduction">
-      このページの使い方
-    </button>
+    <div class="events-header-bar">
+      <button
+        class="main-btn tutorial-btn"
+        id="tutorial-btn-event-introduction"
+      >
+        このページの使い方
+      </button>
+      <div class="events-count" id="events-count">
+        {projects.length}件
+      </div>
+    </div>
   </div>
 
   <hr />
@@ -112,11 +124,41 @@ const categories = [
       margin-top: 0px;
     }
 
+    .events-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8em;
+    }
+
+    .events-header-bar .tutorial-btn {
+      margin-bottom: 0;
+    }
+
+    .events-count {
+      color: var(--color-main);
+      font-size: 20px;
+      text-align: right;
+    }
+
+    @media (max-width: 319.98px) {
+      .events-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .events-count {
+        text-align: left;
+      }
+    }
+
     .tag-filter-container {
       margin: 20px 0 0 0;
       display: flex;
       flex-direction: column;
       gap: 16px;
+      display: none;
     }
 
     .tag-filter-top {
@@ -167,7 +209,7 @@ const categories = [
 
   <!-- JS code for filtering: multiple selection (same category: OR, different categories: AND) -->
   <script is:inline>
-    document.addEventListener("DOMContentLoaded", () => {
+    const initFilter = () => {
       const filterContainer = document.getElementById("tag-filter");
       if (!filterContainer) return;
 
@@ -200,16 +242,22 @@ const categories = [
           }
         });
 
+        const countEl = document.getElementById("events-count");
+
         // activate 'All' and show all cards if no tags are selected
         if (totalSelected === 0) {
           if (allBtn) allBtn.classList.add("active");
           eventCards.forEach((card) => card.classList.remove("hidden"));
+          if (countEl) {
+            countEl.textContent = `${eventCards.length}件`;
+          }
           return;
         } else {
           if (allBtn) allBtn.classList.remove("active");
         }
 
         // 2. check if each card matches: OR within the same category, AND between different categories
+        let visibleCount = 0;
         eventCards.forEach((card) => {
           let matches = true;
 
@@ -236,10 +284,66 @@ const categories = [
 
           if (matches) {
             card.classList.remove("hidden");
+            visibleCount++;
           } else {
             card.classList.add("hidden");
           }
         });
+
+        if (countEl) {
+          countEl.textContent = `${visibleCount}件`;
+        }
+      }
+
+      function syncUrlWithState() {
+        const activeTags = [];
+        tagBtns.forEach((btn) => {
+          if (btn.classList.contains("active")) {
+            const tag = btn.getAttribute("data-tag");
+            if (tag) activeTags.push(tag);
+          }
+        });
+
+        const currentUrl = new URL(window.location.href);
+        if (activeTags.length > 0) {
+          currentUrl.searchParams.set("tags", activeTags.join(","));
+        } else {
+          currentUrl.searchParams.delete("tags");
+        }
+        window.history.replaceState({}, "", currentUrl.toString());
+      }
+
+      function applyUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const urlTags = params
+          .getAll("tags")
+          .flatMap((t) => t.split(","))
+          .map((t) => t.trim())
+          .filter(Boolean);
+
+        if (urlTags.length > 0) {
+          let hasMatch = false;
+          tagBtns.forEach((btn) => {
+            const tag = btn.getAttribute("data-tag");
+            if (tag && urlTags.includes(tag)) {
+              btn.classList.add("active");
+              hasMatch = true;
+            } else {
+              btn.classList.remove("active");
+            }
+          });
+
+          if (hasMatch) {
+            if (allBtn) allBtn.classList.remove("active");
+          } else {
+            if (allBtn) allBtn.classList.add("active");
+          }
+        } else {
+          tagBtns.forEach((btn) => btn.classList.remove("active"));
+          if (allBtn) allBtn.classList.add("active");
+        }
+
+        updateFiltering();
       }
 
       // 'All' button click
@@ -248,6 +352,7 @@ const categories = [
           tagBtns.forEach((btn) => btn.classList.remove("active"));
           allBtn.classList.add("active");
           updateFiltering();
+          syncUrlWithState();
         });
       }
 
@@ -256,8 +361,21 @@ const categories = [
         btn.addEventListener("click", () => {
           btn.classList.toggle("active");
           updateFiltering();
+          syncUrlWithState();
         });
       });
-    });
+
+      // browser history navigation (back/forward)
+      window.addEventListener("popstate", applyUrlParams);
+
+      // initial apply from URL
+      applyUrlParams();
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initFilter);
+    } else {
+      initFilter();
+    }
   </script>
 </Layout>

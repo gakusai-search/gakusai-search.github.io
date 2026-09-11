@@ -52,7 +52,12 @@ const allProjectTags = [
           <!-- generate tag buttons from the 4-category or array tag data -->
           {
             allProjectTags.map((tag) => (
-              <button class="main-btn">#{tag}</button>
+              <button
+                class="main-btn"
+                onclick={`location.href='/events/?tags=${encodeURIComponent(tag)}'`}
+              >
+                #{tag}
+              </button>
             ))
           }
         </section>

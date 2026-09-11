@@ -384,7 +384,7 @@ const categories = [
 </style>
 
 <script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
+  const initModal = () => {
     const modalBackdrop = document.getElementById("search-modal-backdrop");
     const modalCloseBtn = document.getElementById("modal-close-btn");
     const clearBtn = document.getElementById("modal-clear-btn");
@@ -395,9 +395,34 @@ const categories = [
       ".header-search-btn, [data-open-search-modal]",
     );
 
+    // sync modal selections with current URL search params
+    function syncModalWithUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const urlTags = params
+        .getAll("tags")
+        .flatMap((t) => t.split(","))
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      tagBtns.forEach((btn) => {
+        const tag = btn.getAttribute("data-tag");
+        if (tag && urlTags.includes(tag)) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+
+      const keyword = params.get("q");
+      if (searchInput) {
+        searchInput.value = keyword || "";
+      }
+    }
+
     // open modal
     function openModal() {
       if (modalBackdrop) {
+        syncModalWithUrl();
         modalBackdrop.classList.add("is-open");
         modalBackdrop.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
@@ -452,7 +477,7 @@ const categories = [
       });
     });
 
-    // clea button
+    // clear button
     if (clearBtn) {
       clearBtn.addEventListener("click", () => {
         tagBtns.forEach((btn) => btn.classList.remove("active"));
@@ -476,10 +501,25 @@ const categories = [
         if (keyword) params.set("q", keyword);
         if (selectedTags.length > 0) params.set("tags", selectedTags.join(","));
 
-        const searchUrl = `/events/${params.toString() ? "?" + params.toString() : ""}`;
+        const queryStr = params.toString() ? "?" + params.toString() : "";
+        const searchUrl = `/events/${queryStr}`;
+
         closeModal();
+
+        const isEventsPage =
+          window.location.pathname.replace(/\/+$/, "") === "/events";
+        if (isEventsPage && window.location.search === queryStr) {
+          return;
+        }
+
         window.location.href = searchUrl;
       });
     }
-  });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initModal);
+  } else {
+    initModal();
+  }
 </script>
