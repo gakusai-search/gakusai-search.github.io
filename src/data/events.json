@@ -1,13 +1,29 @@
 [
   {
     "id": "example-event",
-    "name": "qwertyuiopasdfghjkl",
+    "name": "テストイベント1 in iTLFest.2026",
     "image": "/img/events/events_hero_example.jpg",
-    "tags": ["タグ1", "タグ2", "タグ3"],
+    "tags": {
+      "date": [
+        "10月31日(土)"
+      ],
+      "format": [
+        "展示",
+        "体験"
+      ],
+      "field": [
+        "テクノロジー",
+        "情報"
+      ],
+      "features": [
+        "予約不要",
+        "参加無料"
+      ]
+    },
     "datetime": "2026年 10月31日(土) 10:00~13:00",
     "place": {
-      "campus": "○○大学　△キャンパス",
-      "room": "○F　○○教室"
+      "campus": "中央大学　市ヶ谷田町キャンパス",
+      "room": "19F　1909教室"
     },
     "description": "イベント内容の詳しい説明",
     "accounts": {
@@ -19,7 +35,23 @@
     "id": "dance-stage",
     "name": "メインステージ ダンスパフォーマンス",
     "image": "/img/events/events_hero_example.jpg",
-    "tags": ["ダンス", "ステージ", "タグ1"],
+    "tags": {
+      "date": [
+        "11月1日(日)"
+      ],
+      "format": [
+        "ステージ",
+        "ライブ"
+      ],
+      "field": [
+        "ダンス",
+        "音楽"
+      ],
+      "features": [
+        "雨天開催",
+        "入退場自由"
+      ]
+    },
     "datetime": "2026年 11月1日(日) 14:00~15:00",
     "place": {
       "campus": "○○大学　△キャンパス",
@@ -29,6 +61,38 @@
     "accounts": {
       "X": "@dance_circle",
       "YouTube": "DanceChannel"
+    }
+  },
+  {
+    "id": "music-stage",
+    "name": "メインステージ 音楽パフォーマンス",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": [
+        "10月31日(土)",
+        "11月1日(日)"
+      ],
+      "format": [
+        "ステージ",
+        "ライブ"
+      ],
+      "field": [
+        "音楽"
+      ],
+      "features": [
+        "雨天開催",
+        "入退場自由"
+      ]
+    },
+    "datetime": "2026年 11月1日(日) 14:00~15:00",
+    "place": {
+      "campus": "○○大学　△キャンパス",
+      "room": "中庭 メインステージ"
+    },
+    "description": "音楽サークルによる圧巻のパフォーマンスです！",
+    "accounts": {
+      "X": "@music_circle",
+      "YouTube": "MusicChannel"
     }
   }
 ]

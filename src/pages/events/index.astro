@@ -2,172 +2,260 @@
 import Layout from "../../layouts/Layout.astro";
 import projects from "../../data/events.json";
 
-// generates an array of unique tags from all project data automatically
-const allTags = [...new Set(projects.flatMap((project) => project.tags))];
+const categories = [
+  {
+    key: "date",
+    title: "日程",
+    tags: [...new Set(projects.flatMap((p) => p.tags.date))],
+  },
+  {
+    key: "format",
+    title: "形式",
+    tags: [...new Set(projects.flatMap((p) => p.tags.format))],
+  },
+  {
+    key: "field",
+    title: "分野",
+    tags: [...new Set(projects.flatMap((p) => p.tags.field))],
+  },
+  {
+    key: "features",
+    title: "気になる条件",
+    tags: [...new Set(projects.flatMap((p) => p.tags.features))],
+  },
+];
 ---
 
-<Layout title="企画一覧｜学祭ポータル">
-  <h1>企画一覧</h1>
-
-  <!-- UI component for filtering projects by selecting tags -->
-  <div class="tag-filter-container">
-    <h2>タグで探す</h2>
-    <div class="tag-list" id="tag-filter">
-      <!-- "all" button -->
-      <button class="main-btn filter-btn active" data-tag="all">すべて</button>
-
-      <!-- rendering the extracted unique tags as a list of interactive buttons -->
-      {
-        allTags.map((tag) => (
-          <button class="main-btn filter-btn" data-tag={tag}>
-            #{tag}
-          </button>
-        ))
-      }
+<Layout title="検索結果｜学祭ポータル">
+  <div class="page-header">
+    <div class="page-title">
+      <img src="/img/events/search_page.svg" alt="検索結果アイコン" class="page-icon" />
+      <h1>検索結果</h1>
     </div>
+    <button class="main-btn tutorial-btn" id="tutorial-btn-event-introduction">
+      このページの使い方
+    </button>
   </div>
 
   <hr />
 
+  <!-- UI component for filtering projects by selecting tags -->
+  <div class="tag-filter-container" id="tag-filter">
+    <div class="tag-filter-top">
+      <h2>タグで探す</h2>
+      <button class="main-btn filter-btn active" data-tag="all">すべて</button>
+    </div>
+
+    <div class="tag-categories-wrapper">
+      {
+        categories.map(
+          (category) =>
+            category.tags.length > 0 && (
+              <div class="tag-category-section">
+                <h3 class="tag-category-title">{category.title}</h3>
+                <div class="tag-list">
+                  {category.tags.map((tag) => (
+                    <button
+                      class="main-btn filter-btn"
+                      data-category={category.key}
+                      data-tag={tag}
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ),
+        )
+      }
+    </div>
+  </div>
+
   <!-- event cards -->
   <div class="events-grid">
     {
-      projects.map((project) => (
-        // using the comma-separated values in the data-tags attribute for JavaScript filtering
-        <a
-          href={`/events/${project.id}`}
-          class="event-card"
-          data-tags={project.tags.join(",")}
-        >
-          <img src={project.image} alt={project.name} loading="lazy" />
-          <div class="event-card-content">
-            <h3>{project.name}</h3>
-            <p class="campus-text">{project.place.campus}</p>
-            <div class="event-card-tags">
-              {project.tags.map((tag) => (
-                <span class="tag-span">#{tag}</span>
-              ))}
+      projects.map((project) => {
+        const allTags = [
+          ...project.tags.date,
+          ...project.tags.format,
+          ...project.tags.field,
+          ...project.tags.features,
+        ];
+        return (
+          <a
+            href={`/events/${project.id}`}
+            class="event-card"
+            data-tags-date={project.tags.date.join(",")}
+            data-tags-format={project.tags.format.join(",")}
+            data-tags-field={project.tags.field.join(",")}
+            data-tags-features={project.tags.features.join(",")}
+          >
+            <img src={project.image} alt={project.name} loading="lazy" />
+            <div class="event-card-content">
+              <h3>{project.name}</h3>
+              <p class="campus-text">{project.place.campus}</p>
+              <div class="event-card-tags">
+                {allTags.map((tag) => (
+                  <span class="tag-span">#{tag}</span>
+                ))}
+              </div>
             </div>
-          </div>
-        </a>
-      ))
+          </a>
+        );
+      })
     }
   </div>
 
   <!-- style only for this page -->
   <style>
-    .tag-filter-container {
-      margin: 20px;
-      text-align: center;
+    hr {
+      margin-top: 0px;
     }
+
+    .tag-filter-container {
+      margin: 20px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tag-filter-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tag-filter-top h2 {
+      margin: 0;
+      font-size: 20px;
+      text-align: left;
+    }
+
+    .tag-categories-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-color: var(--color-btn-main);
+      border: 1.5px solid var(--color-border-main);
+      border-radius: 14px;
+      padding: 16px 20px;
+      box-sizing: border-box;
+    }
+
+    .tag-category-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tag-category-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: bold;
+      color: var(--color-text-main);
+      text-align: left;
+    }
+
     .tag-list {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 8px;
-    }
-    .filter-btn.active {
-      background: var(--color-main);
-      border-color: var(--color-main);
-    }
-
-    .events-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    /* responsive ui */
-    @media (min-width: 768px) {
-      .events-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      }
-    }
-
-    .event-card {
-      display: block;
-      background-color: var(--color-btn-main);
-      border: 1px solid var(--color-border-main);
-      border-radius: 12px;
-      overflow: hidden;
-      text-decoration: none;
-      transition: transform 0.2s;
-    }
-    .event-card:hover {
-      transform: translateY(-4px);
-    }
-    .event-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .event-card-content {
-      padding: 16px;
-    }
-    .event-card-content h3 {
-      margin: 0 0 12px 0;
-      font-size: 18px;
-      text-align: left;
-    }
-    .campus-text {
-      font-size: 14px;
-      color: color-mix(in srgb, var(--color-text-main) 60%, transparent);
-      text-align: left;
-      margin-bottom: 12px;
-    }
-    .event-card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .tag-span {
-      font-size: 12px;
-      color: var(--color-text-main);
-      background-color: color-mix(
-        in srgb,
-        var(--color-text-main) 10%,
-        transparent
-      );
-      padding: 4px 8px;
-      border-radius: 4px;
-    }
-
-    .hidden {
-      display: none !important;
     }
   </style>
 
-  <!-- JS code for filtering -->
+  <!-- JS code for filtering: multiple selection (same category: OR, different categories: AND) -->
   <script is:inline>
     document.addEventListener("DOMContentLoaded", () => {
-      const filterBtns = document.querySelectorAll(".filter-btn");
+      const filterContainer = document.getElementById("tag-filter");
+      if (!filterContainer) return;
+
+      const allBtn = filterContainer.querySelector(
+        '.filter-btn[data-tag="all"]',
+      );
+      const tagBtns = filterContainer.querySelectorAll(
+        '.filter-btn:not([data-tag="all"])',
+      );
       const eventCards = document.querySelectorAll(".event-card");
 
-      filterBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          // 1. toggle button active state
-          filterBtns.forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
+      function updateFiltering() {
+        // 1. collect selected tags for each category
+        const selectedByCat = {
+          date: [],
+          format: [],
+          field: [],
+          features: [],
+        };
 
-          // 2. get clicked tag
-          const selectedTag = btn.getAttribute("data-tag");
-
-          // 3. determine visibility for each card
-          eventCards.forEach((card) => {
-            if (selectedTag === "all") {
-              card.classList.remove("hidden");
-            } else {
-              // get card tags and verify if selected tag matches
-              const cardTags = card.getAttribute("data-tags").split(",");
-              if (cardTags.includes(selectedTag)) {
-                card.classList.remove("hidden");
-              } else {
-                card.classList.add("hidden");
-              }
+        let totalSelected = 0;
+        tagBtns.forEach((btn) => {
+          if (btn.classList.contains("active")) {
+            const cat = btn.getAttribute("data-category");
+            const tag = btn.getAttribute("data-tag");
+            if (cat && selectedByCat[cat]) {
+              selectedByCat[cat].push(tag);
+              totalSelected++;
             }
-          });
+          }
+        });
+
+        // activate 'All' and show all cards if no tags are selected
+        if (totalSelected === 0) {
+          if (allBtn) allBtn.classList.add("active");
+          eventCards.forEach((card) => card.classList.remove("hidden"));
+          return;
+        } else {
+          if (allBtn) allBtn.classList.remove("active");
+        }
+
+        // 2. check if each card matches: OR within the same category, AND between different categories
+        eventCards.forEach((card) => {
+          let matches = true;
+
+          for (const [catKey, selectedTags] of Object.entries(selectedByCat)) {
+            // if no tag is selected in this category, just skip
+            if (selectedTags.length === 0) continue;
+
+            // get the tags of that category the card has
+            const cardAttr = card.getAttribute(`data-tags-${catKey}`);
+            const cardTags = cardAttr
+              ? cardAttr.split(",").filter(Boolean)
+              : [];
+
+            // OR within the same category: if any of the selected tags is included in the card tags
+            const hasAnyTag = selectedTags.some((tag) =>
+              cardTags.includes(tag),
+            );
+
+            if (!hasAnyTag) {
+              matches = false;
+              break; // AND between different categories
+            }
+          }
+
+          if (matches) {
+            card.classList.remove("hidden");
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+      }
+
+      // 'All' button click
+      if (allBtn) {
+        allBtn.addEventListener("click", () => {
+          tagBtns.forEach((btn) => btn.classList.remove("active"));
+          allBtn.classList.add("active");
+          updateFiltering();
+        });
+      }
+
+      // each tag button click (toggle selection)
+      tagBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          btn.classList.toggle("active");
+          updateFiltering();
         });
       });
     });

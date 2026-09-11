@@ -12,6 +12,13 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+
+const allProjectTags = [
+  ...project.tags.date,
+  ...project.tags.format,
+  ...project.tags.field,
+  ...project.tags.features,
+];
 ---
 
 <Layout title={`${project.name}｜学祭ポータル`} hideNav={true}>
@@ -42,8 +49,12 @@ const { project } = Astro.props;
         <h2>企画名</h2>
         <p class="event-name">{project.name}</p>
         <section class="button-list">
-          <!-- generate tag buttons from the array data -->
-          {project.tags.map((tag) => <button class="main-btn">#{tag}</button>)}
+          <!-- generate tag buttons from the 4-category or array tag data -->
+          {
+            allProjectTags.map((tag) => (
+              <button class="main-btn">#{tag}</button>
+            ))
+          }
         </section>
       </div>
       <hr />

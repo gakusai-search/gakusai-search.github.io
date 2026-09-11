@@ -1,3 +1,27 @@
+---
+// SearchModal.astro
+import projects from "../data/events.json";
+
+const categories = [
+  {
+    title: "日程",
+    tags: [...new Set(projects.flatMap((p) => p.tags.date))],
+  },
+  {
+    title: "形式",
+    tags: [...new Set(projects.flatMap((p) => p.tags.format))],
+  },
+  {
+    title: "分野",
+    tags: [...new Set(projects.flatMap((p) => p.tags.field))],
+  },
+  {
+    title: "気になる条件",
+    tags: [...new Set(projects.flatMap((p) => p.tags.features))],
+  },
+];
+---
+
 <div
   id="search-modal-backdrop"
   class="search-modal-backdrop"
@@ -55,76 +79,27 @@
     </div>
 
     <div class="modal-scrollable-tags">
-      <!-- category: day -->
-      <section class="modal-category">
-        <h2 class="modal-category-title">日程</h2>
-        <div class="modal-tag-list">
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="日程サンプル1">#日程サンプル1</button
-          >
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="日程サンプル2">#日程サンプル2</button
-          >
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="日程サンプル3">#日程サンプル3</button
-          >
-        </div>
-      </section>
-
-      <!-- category: format -->
-      <section class="modal-category">
-        <h2 class="modal-category-title">形式</h2>
-        <div class="modal-tag-list">
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="形式サンプル1">#形式サンプル1</button
-          >
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="形式サンプル2">#形式サンプル2</button
-          >
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="形式サンプル3">#形式サンプル3</button
-          >
-        </div>
-      </section>
-
-      <!-- category: field -->
-      <section class="modal-category">
-        <h2 class="modal-category-title">分野</h2>
-        <div class="modal-tag-list">
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="分野サンプル1">#分野サンプル1</button
-          >
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="分野サンプル2">#分野サンプル2</button
-          >
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="分野サンプル3">#分野サンプル3</button
-          >
-          <button
-            type="button"
-            class="main-btn filter-btn modal-tag-btn"
-            data-tag="分野サンプル4">#分野サンプル4</button
-          >
-        </div>
-      </section>
+      {
+        categories.map(
+          (category) =>
+            category.tags.length > 0 && (
+              <section class="modal-category">
+                <h2 class="modal-category-title">{category.title}</h2>
+                <div class="modal-tag-list">
+                  {category.tags.map((tag) => (
+                    <button
+                      type="button"
+                      class="main-btn modal-tag-btn"
+                      data-tag={tag}
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                </div>
+              </section>
+            ),
+        )
+      }
     </div>
 
     <hr class="modal-hr" />
