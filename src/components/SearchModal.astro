@@ -1,5 +1,4 @@
 ---
-// SearchModal.astro
 import projects from "../data/events.json";
 
 const categories = [
@@ -162,12 +161,6 @@ const categories = [
     padding: 20px;
     box-sizing: border-box;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-    transform: scale(0.94);
-    transition: transform 0.25s ease;
-  }
-
-  .search-modal-backdrop.is-open .search-modal-container {
-    transform: scale(1);
   }
 
   .modal-top-bar {
@@ -189,18 +182,12 @@ const categories = [
     justify-content: center;
     cursor: pointer;
     padding: 0;
-    transition:
-      background-color 0.2s ease,
-      transform 0.1s ease;
+    transition: background-color 0.2s ease;
     flex-shrink: 0;
   }
 
   .modal-close-btn:hover {
     background-color: #afafaf;
-  }
-
-  .modal-close-btn:active {
-    transform: scale(0.92);
   }
 
   .modal-close-icon {
@@ -347,17 +334,11 @@ const categories = [
     border-radius: 6px;
     padding: 0;
     cursor: pointer;
-    transition:
-      opacity 0.2s ease,
-      transform 0.1s ease;
+    transition: opacity 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-  }
-
-  .modal-search-btn:active {
-    transform: scale(0.97);
   }
 
   @media (hover: hover) {
@@ -488,32 +469,40 @@ const categories = [
       });
     }
 
+    // function to execute search
+    function executeSearch() {
+      const selectedTags = Array.from(
+        document.querySelectorAll(".modal-tag-btn.active"),
+      ).map((btn) => btn.getAttribute("data-tag"));
+      const keyword = searchInput?.value.trim() || "";
+
+      // build search parameters
+      const params = new URLSearchParams();
+      if (keyword) params.set("q", keyword);
+      if (selectedTags.length > 0) params.set("tags", selectedTags.join(","));
+
+      const queryStr = params.toString() ? "?" + params.toString() : "";
+      const searchUrl = `/events/${queryStr}`;
+
+      closeModal();
+
+      const isEventsPage =
+        window.location.pathname.replace(/\/+$/, "") === "/events";
+
+      if (isEventsPage) {
+        if (window.location.search !== queryStr) {
+          window.history.pushState({}, "", searchUrl);
+          window.dispatchEvent(new CustomEvent("searchparamschange"));
+        }
+        return;
+      }
+
+      window.location.href = searchUrl;
+    }
+
     // search button behavior
     if (searchSubmitBtn) {
-      searchSubmitBtn.addEventListener("click", () => {
-        const selectedTags = Array.from(
-          document.querySelectorAll(".modal-tag-btn.active"),
-        ).map((btn) => btn.getAttribute("data-tag"));
-        const keyword = searchInput?.value.trim() || "";
-
-        // build search parameters
-        const params = new URLSearchParams();
-        if (keyword) params.set("q", keyword);
-        if (selectedTags.length > 0) params.set("tags", selectedTags.join(","));
-
-        const queryStr = params.toString() ? "?" + params.toString() : "";
-        const searchUrl = `/events/${queryStr}`;
-
-        closeModal();
-
-        const isEventsPage =
-          window.location.pathname.replace(/\/+$/, "") === "/events";
-        if (isEventsPage && window.location.search === queryStr) {
-          return;
-        }
-
-        window.location.href = searchUrl;
-      });
+      searchSubmitBtn.addEventListener("click", executeSearch);
     }
   };
 

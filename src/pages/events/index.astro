@@ -51,6 +51,22 @@ const categories = [
 
   <hr />
 
+  <!-- active search conditions bar (keywords and selected tags) -->
+  <div id="active-query-bar" class="active-query-bar">
+    <span class="active-query-label">検索条件:</span>
+    <div id="active-query-tags-container" class="active-query-tags-container">
+      <span class="active-query-none">なし</span>
+    </div>
+    <button
+      type="button"
+      class="main-btn search-again-btn"
+      id="search-again-btn"
+      data-open-search-modal
+    >
+      別の条件で検索
+    </button>
+  </div>
+
   <!-- UI component for filtering projects by selecting tags -->
   <div class="tag-filter-container" id="tag-filter">
     <div class="tag-filter-top">
@@ -84,9 +100,9 @@ const categories = [
   </div>
 
   <!-- event cards -->
-  <div class="events-grid">
+  <div class="events-grid" id="events-grid">
     {
-      projects.map((project) => {
+      projects.slice(0, 24).map((project) => {
         const allTags = [
           ...project.tags.date,
           ...project.tags.format,
@@ -97,10 +113,7 @@ const categories = [
           <a
             href={`/events/${project.id}`}
             class="event-card"
-            data-tags-date={project.tags.date.join(",")}
-            data-tags-format={project.tags.format.join(",")}
-            data-tags-field={project.tags.field.join(",")}
-            data-tags-features={project.tags.features.join(",")}
+            data-id={project.id}
           >
             <img src={project.image} alt={project.name} loading="lazy" />
             <div class="event-card-content">
@@ -117,6 +130,26 @@ const categories = [
       })
     }
   </div>
+
+  <!-- 0 results message -->
+  <div id="no-events-message" class="no-events-message" style="display: none;">
+    <p>条件に一致する企画が見つかりませんでした。</p>
+  </div>
+
+  <!-- infinite scroll sentinel element -->
+  <div id="scroll-sentinel" class="scroll-sentinel"></div>
+
+  <!-- template for dynamic card rendering -->
+  <template id="event-card-template">
+    <a href="" class="event-card">
+      <img src="" alt="" loading="lazy" />
+      <div class="event-card-content">
+        <h3></h3>
+        <p class="campus-text"></p>
+        <div class="event-card-tags"></div>
+      </div>
+    </a>
+  </template>
 
   <!-- style only for this page -->
   <style>
@@ -151,6 +184,113 @@ const categories = [
       .events-count {
         text-align: left;
       }
+    }
+
+    /* active search conditions bar */
+    .active-query-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 0px;
+      font-size: 14px;
+      color: var(--color-text-main);
+      flex-wrap: wrap;
+    }
+
+    .active-query-label {
+      font-weight: bold;
+      color: var(--color-text-main);
+      white-space: nowrap;
+    }
+
+    :global(.active-query-tags-container) {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    :global(.active-query-none) {
+      color: color-mix(in srgb, var(--color-text-main) 70%, transparent);
+      font-size: 14px;
+    }
+
+    :global(.active-query-tag) {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--color-main);
+      color: #ffffff;
+      height: 28px;
+      padding: 0 6px 0 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+
+    :global(.active-query-tag .active-query-tag-text) {
+      display: inline-block;
+      line-height: 28px;
+      height: 28px;
+      transform: translateY(0.5px);
+    }
+
+    :global(.clear-query-btn) {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      transform: translateY(-0.5px);
+      transition:
+        background-color 0.15s ease,
+        opacity 0.15s ease,
+        transform 0.15s ease;
+    }
+
+    :global(.clear-query-btn svg) {
+      display: block;
+      width: 12px;
+      height: 12px;
+    }
+
+    :global(.clear-query-btn:hover) {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .search-again-btn {
+      margin-bottom: 0;
+      height: 30px;
+      font-size: 14px;
+      border-radius: 15px;
+      padding: 0 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .no-events-message {
+      padding: 48px 20px;
+      text-align: center;
+      color: var(--color-text-main);
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    .scroll-sentinel {
+      height: 20px;
+      width: 100%;
     }
 
     .tag-filter-container {
@@ -207,97 +347,336 @@ const categories = [
     }
   </style>
 
-  <!-- JS code for filtering: multiple selection (same category: OR, different categories: AND) -->
-  <script is:inline>
+  <!-- JS code for filtering: miniSearch fuzzy search + multiple tag selection + infinite scrolling -->
+  <script>
+    import MiniSearch from "minisearch";
+    import projects from "../../data/events.json";
+
+    type ProjectType = (typeof projects)[number];
+
     const initFilter = () => {
       const filterContainer = document.getElementById("tag-filter");
-      if (!filterContainer) return;
+      const gridEl = document.getElementById("events-grid");
+      const templateEl = document.getElementById(
+        "event-card-template",
+      ) as HTMLTemplateElement | null;
+      const countEl = document.getElementById("events-count");
+      const noEventsEl = document.getElementById("no-events-message");
+      const sentinelEl = document.getElementById("scroll-sentinel");
+      const queryTagsContainer = document.getElementById(
+        "active-query-tags-container",
+      );
 
-      const allBtn = filterContainer.querySelector(
+      if (!gridEl || !templateEl) return;
+
+      const allBtn = filterContainer?.querySelector(
         '.filter-btn[data-tag="all"]',
       );
-      const tagBtns = filterContainer.querySelectorAll(
+      const tagBtns = filterContainer?.querySelectorAll(
         '.filter-btn:not([data-tag="all"])',
       );
-      const eventCards = document.querySelectorAll(".event-card");
 
-      function updateFiltering() {
-        // 1. collect selected tags for each category
-        const selectedByCat = {
+      // 1. initialize tokenizer using Intl.Segmenter with fallback
+      const segmenter =
+        typeof Intl !== "undefined" && (Intl as any).Segmenter
+          ? new (Intl as any).Segmenter("ja", { granularity: "word" })
+          : null;
+
+      const tokenize = (text: string): string[] => {
+        if (!text) return [];
+        if (segmenter) {
+          const words: string[] = [];
+          for (const seg of segmenter.segment(text)) {
+            const w = seg.segment.trim().toLowerCase();
+            if (w) words.push(w);
+          }
+          return words;
+        }
+        return text
+          .toLowerCase()
+          .split(/[\s,、。！？\-_/]+/g)
+          .filter(Boolean);
+      };
+
+      // 2. prepare search documents map and MiniSearch index
+      const projectsMap = new Map<string, ProjectType>();
+      const searchDocuments = projects.map((p) => {
+        projectsMap.set(p.id, p);
+        const allTags = [
+          ...(p.tags.date || []),
+          ...(p.tags.format || []),
+          ...(p.tags.field || []),
+          ...(p.tags.features || []),
+        ];
+        return {
+          id: p.id,
+          name: p.name,
+          description: p.description || "",
+          campus: p.place?.campus || "",
+          room: p.place?.room || "",
+          tagsText: allTags.join(" "),
+        };
+      });
+
+      const miniSearch = new MiniSearch({
+        fields: ["name", "tagsText", "description", "campus", "room"],
+        storeFields: ["id"],
+        searchOptions: {
+          boost: {
+            name: 3,
+            tagsText: 2,
+            campus: 1.5,
+            room: 1.5,
+            description: 1,
+          },
+          fuzzy: 0.2,
+          prefix: true,
+        },
+        tokenize,
+        processTerm: (term) => term.toLowerCase().normalize("NFKC"),
+      });
+
+      miniSearch.addAll(searchDocuments);
+
+      // 3. infinite scrolling & dynamic card rendering logic
+      const PAGE_SIZE = 24;
+      let currentFilteredList: ProjectType[] = [];
+      let renderedCount = 0;
+
+      const createCardElement = (p: ProjectType): HTMLElement => {
+        const clone = templateEl.content.cloneNode(true) as DocumentFragment;
+        const link = clone.querySelector("a") as HTMLAnchorElement;
+        link.href = `/events/${p.id}`;
+        link.setAttribute("data-id", p.id);
+
+        const img = clone.querySelector("img") as HTMLImageElement;
+        img.src = p.image;
+        img.alt = p.name;
+
+        const title = clone.querySelector("h3") as HTMLElement;
+        title.textContent = p.name;
+
+        const campus = clone.querySelector(".campus-text") as HTMLElement;
+        campus.textContent = p.place?.campus || "";
+
+        const tagsContainer = clone.querySelector(
+          ".event-card-tags",
+        ) as HTMLElement;
+        const allTags = [
+          ...(p.tags.date || []),
+          ...(p.tags.format || []),
+          ...(p.tags.field || []),
+          ...(p.tags.features || []),
+        ];
+        allTags.forEach((tag) => {
+          const span = document.createElement("span");
+          span.className = "tag-span";
+          span.textContent = `#${tag}`;
+          tagsContainer.appendChild(span);
+        });
+
+        return link;
+      };
+
+      const renderNextPage = () => {
+        if (renderedCount >= currentFilteredList.length) return;
+        const nextBatch = currentFilteredList.slice(
+          renderedCount,
+          renderedCount + PAGE_SIZE,
+        );
+        const fragment = document.createDocumentFragment();
+        nextBatch.forEach((p) => {
+          fragment.appendChild(createCardElement(p));
+        });
+        gridEl.appendChild(fragment);
+        renderedCount += nextBatch.length;
+      };
+
+      const resetAndRender = (list: ProjectType[]) => {
+        currentFilteredList = list;
+        gridEl.innerHTML = "";
+        renderedCount = 0;
+
+        if (list.length === 0) {
+          if (noEventsEl) noEventsEl.style.display = "block";
+        } else {
+          if (noEventsEl) noEventsEl.style.display = "none";
+          renderNextPage();
+        }
+      };
+
+      // set up IntersectionObserver for infinite scrolling
+      if (sentinelEl) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            if (entries[0].isIntersecting) {
+              renderNextPage();
+            }
+          },
+          { rootMargin: "300px" },
+        );
+        observer.observe(sentinelEl);
+      }
+
+      // 4. tag matching logic: OR within category, AND between categories
+      const matchesCategoryTags = (
+        p: ProjectType,
+        selectedByCat: Record<string, string[]>,
+      ): boolean => {
+        for (const [catKey, selectedTags] of Object.entries(selectedByCat)) {
+          if (selectedTags.length === 0) continue;
+          const projectTags = (p.tags as any)[catKey] || [];
+          const hasAny = selectedTags.some((t: string) =>
+            projectTags.includes(t),
+          );
+          if (!hasAny) return false;
+        }
+        return true;
+      };
+
+      // 5. update filtering according to current state
+      const updateFiltering = () => {
+        const params = new URLSearchParams(window.location.search);
+        const keyword = (params.get("q") || "").trim();
+
+        // collect selected tags by category
+        const selectedByCat: Record<string, string[]> = {
           date: [],
           format: [],
           field: [],
           features: [],
         };
+        const selectedTagList: { cat: string; tag: string; btn: Element }[] =
+          [];
 
-        let totalSelected = 0;
-        tagBtns.forEach((btn) => {
+        tagBtns?.forEach((btn) => {
           if (btn.classList.contains("active")) {
             const cat = btn.getAttribute("data-category");
             const tag = btn.getAttribute("data-tag");
-            if (cat && selectedByCat[cat]) {
+            if (cat && selectedByCat[cat] && tag) {
               selectedByCat[cat].push(tag);
-              totalSelected++;
+              selectedTagList.push({ cat, tag, btn });
             }
           }
         });
 
-        const countEl = document.getElementById("events-count");
+        // update active conditions (keyword + tags) badge container
+        if (queryTagsContainer) {
+          queryTagsContainer.innerHTML = "";
+          const hasKeyword = Boolean(keyword);
+          const hasTags = selectedTagList.length > 0;
 
-        // activate 'All' and show all cards if no tags are selected
-        if (totalSelected === 0) {
-          if (allBtn) allBtn.classList.add("active");
-          eventCards.forEach((card) => card.classList.remove("hidden"));
-          if (countEl) {
-            countEl.textContent = `${eventCards.length}件`;
-          }
-          return;
-        } else {
-          if (allBtn) allBtn.classList.remove("active");
-        }
-
-        // 2. check if each card matches: OR within the same category, AND between different categories
-        let visibleCount = 0;
-        eventCards.forEach((card) => {
-          let matches = true;
-
-          for (const [catKey, selectedTags] of Object.entries(selectedByCat)) {
-            // if no tag is selected in this category, just skip
-            if (selectedTags.length === 0) continue;
-
-            // get the tags of that category the card has
-            const cardAttr = card.getAttribute(`data-tags-${catKey}`);
-            const cardTags = cardAttr
-              ? cardAttr.split(",").filter(Boolean)
-              : [];
-
-            // OR within the same category: if any of the selected tags is included in the card tags
-            const hasAnyTag = selectedTags.some((tag) =>
-              cardTags.includes(tag),
-            );
-
-            if (!hasAnyTag) {
-              matches = false;
-              break; // AND between different categories
-            }
-          }
-
-          if (matches) {
-            card.classList.remove("hidden");
-            visibleCount++;
+          if (!hasKeyword && !hasTags) {
+            const noneSpan = document.createElement("span");
+            noneSpan.className = "active-query-none";
+            noneSpan.textContent = "なし";
+            queryTagsContainer.appendChild(noneSpan);
           } else {
-            card.classList.add("hidden");
+            // 1. keyword badge
+            if (hasKeyword) {
+              const badge = document.createElement("span");
+              badge.className = "active-query-tag";
+
+              const textSpan = document.createElement("span");
+              textSpan.className = "active-query-tag-text";
+              textSpan.textContent = keyword;
+
+              const clearBtn = document.createElement("button");
+              clearBtn.type = "button";
+              clearBtn.className = "clear-query-btn";
+              clearBtn.setAttribute("aria-label", "検索ワードを解除");
+              clearBtn.innerHTML = `
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              `;
+              clearBtn.addEventListener("click", () => {
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.delete("q");
+                window.history.replaceState({}, "", currentUrl.toString());
+                updateFiltering();
+              });
+
+              badge.appendChild(textSpan);
+              badge.appendChild(clearBtn);
+              queryTagsContainer.appendChild(badge);
+            }
+
+            // 2. tag badges
+            selectedTagList.forEach(({ tag, btn }) => {
+              const badge = document.createElement("span");
+              badge.className = "active-query-tag";
+
+              const textSpan = document.createElement("span");
+              textSpan.className = "active-query-tag-text";
+              textSpan.textContent = `#${tag}`;
+
+              const clearBtn = document.createElement("button");
+              clearBtn.type = "button";
+              clearBtn.className = "clear-query-btn";
+              clearBtn.setAttribute("aria-label", `${tag}タグを解除`);
+              clearBtn.innerHTML = `
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              `;
+              clearBtn.addEventListener("click", () => {
+                btn.classList.remove("active");
+                syncUrlWithState();
+                updateFiltering();
+              });
+
+              badge.appendChild(textSpan);
+              badge.appendChild(clearBtn);
+              queryTagsContainer.appendChild(badge);
+            });
           }
-        });
-
-        if (countEl) {
-          countEl.textContent = `${visibleCount}件`;
         }
-      }
 
-      function syncUrlWithState() {
-        const activeTags = [];
-        tagBtns.forEach((btn) => {
+        // update 'All' tag button state
+        if (allBtn) {
+          if (selectedTagList.length === 0) {
+            allBtn.classList.add("active");
+          } else {
+            allBtn.classList.remove("active");
+          }
+        }
+
+        // candidates filtering (MiniSearch fuzzy search)
+        let candidates: ProjectType[];
+        if (keyword) {
+          const searchResults = miniSearch.search(keyword, {
+            fuzzy: 0.2,
+            prefix: true,
+          });
+          candidates = searchResults
+            .map((res) => projectsMap.get(res.id)!)
+            .filter(Boolean);
+        } else {
+          candidates = projects;
+        }
+
+        // filter by tags
+        const hasTagFilters = selectedTagList.length > 0;
+        const finalResults = hasTagFilters
+          ? candidates.filter((p) => matchesCategoryTags(p, selectedByCat))
+          : candidates;
+
+        // update count element
+        if (countEl) {
+          countEl.textContent = `${finalResults.length}件`;
+        }
+
+        // render card items
+        resetAndRender(finalResults);
+      };
+
+      // 6. sync URL parameters with current UI state
+      const syncUrlWithState = () => {
+        const activeTags: string[] = [];
+        tagBtns?.forEach((btn) => {
           if (btn.classList.contains("active")) {
             const tag = btn.getAttribute("data-tag");
             if (tag) activeTags.push(tag);
@@ -311,9 +690,10 @@ const categories = [
           currentUrl.searchParams.delete("tags");
         }
         window.history.replaceState({}, "", currentUrl.toString());
-      }
+      };
 
-      function applyUrlParams() {
+      // 7. apply URL params to UI and execute filtering
+      const applyUrlParams = () => {
         const params = new URLSearchParams(window.location.search);
         const urlTags = params
           .getAll("tags")
@@ -321,7 +701,7 @@ const categories = [
           .map((t) => t.trim())
           .filter(Boolean);
 
-        if (urlTags.length > 0) {
+        if (tagBtns) {
           let hasMatch = false;
           tagBtns.forEach((btn) => {
             const tag = btn.getAttribute("data-tag");
@@ -333,42 +713,41 @@ const categories = [
             }
           });
 
-          if (hasMatch) {
-            if (allBtn) allBtn.classList.remove("active");
-          } else {
-            if (allBtn) allBtn.classList.add("active");
+          if (allBtn) {
+            if (hasMatch) {
+              allBtn.classList.remove("active");
+            } else {
+              allBtn.classList.add("active");
+            }
           }
-        } else {
-          tagBtns.forEach((btn) => btn.classList.remove("active"));
-          if (allBtn) allBtn.classList.add("active");
         }
 
         updateFiltering();
-      }
+      };
 
-      // 'All' button click
+      // 8. event listeners
       if (allBtn) {
         allBtn.addEventListener("click", () => {
-          tagBtns.forEach((btn) => btn.classList.remove("active"));
+          tagBtns?.forEach((btn) => btn.classList.remove("active"));
           allBtn.classList.add("active");
-          updateFiltering();
           syncUrlWithState();
+          updateFiltering();
         });
       }
 
-      // each tag button click (toggle selection)
-      tagBtns.forEach((btn) => {
+      tagBtns?.forEach((btn) => {
         btn.addEventListener("click", () => {
           btn.classList.toggle("active");
-          updateFiltering();
           syncUrlWithState();
+          updateFiltering();
         });
       });
 
-      // browser history navigation (back/forward)
+      // handle back/forward and custom modal search events
       window.addEventListener("popstate", applyUrlParams);
+      window.addEventListener("searchparamschange", applyUrlParams);
 
-      // initial apply from URL
+      // initial apply
       applyUrlParams();
     };
 
