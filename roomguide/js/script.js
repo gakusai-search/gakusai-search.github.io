@@ -83,3 +83,25 @@ selects.forEach((select, index) => {
 
 /*検索ボタンはデフォで押せない見た目の方が良さそうってイティエルが言ってた */
 
+const flSelect = document.getElementById('fl_select');
+const searchBtn = document.querySelector('.roomguide-search-btn');
+
+flSelect.addEventListener('change', updateSearchBtn);
+updateSearchBtn();
+
+searchBtn.addEventListener('click', () => {
+  const floorNum = flSelect.value.replace('itl-', '');
+});
+
+function updateSearchBtn() {
+  const ready = [...selects].every(s => s.value !== 'none');
+  searchBtn.disabled = !ready;
+  searchBtn.classList.toggle('activated', ready);
+}
+
+selects.forEach(select => select.addEventListener('change', updateSearchBtn));
+updateSearchBtn();
+
+searchBtn.addEventListener('click', () => {
+  const floorNum = flSelect.value.replace('itl-', '');
+});
