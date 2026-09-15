@@ -1,5 +1,6 @@
 /*教室選択のoptionを整理しよう！ */
 
+/*
 const fl_classrooms = {
   '1階': ['教室を選択', 'エントランスホール', 'コミュニケーションホール'],
   '3階': ['教室を選択', '301'],
@@ -11,6 +12,7 @@ const fl_classrooms = {
   '9階': ['教室を選択', '901', '902'],
   '10階': ['教室を選択', '1001', '1002', '1003', '1004', '1005'],
 };
+*/
 
 /*上から順に選ばないと次には進めないよ～ん */
 
@@ -37,6 +39,7 @@ selects.forEach((select, index) => {
 
 /*教室選択の際の選択肢の処理だよ */
 
+/*
 const flSelect = document.getElementById('fl_select');
 const classroomsSelect = document.getElementById('classrooms_select');
 
@@ -63,6 +66,7 @@ if (flSelect && classroomsSelect) {
     }
   });
 }
+*/
 
 /*選択肢を変更した場合に実行する後続選択の初期化処理だよ */
 
@@ -76,3 +80,6 @@ selects.forEach((select, index) => {
     }
   });
 });
+
+/*検索ボタンはデフォで押せない見た目の方が良さそうってイティエルが言ってた */
+
