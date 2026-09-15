@@ -105,3 +105,5 @@ updateSearchBtn();
 searchBtn.addEventListener('click', () => {
   const floorNum = flSelect.value.replace('itl-', '');
 });
+
+/*flselectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムをこの下に置くつもり */
