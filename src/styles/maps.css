@@ -1,1 +1,67 @@
 @charset "UTF-8";
+
+hr {
+    margin-top: 0px;
+}
+
+.info button {
+    background-color: var(--color-btn-main);
+    color: var(--color-text-main);
+    padding: 3px 11px;
+    border: thin solid var(--color-border-main);
+    border-radius: 20px;
+}
+
+.access-info1 {
+    background-color: var(--color-btn-main);
+    color: var(--color-text-main);
+    padding: 3px 11px;
+    border: thin solid var(--color-border-main);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.access-info1 .text1 span:first-child {
+    font-weight: bold;
+    font-size: 15px;
+    color: var(--color-text-main);
+}
+
+.access-info1 .text1 {
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+}
+
+.access-info2 {
+    background-color: var(--color-btn-main);
+    color: var(--color-text-main);
+    padding: 3px 11px;
+    border: thin solid var(--color-border-main);
+    border-radius: 10px;
+    width: 100%;
+}
+
+.access-info2 .text2 span:first-child {
+    font-weight: bold;
+    font-size: 15px;
+    color: var(--color-text-main);
+}
+
+.access-info2 .text2 {
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+}
+
+@media (min-width: 940px) {
+    body {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
