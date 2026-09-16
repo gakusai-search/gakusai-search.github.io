@@ -1,44 +1,33 @@
 @charset "UTF-8";
 
-.title-container{
-    display: flex;
-    gap: 12px;
-}
-
-.map-icon{
-  width: 40px; 
-  height: auto;
-}
-
-.title-container h2{
-  color: #ffffff;
-  margin: 0;      
-  font-size: 28px;      
+hr {
+    margin-top: 0px;
 }
 
 .info button{
-    background-color: #EFE3E0;
-    color: #000;
+    background-color: var(--color-btn-main);
+    color: var(--color-text-main);
     padding: 3px 11px;
-    border: thin solid #F8F0EA;
+    border: thin solid var(--color-border-main);
     border-radius: 20px;
 }
 
 .access-info1{
-    background-color: #EFE3E0;
-    color: #000;
+    background-color: var(--color-btn-main);
+    color: var(--color-text-main);
     padding: 3px 11px;
-    border: thin solid #F8F0EA;
+    border: thin solid var(--color-border-main);
     border-radius: 10px;
     display: flex;
     align-items: center;
     gap: 11px;
+    margin-bottom: 20px;
 }
 
 .access-info1 .text1 span:first-child{
     font-weight: bold;
     font-size: 15px;
-    color: #000;
+    color: var(--color-text-main);
 }
 
 .access-info1 .text1{
@@ -48,17 +37,17 @@
 }
 
 .access-info2{
-    background-color: #EFE3E0;
-    color: #000;
+    background-color: var(--color-btn-main);
+    color: var(--color-text-main);
     padding: 3px 11px;
-    border: thin solid #F8F0EA;
+    border: thin solid var(--color-border-main);
     border-radius: 10px;
 }
 
 .access-info2 .text2 span:first-child{
     font-weight: bold;
     font-size: 15px;
-    color: #000;
+    color: var(--color-text-main);
 }
 
 .access-info2 .text2{
