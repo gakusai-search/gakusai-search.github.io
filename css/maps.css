@@ -11,13 +11,64 @@ header{
     gap: 12px;
 }
 
-.map-icon {
+.map-icon{
   width: 40px; 
   height: auto;
 }
 
-.title-container h2 {
+.title-container h2{
   color: #ffffff;
   margin: 0;      
   font-size: 28px;      
+}
+
+.info button{
+    background-color: #EFE3E0;
+    color: #000;
+    padding: 3px 11px;
+    border: thin solid #F8F0EA;
+    border-radius: 20px;
+}
+
+.access-info1{
+    background-color: #EFE3E0;
+    color: #000;
+    padding: 3px 11px;
+    border: thin solid #F8F0EA;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.access-info1 .text1 span:first-child{
+    font-weight: bold;
+    font-size: 15px;
+    color: #000;
+}
+
+.access-info1 .text1{
+  display: flex;
+  text-align: left;
+  flex-direction: column;    
+}
+
+.access-info2{
+    background-color: #EFE3E0;
+    color: #000;
+    padding: 3px 11px;
+    border: thin solid #F8F0EA;
+    border-radius: 10px;
+}
+
+.access-info2 .text2 span:first-child{
+    font-weight: bold;
+    font-size: 15px;
+    color: #000;
+}
+
+.access-info2 .text2{
+  display: flex;
+  text-align: left;
+  flex-direction: column;    
 }
