@@ -4,7 +4,7 @@ import "../../styles/roomguide.css";
 ---
 
 <Layout title="教室案内｜学祭ポータル">
-  <div class="roomguide-container">
+  <div class="roomguide-header">
     <div class="roomguide-upside-col page-header">
       <div class="page-title">
         <img
@@ -23,65 +23,39 @@ import "../../styles/roomguide.css";
       <hr />
     </div>
     <div class="roomguide-middle-col">
-      <h2>出発地</h2>
-      <button class="roomguide-osenai-btn" disabled>
-        キャンパス入口（正門）
-      </button>
-      <h2>到着地</h2>
-      <select class="roomguide-btn" id="univ_select">
-        <option value="none">大学を選択</option>
-        <option value="chudai">中央大学</option>
-      </select>
-      <br />
-      <select class="roomguide-btn" id="campus_select">
-        <option value="none">キャンパスを選択</option>
-        <option value="chudai">市ヶ谷田町キャンパス</option>
-      </select>
-      <br />
-      <select class="roomguide-btn" id="buildings_select">
-        <option value="none">建物を選択</option>
-        <option value="chudai">ミドルブリッジ</option>
-      </select>
-      <br />
-      <select class="roomguide-btn" id="fl_select">
-        <option value="none">階数を選択</option>
-        <option value="chudai">1階</option>
-        <option value="chudai">3階</option>
-        <option value="chudai">4階</option>
-        <option value="chudai">5階</option>
-        <option value="chudai">6階</option>
-        <option value="chudai">7階</option>
-        <option value="chudai">8階</option>
-        <option value="chudai">9階</option>
-        <option value="chudai">10階</option>
-        <option value="none">2階、および11階は立入できません</option>
-      </select>
-      <br />
-      <select class="roomguide-btn" id="classrooms_select">
-        <option value="none">教室を選択</option>
-      </select>
-      <br />
-      <button class="roomguide-search-btn"> 案内を見る </button>
+      <h2 class="section-title">場所を検索</h2>
     </div>
-    <div class="roomguide-downside-col"></div>
+    <select class="roomguide-btn" id="univ_select">
+      <option value="none">大学を選択</option>
+      <option value="chudai">中央大学</option>
+    </select>
+    <select class="roomguide-btn" id="campus_select">
+      <option value="none">キャンパスを選択</option>
+      <option value="chudai">市ヶ谷田町キャンパス</option>
+    </select>
+    <select class="roomguide-btn" id="buildings_select">
+      <option value="none">建物を選択</option>
+      <option value="chudai">ミドルブリッジ</option>
+    </select>
+    <select class="roomguide-btn" id="fl_select">
+      <option value="none">階数を選択</option>
+      <option value="chudai">1階</option>
+      <option value="chudai">3階</option>
+      <option value="chudai">4階</option>
+      <option value="chudai">5階</option>
+      <option value="chudai">6階</option>
+      <option value="chudai">7階</option>
+      <option value="chudai">8階</option>
+      <option value="chudai">9階</option>
+      <option value="chudai">10階</option>
+      <option value="none">2階、および11階は立入できません</option>
+    </select>
+    <button class="roomguide-search-btn"> フロアマップを見る </button>
   </div>
+  <div class="roomguide-downside-col"></div>
 </Layout>
 
 <script>
-  /*教室選択のoptionを整理しよう！ */
-
-  const fl_classrooms = {
-    "1階": ["教室を選択", "エントランスホール", "コミュニケーションホール"],
-    "3階": ["教室を選択", "301"],
-    "4階": ["教室を選択", "401"],
-    "5階": ["教室を選択", "501", "502"],
-    "6階": ["教室を選択", "事務室"],
-    "7階": ["教室を選択", "701", "702"],
-    "8階": ["教室を選択", "801", "802"],
-    "9階": ["教室を選択", "901", "902"],
-    "10階": ["教室を選択", "1001", "1002", "1003", "1004", "1005"],
-  };
-
   /*上から順に選ばないと次には進めないよ～ん */
 
   const selects = document.querySelectorAll(".roomguide-btn");
@@ -106,35 +80,6 @@ import "../../styles/roomguide.css";
     });
   });
 
-  /*教室選択の際の選択肢の処理だよ */
-
-  const flSelect = document.getElementById("fl_select");
-  const classroomsSelect = document.getElementById("classrooms_select");
-
-  if (flSelect && classroomsSelect) {
-    flSelect.addEventListener("change", () => {
-      const selectedFloor = flSelect.options[flSelect.selectedIndex].text;
-
-      classroomsSelect.innerHTML = "";
-
-      const classrooms = fl_classrooms[selectedFloor];
-
-      if (classrooms) {
-        classrooms.forEach((room) => {
-          const option = document.createElement("option");
-          option.value = room;
-          option.textContent = room;
-          classroomsSelect.appendChild(option);
-        });
-      } else {
-        const option = document.createElement("option");
-        option.value = "none";
-        option.textContent = "教室を選択";
-        classroomsSelect.appendChild(option);
-      }
-    });
-  }
-
   /*選択肢を変更した場合に実行する後続選択の初期化処理だよ */
 
   selects.forEach((select, index) => {
@@ -147,4 +92,33 @@ import "../../styles/roomguide.css";
       }
     });
   });
+
+  /*検索ボタンはデフォで押せない見た目の方が良さそうってイティエルが言ってた */
+
+  const flSelect = document.getElementById("fl_select");
+  const searchBtn = document.querySelector(".roomguide-search-btn");
+
+  flSelect.addEventListener("change", updateSearchBtn);
+  updateSearchBtn();
+
+  searchBtn.addEventListener("click", () => {
+    const floorNum = flSelect.value.replace("itl-", "");
+  });
+
+  function updateSearchBtn() {
+    const ready = [...selects].every((s) => s.value !== "none");
+    searchBtn.disabled = !ready;
+    searchBtn.classList.toggle("activated", ready);
+  }
+
+  selects.forEach((select) =>
+    select.addEventListener("change", updateSearchBtn),
+  );
+  updateSearchBtn();
+
+  searchBtn.addEventListener("click", () => {
+    const floorNum = flSelect.value.replace("itl-", "");
+  });
+
+  /*flselectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムをこの下に置くつもり */
 </script>
