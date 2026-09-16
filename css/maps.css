@@ -22,6 +22,7 @@ hr {
     align-items: center;
     gap: 11px;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .access-info1 .text1 span:first-child{
@@ -42,6 +43,7 @@ hr {
     padding: 3px 11px;
     border: thin solid var(--color-border-main);
     border-radius: 10px;
+    width: 100%;
 }
 
 .access-info2 .text2 span:first-child{
@@ -54,4 +56,12 @@ hr {
   display: flex;
   text-align: left;
   flex-direction: column;    
+}
+
+@media (min-width: 940px) {
+    body {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
