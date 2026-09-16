@@ -7,54 +7,20 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/maps.css">
 </head>
-<body>
-   <div class="global-header">
-    <div class="header-logo">
-        <a href="/">
-            <img src="/img/nav/logo.png" alt="サイトロゴ" class="logo-img">
-        </a>
-    </div>
-    <div class="header-search">
-        <a href="#">
-            <img src="/img/nav/search.svg" alt="検索" class="search-img">
-        </a>
-    </div>
-   </div>
-   
-   <div class="menu">
-        <nav class="global-nav">
-            <a href="/" class="nav_item">
-                <span class="nav_icon" style="-webkit-mask-image: url('/img/nav/home.svg'); mask-image: url('/img/nav/home.svg');"></span>
-                <span class="nav_label">ホーム</span>
-            </a>
-            <a href="/maps/" class="nav_item">
-                <span class="nav_icon"
-                    style="-webkit-mask-image: url('/img/nav/map.svg'); mask-image: url('/img/nav/map.svg');"></span>
-                <span class="nav_label">マップ</span>
-            </a>
-            <a href="/roomguide/" class="nav_item">
-                <span class="nav_icon"
-                    style="-webkit-mask-image: url('/img/nav/univ.svg'); mask-image: url('/img/nav/univ.svg');"></span>
-                <span class="nav_label">教室案内</span>
-            </a>
-            <a href="#" class="nav_item">
-                <span class="nav_icon"
-                    style="-webkit-mask-image: url('/img/nav/others.svg'); mask-image: url('/img/nav/others.svg');"></span>
-                <span class="nav_label">その他</span>
-            </a>
-        </nav>
-    </div>
-    <div class="empty_space"></div>
+<body>   
+   <header id="header-container"></header>
+    <nav class="navbar"></nav>
 
-   <div class="title-container">
-     <img src="/img/maps/maps.svg" class="map-icon">
-     <h1>キャンパスマップ</h1> 
-   </div>
-   
-   <div class="info">
-    <button>このページの使い方</button>
-   </div>
-   
+    <div class="page-header">
+        <div class="page-title">
+            <img src="/img/maps/maps.svg" alt="地図アイコン" class="page-icon" />
+            <h1>キャンパスマップ</h1>
+        </div>
+        <button class="main-btn tutorial-btn" id="tutorial-btn-event-introduction">
+            このページの使い方
+        </button>
+    </div>
+
    <hr>
    
    <div class="second-title">
@@ -87,11 +53,9 @@
     <img src="/img/maps/townlens.svg" alt="Ichigaya Town Lens">
    </button>
 
-   <p class="footer_text">
-        Ⓒ2026 Unknown
-        <br>
-        Under Construction
-    </p>
+   <footer></footer>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
 
 </body>
 </html>
