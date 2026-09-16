@@ -37,37 +37,6 @@ selects.forEach((select, index) => {
   });
 });
 
-/*教室選択の際の選択肢の処理だよ */
-
-/*
-const flSelect = document.getElementById('fl_select');
-const classroomsSelect = document.getElementById('classrooms_select');
-
-if (flSelect && classroomsSelect) {
-  flSelect.addEventListener('change', () => {
-    const selectedFloor = flSelect.options[flSelect.selectedIndex].text;
-
-    classroomsSelect.innerHTML = '';
-
-    const classrooms = fl_classrooms[selectedFloor];
-
-    if (classrooms) {
-      classrooms.forEach((room) => {
-        const option = document.createElement('option');
-        option.value = room;
-        option.textContent = room;
-        classroomsSelect.appendChild(option);
-      });
-    } else {
-      const option = document.createElement('option');
-      option.value = 'none';
-      option.textContent = '教室を選択';
-      classroomsSelect.appendChild(option);
-    }
-  });
-}
-*/
-
 /*選択肢を変更した場合に実行する後続選択の初期化処理だよ */
 
 selects.forEach((select, index) => {
