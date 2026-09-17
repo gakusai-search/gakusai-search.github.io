@@ -14,6 +14,12 @@ const fl_classrooms = {
 };
 */
 
+/*フロアマップのoptionも整理しよう！ */
+const floor_map = {
+  "iTL-2F": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-2.png",
+
+}
+
 /*上から順に選ばないと次には進めないよ～ん */
 
 const selects = document.querySelectorAll('.roomguide-btn');
@@ -75,4 +81,7 @@ searchBtn.addEventListener('click', () => {
   const floorNum = flSelect.value.replace('itl-', '');
 });
 
-/*flselectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムをこの下に置くつもり */
+/*fl_selectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムをこの下に置くつもり */
+
+const access_floor_map = document.getElementById('access-code');
+const map_search = document.getElementById('fl_select');
