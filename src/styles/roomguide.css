@@ -42,6 +42,35 @@ hr {
     cursor: pointer;
 }
 
+.map-card {
+    background-color: var(--color-btn-main);
+    border: 1.5px solid var(--color-border-main);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.map-icon {
+    size: 48px;
+}
+
+.floor-txt {
+    color: var(--color-text-main);
+}
+
+.fl-main {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.fl-sub {
+    font-size: 15px;
+}
+
 @media (min-width: 940px) {
     body {
         max-width: 900px;

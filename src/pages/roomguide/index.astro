@@ -4,8 +4,8 @@ import "../../styles/roomguide.css";
 ---
 
 <Layout title="教室案内｜学祭ポータル">
-  <div class="roomguide-header">
-    <div class="roomguide-upside-col page-header">
+  <div class="roomgjuide-main">
+    <div class="page-header">
       <div class="page-title">
         <img
           class="page-icon"
@@ -24,38 +24,123 @@ import "../../styles/roomguide.css";
     </div>
     <div class="roomguide-middle-col">
       <h2 class="section-title">場所を検索</h2>
+      <select class="roomguide-btn" id="univ_select">
+        <option value="none">大学を選択</option>
+        <option value="chudai">中央大学</option>
+      </select>
+      <select class="roomguide-btn" id="campus_select">
+        <option value="none">キャンパスを選択</option>
+        <option value="chudai">市ヶ谷田町キャンパス</option>
+      </select>
+      <select class="roomguide-btn" id="buildings_select">
+        <option value="none">建物を選択</option>
+        <option value="chudai">ミドルブリッジ</option>
+      </select>
+      <select class="roomguide-btn" id="fl_select">
+        <option value="none">階数を選択</option>
+        <option value="itl-1">1階</option>
+        <option value="itl-3">3階</option>
+        <option value="itl-4">4階</option>
+        <option value="itl-5">5階</option>
+        <option value="itl-6">6階</option>
+        <option value="itl-7">7階</option>
+        <option value="itl-8">8階</option>
+        <option value="itl-9">9階</option>
+        <option value="itl-10">10階</option>
+        <option value="itl-2">2階（テスト用）</option>
+        <option value="none">2階、および11階は立入できません</option>
+      </select>
+      <button class="roomguide-search-btn" id="access-code">
+        フロアマップを見る
+      </button>
     </div>
-    <select class="roomguide-btn" id="univ_select">
-      <option value="none">大学を選択</option>
-      <option value="chudai">中央大学</option>
-    </select>
-    <select class="roomguide-btn" id="campus_select">
-      <option value="none">キャンパスを選択</option>
-      <option value="chudai">市ヶ谷田町キャンパス</option>
-    </select>
-    <select class="roomguide-btn" id="buildings_select">
-      <option value="none">建物を選択</option>
-      <option value="chudai">ミドルブリッジ</option>
-    </select>
-    <select class="roomguide-btn" id="fl_select">
-      <option value="none">階数を選択</option>
-      <option value="chudai">1階</option>
-      <option value="chudai">3階</option>
-      <option value="chudai">4階</option>
-      <option value="chudai">5階</option>
-      <option value="chudai">6階</option>
-      <option value="chudai">7階</option>
-      <option value="chudai">8階</option>
-      <option value="chudai">9階</option>
-      <option value="chudai">10階</option>
-      <option value="none">2階、および11階は立入できません</option>
-    </select>
-    <button class="roomguide-search-btn"> フロアマップを見る </button>
+    <div class="roomguide-map" id="roomguide-map" style="display:none;">
+      <div class="map-card">
+        <div class="map-icon">
+          <img src="/img/roomguide/icons/orange_icon.svg" />
+        </div>
+        <div class="floor-txt">
+          <div class="fl-main">
+            <span id="floor-main"></span>
+          </div>
+          <div class="fl-sub">
+            <span id="floor-sub"></span>
+          </div>
+        </div>
+        <img id="display-image" src=" " alt="フロアマップ" />
+      </div>
+    </div>
   </div>
-  <div class="roomguide-downside-col"></div>
 </Layout>
 
 <script>
+  /*教室選択のoptionを整理しよう！ */
+
+  /*
+const fl_classrooms = {
+  '1階': ['教室を選択', 'エントランスホール', 'コミュニケーションホール'],
+  '3階': ['教室を選択', '301'],
+  '4階': ['教室を選択', '401'],
+  '5階': ['教室を選択', '501', '502'],
+  '6階': ['教室を選択', '事務室'],
+  '7階': ['教室を選択', '701', '702'],
+  '8階': ['教室を選択', '801', '802'],
+  '9階': ['教室を選択', '901', '902'],
+  '10階': ['教室を選択', '1001', '1002', '1003', '1004', '1005'],
+};
+*/
+
+  /*フロアマップのoptionも整理しよう！※画像ファイルのタグは/img/roomguide/大学_キャンパス_建物_階数.png */
+
+  const floor_map = {
+    "itl-2": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-2.png",
+  };
+
+  /*フロアマップにつける補足説明のoptionも整理しよう！*/
+
+  const floor_labels = {
+    "itl-1": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 1階",
+    },
+    "itl-3": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 3階",
+    },
+    "itl-4": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 4階",
+    },
+    "itl-5": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 5階",
+    },
+    "itl-6": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 6階",
+    },
+    "itl-7": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 7階",
+    },
+    "itl-8": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 8階",
+    },
+    "itl-9": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 9階",
+    },
+    "itl-10": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 10階",
+    },
+    "itl-2": {
+      main: "中央大学 市ヶ谷田町キャンパス",
+      sub: "ミドルブリッジ 2階（テスト用）",
+    },
+  };
+
   /*上から順に選ばないと次には進めないよ～ん */
 
   const selects = document.querySelectorAll(".roomguide-btn");
@@ -120,5 +205,35 @@ import "../../styles/roomguide.css";
     const floorNum = flSelect.value.replace("itl-", "");
   });
 
-  /*flselectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムをこの下に置くつもり */
+  /*fl_selectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムをこの下に置くつもり */
+
+  const access_floor_map = document.getElementById("access-code");
+  const map_search = document.getElementById("fl_select");
+  const roomguide_map = document.getElementById("roomguide-map");
+  const img = document.getElementById("display-image");
+  const floor_main = document.getElementById("floor-main");
+  const floor_sub = document.getElementById("floor-sub");
+
+  access_floor_map.addEventListener("click", () => {
+    const selectedValue = map_search.value;
+    const imageSrc = floor_map[selectedValue];
+    const labelinfo = floor_labels[selectedValue];
+
+    if (imageSrc) {
+      img.src = imageSrc;
+      roomguide_map.style.display = "block";
+      if (labelinfo) {
+        floor_main.textContent = labelinfo.main;
+        floor_sub.textContent = labelinfo.sub;
+      }
+    } else {
+      img.src = " ";
+      roomguide_map.style.display = "none";
+      alert("この場所のフロアマップは現在準備中です");
+      console.warn(
+        "floor map is not prepared now. comming soon:",
+        selectedValue,
+      );
+    }
+  });
 </script>
