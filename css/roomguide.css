@@ -54,16 +54,21 @@ hr {
     margin-bottom: 30px;
 }
 
+.map-icon {
+    size: 48px;
+}
+
 .floor-txt {
     color: var(--color-text-main);
 }
 
 .fl-main {
-    font-size: 24px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .fl-sub {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 @media (min-width: 940px) {
