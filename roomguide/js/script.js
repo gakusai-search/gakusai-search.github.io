@@ -15,10 +15,26 @@ const fl_classrooms = {
 */
 
 /*フロアマップのoptionも整理しよう！※画像ファイルのタグは/img/roomguide/大学_キャンパス_建物_階数.png */
+
 const floor_map = {
   "itl-2": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-2.png",
 
-}
+};
+
+/*フロアマップにつける補足説明のoptionも整理しよう！*/
+
+const floor_labels = {
+  "itl-1": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 1階"},
+  "itl-3": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 3階"},
+  "itl-4": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 4階"},
+  "itl-5": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 5階"},
+  "itl-6": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 6階"},
+  "itl-7": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 7階"},
+  "itl-8": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 8階"},
+  "itl-9": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 9階"},
+  "itl-10": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 10階"},
+  "itl-2": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 2階（テスト用）"},
+};
 
 /*上から順に選ばないと次には進めないよ～ん */
 
@@ -85,18 +101,26 @@ searchBtn.addEventListener('click', () => {
 
 const access_floor_map = document.getElementById('access-code');
 const map_search = document.getElementById('fl_select');
+const roomguide_map = document.getElementById('roomguide-map');
+const img = document.getElementById('display-image')
+const floor_main = document.getElementById('floor-main')
+const floor_sub = document.getElementById('floor-sub')
 
 access_floor_map.addEventListener('click', () => {
   const selectedValue = map_search.value;
   const imageSrc = floor_map[selectedValue];
-  const img = document.getElementById('display-image');
+  const labelinfo = floor_labels[selectedValue];
 
   if(imageSrc) {
     img.src = imageSrc;
-    img.style.display = 'block';
+    roomguide_map.style.display = 'block';
+    if (labelinfo) {
+      floor_main.textContent = labelinfo.main;
+      floor_sub.textContent = labelinfo.sub;
+    }
   } else {
     img.src = ' ';
-    img.style.display = 'none';
+    roomguide_map.style.display = 'none';
     alert("この場所のフロアマップは現在準備中です")
     console.warn('floor map is not prepared now. comming soon:', selectedValue);
   }
