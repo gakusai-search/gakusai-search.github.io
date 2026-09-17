@@ -14,9 +14,9 @@ const fl_classrooms = {
 };
 */
 
-/*フロアマップのoptionも整理しよう！ */
+/*フロアマップのoptionも整理しよう！※画像ファイルのタグは/img/roomguide/大学_キャンパス_建物_階数.png */
 const floor_map = {
-  "iTL-2F": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-2.png",
+  "itl-2": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-2.png",
 
 }
 
@@ -85,3 +85,19 @@ searchBtn.addEventListener('click', () => {
 
 const access_floor_map = document.getElementById('access-code');
 const map_search = document.getElementById('fl_select');
+
+access_floor_map.addEventListener('click', () => {
+  const selectedValue = map_search.value;
+  const imageSrc = floor_map[selectedValue];
+  const img = document.getElementById('display-image');
+
+  if(imageSrc) {
+    img.src = imageSrc;
+    img.style.display = 'block';
+  } else {
+    img.src = ' ';
+    img.style.display = 'none';
+    alert("この場所のフロアマップは現在準備中です")
+    console.warn('floor map is not prepared now. comming soon:', selectedValue);
+  }
+});
