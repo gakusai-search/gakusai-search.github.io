@@ -1,7 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import projects from "../../data/events.json";
-import { getSearchFilterCategories, getTagColorClass } from "../../utils/tags";
+import {
+  getSearchFilterCategories,
+  getTagColorClass,
+  getFieldTagColorClass,
+} from "../../utils/tags";
 
 const categories = getSearchFilterCategories(projects);
 ---
@@ -111,10 +115,11 @@ const categories = getSearchFilterCategories(projects);
           ...project.tags.field,
           ...project.tags.features,
         ];
+        const cardColorClass = getFieldTagColorClass(project.tags?.field);
         return (
           <a
             href={`/events/${project.id}`}
-            class="event-card"
+            class={`event-card ${cardColorClass}`.trim()}
             data-id={project.id}
           >
             <img src={project.image} alt={project.name} loading="lazy" />
@@ -408,7 +413,7 @@ const categories = getSearchFilterCategories(projects);
   <script>
     import MiniSearch from "minisearch";
     import projects from "../../data/events.json";
-    import { getTagColorClass } from "../../utils/tags";
+    import { getTagColorClass, getFieldTagColorClass } from "../../utils/tags";
 
     type ProjectType = (typeof projects)[number];
 
@@ -506,6 +511,11 @@ const categories = getSearchFilterCategories(projects);
         const link = clone.querySelector("a") as HTMLAnchorElement;
         link.href = `/events/${p.id}`;
         link.setAttribute("data-id", p.id);
+
+        const cardColorClass = getFieldTagColorClass(p.tags?.field);
+        if (cardColorClass) {
+          link.classList.add(cardColorClass);
+        }
 
         const img = clone.querySelector("img") as HTMLImageElement;
         img.src = p.image;

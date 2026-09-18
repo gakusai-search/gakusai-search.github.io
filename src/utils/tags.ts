@@ -84,6 +84,11 @@ export function getTagColorClass(tag: string): string {
   return `tag-${cat.colorKey}`;
 }
 
+export function getFieldTagColorClass(fieldTags?: string[]): string {
+  if (!fieldTags || fieldTags.length === 0) return "";
+  return getTagColorClass(fieldTags[0]);
+}
+
 export interface SubCategoryGroup {
   key: string;
   title: string;
