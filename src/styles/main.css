@@ -462,7 +462,7 @@ p.footer_text {
 .event-card {
     display: block;
     background-color: var(--color-btn-main);
-    border: 8px solid var(--color-border-main);
+    border: 8px solid var(--color-main);
     border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
@@ -484,13 +484,6 @@ p.footer_text {
     margin: 0 0 12px 0;
     font-size: 18px;
     text-align: left;
-}
-
-.campus-text {
-    font-size: 14px;
-    color: color-mix(in srgb, var(--color-text-main) 60%, transparent);
-    text-align: left;
-    margin-bottom: 12px;
 }
 
 .event-card-tags {
@@ -611,9 +604,7 @@ p.footer_text {
 }
 
 .event-card.tag-performance {
-    border-color: transparent;
-    background: linear-gradient(var(--color-btn-main), var(--color-btn-main)) padding-box,
-                var(--tag-gradient-performance) border-box;
+    border-color: #ff4da8;
 }
 
 .filter-btn.tag-performance.active,
@@ -633,9 +624,7 @@ p.footer_text {
 }
 
 .event-card.tag-creative {
-    border-color: transparent;
-    background: linear-gradient(var(--color-btn-main), var(--color-btn-main)) padding-box,
-                var(--tag-gradient-creative) border-box;
+    border-color: #7ce000;
 }
 
 .filter-btn.tag-creative.active,
@@ -655,9 +644,7 @@ p.footer_text {
 }
 
 .event-card.tag-tech {
-    border-color: transparent;
-    background: linear-gradient(var(--color-btn-main), var(--color-btn-main)) padding-box,
-                var(--tag-gradient-tech) border-box;
+    border-color: #00e5ff;
 }
 
 .filter-btn.tag-tech.active,
@@ -677,9 +664,7 @@ p.footer_text {
 }
 
 .event-card.tag-society {
-    border-color: transparent;
-    background: linear-gradient(var(--color-btn-main), var(--color-btn-main)) padding-box,
-                var(--tag-gradient-society) border-box;
+    border-color: #ffe838;
 }
 
 .filter-btn.tag-society.active,

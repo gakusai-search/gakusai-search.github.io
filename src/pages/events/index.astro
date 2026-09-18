@@ -125,7 +125,6 @@ const categories = getSearchFilterCategories(projects);
             <img src={project.image} alt={project.name} loading="lazy" />
             <div class="event-card-content">
               <h3>{project.name}</h3>
-              <p class="campus-text">{project.place.campus}</p>
               <div class="event-card-tags">
                 {allTags.map((tag) => (
                   <span
@@ -157,7 +156,6 @@ const categories = getSearchFilterCategories(projects);
       <img src="" alt="" loading="lazy" />
       <div class="event-card-content">
         <h3></h3>
-        <p class="campus-text"></p>
         <div class="event-card-tags"></div>
       </div>
     </a>
@@ -523,9 +521,6 @@ const categories = getSearchFilterCategories(projects);
 
         const title = clone.querySelector("h3") as HTMLElement;
         title.textContent = p.name;
-
-        const campus = clone.querySelector(".campus-text") as HTMLElement;
-        campus.textContent = p.place?.campus || "";
 
         const tagsContainer = clone.querySelector(
           ".event-card-tags",
