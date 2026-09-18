@@ -36,6 +36,21 @@ const floor_labels = {
   "itl-2": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 2階（テスト用）"},
 };
 
+/*フロアマップにつけるアイコンのoptionも整理しよう！*/
+
+const campus_icon = {
+  "itl-1": "/img/roomguide/icons/orange_icon.svg",
+  "itl-3": "/img/roomguide/icons/orange_icon.svg",
+  "itl-4": "/img/roomguide/icons/orange_icon.svg",
+  "itl-5": "/img/roomguide/icons/orange_icon.svg",
+  "itl-6": "/img/roomguide/icons/orange_icon.svg",
+  "itl-7": "/img/roomguide/icons/orange_icon.svg",
+  "itl-8": "/img/roomguide/icons/orange_icon.svg",
+  "itl-9": "/img/roomguide/icons/orange_icon.svg",
+  "itl-10": "/img/roomguide/icons/orange_icon.svg",
+  "itl-2": "/img/roomguide/icons/orange_icon.svg",
+}
+
 /*上から順に選ばないと次には進めないよ～ん */
 
 const selects = document.querySelectorAll('.roomguide-btn');
@@ -97,17 +112,20 @@ searchBtn.addEventListener('click', () => {
   const floorNum = flSelect.value.replace('itl-', '');
 });
 
-/*fl_selectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムをこの下に置くつもり */
+/*fl_selectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムだったけど、テキスト等も引っ張れるように太らせたもの */
 
 const access_floor_map = document.getElementById('access-code');
 const map_search = document.getElementById('fl_select');
 const roomguide_map = document.getElementById('roomguide-map');
-const img = document.getElementById('display-image')
-const floor_main = document.getElementById('floor-main')
-const floor_sub = document.getElementById('floor-sub')
+const img = document.getElementById('display-image');
+const floor_main = document.getElementById('floor-main');
+const floor_sub = document.getElementById('floor-sub');
+const campus_icon_file = document.getElementById('campus-icon')
 
 access_floor_map.addEventListener('click', () => {
+
   const selectedValue = map_search.value;
+
   const imageSrc = floor_map[selectedValue];
   const labelinfo = floor_labels[selectedValue];
 
@@ -123,5 +141,13 @@ access_floor_map.addEventListener('click', () => {
     roomguide_map.style.display = 'none';
     alert("この場所のフロアマップは現在準備中です")
     console.warn('floor map is not prepared now. comming soon:', selectedValue);
+  }
+  
+  /*同一処理にしたらバグり散らかしたので、アイコンの処理だけ分けて記述します */
+
+  const iconSrc = campus_icon[selectedValue];
+
+  if(iconSrc) {
+    campus_icon_file.src = iconSrc;
   }
 });
