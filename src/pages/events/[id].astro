@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/events.css";
 import projects from "../../data/events.json";
+import { getTagColorClass } from "../../utils/tags";
 
 // generate a unique page for each item in events.json
 export async function getStaticPaths() {
@@ -53,7 +54,7 @@ const allProjectTags = [
           {
             allProjectTags.map((tag) => (
               <button
-                class="main-btn"
+                class={`main-btn ${getTagColorClass(tag)}`}
                 onclick={`location.href='/events/?tags=${encodeURIComponent(tag)}'`}
               >
                 #{tag}

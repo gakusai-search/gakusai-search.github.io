@@ -1,29 +1,9 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import projects from "../../data/events.json";
+import { getSearchFilterCategories, getTagColorClass } from "../../utils/tags";
 
-const categories = [
-  {
-    key: "date",
-    title: "日程",
-    tags: [...new Set(projects.flatMap((p) => p.tags.date))],
-  },
-  {
-    key: "format",
-    title: "形式",
-    tags: [...new Set(projects.flatMap((p) => p.tags.format))],
-  },
-  {
-    key: "field",
-    title: "分野",
-    tags: [...new Set(projects.flatMap((p) => p.tags.field))],
-  },
-  {
-    key: "features",
-    title: "気になる条件",
-    tags: [...new Set(projects.flatMap((p) => p.tags.features))],
-  },
-];
+const categories = getSearchFilterCategories(projects);
 ---
 
 <Layout title="検索結果｜学祭ポータル">
@@ -76,25 +56,47 @@ const categories = [
 
     <div class="tag-categories-wrapper">
       {
-        categories.map(
-          (category) =>
-            category.tags.length > 0 && (
-              <div class="tag-category-section">
-                <h3 class="tag-category-title">{category.title}</h3>
-                <div class="tag-list">
-                  {category.tags.map((tag) => (
-                    <button
-                      class="main-btn filter-btn"
-                      data-category={category.key}
-                      data-tag={tag}
+        categories.map((category) => (
+          <div class="tag-category-section">
+            <h3 class="tag-category-title">{category.title}</h3>
+            {category.subCategories ? (
+              <div class="tag-subcategories-wrapper">
+                {category.subCategories.map((sub) => (
+                  <div class="tag-subcategory-section">
+                    <h4
+                      class={`tag-subcategory-title ${sub.colorKey ? `cat-${sub.colorKey}` : ""}`}
                     >
-                      #{tag}
-                    </button>
-                  ))}
-                </div>
+                      {sub.title}
+                    </h4>
+                    <div class="tag-list">
+                      {sub.tags.map((tag) => (
+                        <button
+                          class={`main-btn filter-btn ${sub.colorKey ? `tag-${sub.colorKey}` : ""}`}
+                          data-category={category.categoryType}
+                          data-tag={tag}
+                        >
+                          #{tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ),
-        )
+            ) : (
+              <div class="tag-list">
+                {category.tags?.map((tag) => (
+                  <button
+                    class="main-btn filter-btn"
+                    data-category={category.categoryType}
+                    data-tag={tag}
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ))
       }
     </div>
   </div>
@@ -121,7 +123,12 @@ const categories = [
               <p class="campus-text">{project.place.campus}</p>
               <div class="event-card-tags">
                 {allTags.map((tag) => (
-                  <span class="tag-span">#{tag}</span>
+                  <span
+                    class={`tag-span ${getTagColorClass(tag)}`}
+                    data-tag={tag}
+                  >
+                    #{tag}
+                  </span>
                 ))}
               </div>
             </div>
@@ -339,6 +346,56 @@ const categories = [
       text-align: left;
     }
 
+    .tag-subcategories-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-left: 2px;
+    }
+
+    .tag-subcategory-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tag-subcategory-title {
+      margin: 0;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--color-text-main);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.85;
+    }
+
+    .tag-subcategory-title::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .tag-subcategory-title.cat-performance::before {
+      background: var(--tag-gradient-performance);
+    }
+
+    .tag-subcategory-title.cat-creative::before {
+      background: var(--tag-gradient-creative);
+    }
+
+    .tag-subcategory-title.cat-tech::before {
+      background: var(--tag-gradient-tech);
+    }
+
+    .tag-subcategory-title.cat-society::before {
+      background: var(--tag-gradient-society);
+    }
+
     .tag-list {
       display: flex;
       flex-wrap: wrap;
@@ -351,6 +408,7 @@ const categories = [
   <script>
     import MiniSearch from "minisearch";
     import projects from "../../data/events.json";
+    import { getTagColorClass } from "../../utils/tags";
 
     type ProjectType = (typeof projects)[number];
 
@@ -470,8 +528,10 @@ const categories = [
         ];
         allTags.forEach((tag) => {
           const span = document.createElement("span");
-          span.className = "tag-span";
+          const colorClass = getTagColorClass(tag);
+          span.className = colorClass ? `tag-span ${colorClass}` : "tag-span";
           span.textContent = `#${tag}`;
+          span.setAttribute("data-tag", tag);
           tagsContainer.appendChild(span);
         });
 
@@ -606,7 +666,10 @@ const categories = [
             // 2. tag badges
             selectedTagList.forEach(({ tag, btn }) => {
               const badge = document.createElement("span");
-              badge.className = "active-query-tag";
+              const colorClass = getTagColorClass(tag);
+              badge.className = colorClass
+                ? `active-query-tag ${colorClass}`
+                : "active-query-tag";
 
               const textSpan = document.createElement("span");
               textSpan.className = "active-query-tag-text";
@@ -741,6 +804,33 @@ const categories = [
           syncUrlWithState();
           updateFiltering();
         });
+      });
+
+      // handle click on tags within event cards
+      gridEl.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        const tagSpan = target.closest(".tag-span");
+        if (tagSpan) {
+          e.preventDefault();
+          e.stopPropagation();
+          const tag =
+            tagSpan.getAttribute("data-tag") ||
+            tagSpan.textContent?.replace(/^#/, "").trim();
+          if (tag) {
+            let matchedBtn: HTMLElement | null = null;
+            tagBtns?.forEach((btn) => {
+              if (btn.getAttribute("data-tag") === tag) {
+                matchedBtn = btn as HTMLElement;
+              }
+            });
+
+            if (matchedBtn) {
+              (matchedBtn as HTMLElement).classList.add("active");
+              syncUrlWithState();
+              updateFiltering();
+            }
+          }
+        }
       });
 
       // handle back/forward and custom modal search events
