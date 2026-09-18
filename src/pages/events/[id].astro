@@ -37,7 +37,7 @@ const allProjectTags = [
           src="/img/icons/campus_icon_test.svg"
           alt="アイコン"
         />
-        <h1>企画紹介</h1>
+        <h1>{project.name}</h1>
       </div>
       <button class="main-btn" id="tutorial-btn-event-introduction">
         このページの使い方
@@ -95,3 +95,15 @@ const allProjectTags = [
     </div>
   </div>
 </Layout>
+
+<style>
+  @media screen and (max-width: 767px) {
+    .title h1 {
+      font-size: 1.35rem;
+    }
+
+    img.campus-icon {
+      margin-bottom: 8px;
+    }
+  }
+</style>
