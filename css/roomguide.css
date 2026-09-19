@@ -20,6 +20,16 @@ hr {
     text-align: left;
 }
 
+.roomguide-btn:disabled {
+    opacity: 0.7;
+    -webkit-opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.roomguide-btn option:disabled {
+    opacity: 0.7;
+}
+
 .roomguide-search-btn {
     position: relative;
     font-size: 18px;
@@ -68,8 +78,9 @@ hr {
     gap: 12px;
 }
 
-.map-icon {
-    size: 48px;
+#campus-icon {
+    width: 24px;
+    height: auto;
 }
 
 .floor-txt {
@@ -77,12 +88,12 @@ hr {
 }
 
 .fl-main {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
 }
 
 .fl-sub {
-    font-size: 15px;
+    font-size: 12px;
     margin-bottom: 6px;
 }
 

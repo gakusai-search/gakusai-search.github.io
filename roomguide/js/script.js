@@ -17,23 +17,29 @@ const fl_classrooms = {
 /*フロアマップのoptionも整理しよう！※画像ファイルのタグは/img/roomguide/大学_キャンパス_建物_階数.png */
 
 const floor_map = {
-  "itl-2": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-2.png",
-
+  "itl-1": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-1.png",
+  "itl-3": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-3.png",
+  "itl-4": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-4.png",
+  "itl-5": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-5.png",
+  "itl-6": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-6.png",
+  "itl-7": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-7.png",
+  "itl-8": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-8.png",
+  "itl-9": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-9.png",
+  "itl-10": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-10.png",
 };
 
 /*フロアマップにつける補足説明のoptionも整理しよう！*/
 
 const floor_labels = {
-  "itl-1": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 1階"},
-  "itl-3": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 3階"},
-  "itl-4": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 4階"},
-  "itl-5": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 5階"},
-  "itl-6": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 6階"},
-  "itl-7": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 7階"},
-  "itl-8": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 8階"},
-  "itl-9": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 9階"},
-  "itl-10": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 10階"},
-  "itl-2": {main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 2階（テスト用）"},
+  "itl-1": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 1階" },
+  "itl-3": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 3階" },
+  "itl-4": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 4階" },
+  "itl-5": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 5階" },
+  "itl-6": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 6階" },
+  "itl-7": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 7階" },
+  "itl-8": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 8階" },
+  "itl-9": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 9階" },
+  "itl-10": { main: "中央大学 市ヶ谷田町キャンパス", sub: "ミドルブリッジ 10階" },
 };
 
 /*フロアマップにつけるアイコンのoptionも整理しよう！*/
@@ -48,7 +54,6 @@ const campus_icon = {
   "itl-8": "/img/roomguide/icons/orange_icon.svg",
   "itl-9": "/img/roomguide/icons/orange_icon.svg",
   "itl-10": "/img/roomguide/icons/orange_icon.svg",
-  "itl-2": "/img/roomguide/icons/orange_icon.svg",
 }
 
 /*上から順に選ばないと次には進めないよ～ん */
@@ -129,7 +134,7 @@ access_floor_map.addEventListener('click', () => {
   const imageSrc = floor_map[selectedValue];
   const labelinfo = floor_labels[selectedValue];
 
-  if(imageSrc) {
+  if (imageSrc) {
     img.src = imageSrc;
     roomguide_map.style.display = 'block';
     if (labelinfo) {
@@ -142,12 +147,12 @@ access_floor_map.addEventListener('click', () => {
     alert("この場所のフロアマップは現在準備中です")
     console.warn('floor map is not prepared now. comming soon:', selectedValue);
   }
-  
+
   /*同一処理にしたらバグり散らかしたので、アイコンの処理だけ分けて記述します */
 
   const iconSrc = campus_icon[selectedValue];
 
-  if(iconSrc) {
+  if (iconSrc) {
     campus_icon_file.src = iconSrc;
   }
 });

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/roomguide.css">
 </head>
+
 <body>
     <header id="header-container"></header>
     <nav class="navbar"></nav>
@@ -24,32 +26,31 @@
         </div>
         <div class="roomguide-middle-col">
             <h2 class="section-title">場所を検索</h2>
-                <select class="roomguide-btn" id="univ_select">
-                    <option value="none">大学を選択</option>
-                    <option value="chudai">中央大学</option>
-                </select>
-                <select class="roomguide-btn" id="campus_select">
-                    <option value="none">キャンパスを選択</option>
-                    <option value="chudai">市ヶ谷田町キャンパス</option>
-                </select>
-                <select class="roomguide-btn" id="buildings_select">
-                    <option value="none">建物を選択</option>
-                    <option value="chudai">ミドルブリッジ</option>
-                </select>
-                <select class="roomguide-btn" id="fl_select">
-                    <option value="none">階数を選択</option>
-                    <option value="itl-1">1階</option>
-                    <option value="itl-3">3階</option>
-                    <option value="itl-4">4階</option>
-                    <option value="itl-5">5階</option>
-                    <option value="itl-6">6階</option>
-                    <option value="itl-7">7階</option>
-                    <option value="itl-8">8階</option>
-                    <option value="itl-9">9階</option>
-                    <option value="itl-10">10階</option>
-                    <option value="itl-2">2階（テスト用）</option>
-                    <option value="none">2階、および11階は立入できません</option>
-                </select>
+            <select class="roomguide-btn" id="univ_select">
+                <option value="none">大学を選択</option>
+                <option value="chudai">中央大学</option>
+            </select>
+            <select class="roomguide-btn" id="campus_select">
+                <option value="none">キャンパスを選択</option>
+                <option value="chudai">市ヶ谷田町キャンパス</option>
+            </select>
+            <select class="roomguide-btn" id="buildings_select">
+                <option value="none">建物を選択</option>
+                <option value="chudai">ミドルブリッジ</option>
+            </select>
+            <select class="roomguide-btn" id="fl_select">
+                <option value="none">階数を選択</option>
+                <option value="itl-1">1階</option>
+                <option value="itl-3">3階</option>
+                <option value="itl-4">4階</option>
+                <option value="itl-5">5階</option>
+                <option value="itl-6">6階</option>
+                <option value="itl-7">7階</option>
+                <option value="itl-8">8階</option>
+                <option value="itl-9">9階</option>
+                <option value="itl-10">10階</option>
+                <option value="none">2階、および11階は立入できません</option>
+            </select>
             <button class="roomguide-search-btn" id="access-code">
                 フロアマップを見る
             </button>
@@ -57,13 +58,17 @@
         <div class="roomguide-map" id="roomguide-map" style="display:none;">
             <div class="map-card">
                 <div class="txt-guide">
-                <div class="map-icon">
-                <img id="campus-icon" src =" "></div>
-                <div class="floor-txt">
-                    <div class="fl-main">
-                    <span id="floor-main"></span></div>
-                    <div class="fl-sub">
-                    <span id="floor-sub"></span></div></div>
+                    <div class="map-icon">
+                        <img id="campus-icon" src=" ">
+                    </div>
+                    <div class="floor-txt">
+                        <div class="fl-main">
+                            <span id="floor-main"></span>
+                        </div>
+                        <div class="fl-sub">
+                            <span id="floor-sub"></span>
+                        </div>
+                    </div>
                 </div>
                 <img id="display-image" src=" " alt="フロアマップ">
             </div>
@@ -76,4 +81,5 @@
     <script src="../roomguide/js/script.js"></script>
     <script type="text/javascript" src="../js/main.js"></script>
 </body>
+
 </html>
