@@ -1,7 +1,15 @@
 ---
-import projects from "../data/events.json";
+import { getEventsByYear, getCampusesByYear } from "../utils/events";
 import { getSearchFilterCategories } from "../utils/tags";
+import { CURRENT_YEAR } from "../config/site";
 
+export interface Props {
+  year: string;
+}
+
+const { year } = Astro.props;
+const projects = getEventsByYear(year);
+const campuses = getCampusesByYear(year);
 const categories = getSearchFilterCategories(projects);
 ---
 
@@ -9,6 +17,8 @@ const categories = getSearchFilterCategories(projects);
   id="search-modal-backdrop"
   class="search-modal-backdrop"
   aria-hidden="true"
+  data-year={year}
+  data-current-year={CURRENT_YEAR}
 >
   <div
     class="search-modal-container"
@@ -62,6 +72,16 @@ const categories = getSearchFilterCategories(projects);
     </div>
 
     <div class="modal-scrollable-tags">
+      <section class="modal-category">
+        <h2 class="modal-category-title">キャンパスで絞る</h2>
+        <div class="modal-tag-list">
+          <button type="button" class="main-btn modal-tag-btn" data-campus="all">すべて</button>
+          {campuses.map(c => (
+            <button type="button" class="main-btn modal-tag-btn" data-campus={c.id}>{c.name}</button>
+          ))}
+        </div>
+      </section>
+
       {
         categories.map((category) => (
           <section class="modal-category">
@@ -562,15 +582,28 @@ const categories = getSearchFilterCategories(projects);
       // build search parameters
       const params = new URLSearchParams();
       if (keyword) params.set("q", keyword);
+      
+      // campus filtering
+      const selectedCampus = document.querySelector(".modal-tag-btn[data-campus].active");
+      if (selectedCampus && selectedCampus.getAttribute("data-campus") !== "all") {
+        params.set("campus", selectedCampus.getAttribute("data-campus") || "");
+      }
+
       if (selectedTags.length > 0) params.set("tags", selectedTags.join(","));
 
       const queryStr = params.toString() ? "?" + params.toString() : "";
-      const searchUrl = `/events/${queryStr}`;
+      
+      const modalBackdrop = document.getElementById("search-modal-backdrop");
+      const year = modalBackdrop ? modalBackdrop.getAttribute("data-year") : "2026";
+      const currentYear = modalBackdrop ? modalBackdrop.getAttribute("data-current-year") : "2026";
+      const isLatest = year === currentYear;
+      const basePath = isLatest ? "/events/" : `/${year}/events/`;
+      const searchUrl = `${basePath}${queryStr}`;
 
       closeModal();
 
       const isEventsPage =
-        window.location.pathname.replace(/\/+$/, "") === "/events";
+        window.location.pathname.replace(/\/+$/, "").endsWith("/events");
 
       if (isEventsPage) {
         if (window.location.search !== queryStr) {

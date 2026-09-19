@@ -1,29 +1,34 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import "../../styles/events.css";
-import projects from "../../data/events.json";
-import { getTagColorClass } from "../../utils/tags";
+import Layout from "../../../layouts/Layout.astro";
+import "../../../styles/events.css";
+import { getAllEvents } from "../../../utils/events";
+import { getTagColorClass } from "../../../utils/tags";
+import { CURRENT_YEAR } from "../../../config/site";
 
 // generate a unique page for each item in events.json
 export async function getStaticPaths() {
-  return projects.map((project) => ({
-    params: { id: project.id }, // url path
+  const allEvents = getAllEvents();
+  return allEvents.map((project) => ({
+    params: { year: project.year, id: project.id }, // url path
     props: { project }, // page data
   }));
 }
 
 const { project } = Astro.props;
+const { year } = Astro.params;
+const isLatest = year === CURRENT_YEAR;
+const eventsBasePath = isLatest ? "/events/" : `/${year}/events/`;
 
 const allProjectTags = [
-  ...project.tags.date,
-  ...project.tags.format,
-  ...project.tags.field,
-  ...project.tags.features,
+  ...(project.tags?.date || []),
+  ...(project.tags?.format || []),
+  ...(project.tags?.field || []),
+  ...(project.tags?.features || []),
 ];
 ---
 
-<Layout title={`${project.name}｜学祭ポータル`} hideNav={true}>
-  <button onclick="location.href='/events/'" class="back-button">←戻る</button>
+<Layout title={`${project.name}｜学祭ポータル`} hideNav={true} year={year}>
+  <button onclick={`location.href='${eventsBasePath}'`} class="back-button">←戻る</button>
   <button class="share-button"
     ><img src="/img/icons/share.svg" alt="シェア" /></button
   >
@@ -55,7 +60,7 @@ const allProjectTags = [
             allProjectTags.map((tag) => (
               <button
                 class={`main-btn ${getTagColorClass(tag)}`}
-                onclick={`location.href='/events/?tags=${encodeURIComponent(tag)}'`}
+                onclick={`location.href='${eventsBasePath}?tags=${encodeURIComponent(tag)}'`}
               >
                 #{tag}
               </button>
@@ -71,8 +76,8 @@ const allProjectTags = [
       <hr />
       <div class="place">
         <h2>場所</h2>
-        <p>{project.place.campus}</p>
-        <p>{project.place.room}</p>
+        <p>{project.place?.campus}</p>
+        <p>{project.place?.room}</p>
         <button class="main-btn" id="maps-btn">キャンパスマップ →</button>
       </div>
       <hr />
@@ -85,7 +90,7 @@ const allProjectTags = [
         <h2>公式アカウント</h2>
         <!-- loop through the accounts object to display keys and values -->
         {
-          Object.entries(project.accounts).map(([service, accountId]) => (
+          project.accounts && Object.entries(project.accounts).map(([service, accountId]) => (
             <p>
               {service}: {accountId}
             </p>

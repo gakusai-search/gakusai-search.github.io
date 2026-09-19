@@ -1,0 +1,16 @@
+---
+import YearTop from "../../components/portal/YearTop.astro";
+import { ARCHIVE_YEARS } from "../../config/site";
+import { getEventsByYear } from "../../utils/events";
+
+export async function getStaticPaths() {
+  return ARCHIVE_YEARS.map(year => ({
+    params: { year },
+    props: { year }
+  }));
+}
+
+const { year } = Astro.props;
+const events = getEventsByYear(year);
+---
+<YearTop year={year} events={events} isLatest={false} />

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "tama-2025-food-01",
+    "name": "多摩 2025年模擬店",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["10月30日(土)"],
+      "format": ["グルメ・屋台"],
+      "field": ["食"],
+      "features": ["予約不要"]
+    },
+    "datetime": "2025年 10月30日(土) 10:00～17:00",
+    "place": {
+      "campus": "多摩キャンパス",
+      "room": "広場"
+    },
+    "description": "2025年の多摩キャンパス模擬店です。",
+    "accounts": {}
+  },
+  {
+    "id": "tama-2025-stage-01",
+    "name": "多摩 2025年ステージ",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["10月31日(日)"],
+      "format": ["ステージ・公演"],
+      "field": ["音楽", "ダンス"],
+      "features": ["完全無料"]
+    },
+    "datetime": "2025年 10月31日(日) 13:00～14:30",
+    "place": {
+      "campus": "多摩キャンパス",
+      "room": "特設ステージ"
+    },
+    "description": "2025年の多摩キャンパスステージです。",
+    "accounts": {}
+  },
+  {
+    "id": "tama-2025-exhibit-01",
+    "name": "多摩 2025年展示会",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["10月30日(土)", "10月31日(日)"],
+      "format": ["展示"],
+      "field": ["芸術", "アカデミック"],
+      "features": ["予約不要"]
+    },
+    "datetime": "2025年 10月30日〜31日",
+    "place": {
+      "campus": "多摩キャンパス",
+      "room": "教室"
+    },
+    "description": "2025年の多摩キャンパス展示企画です。",
+    "accounts": {}
+  }
+]

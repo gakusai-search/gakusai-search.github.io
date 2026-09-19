@@ -1,0 +1,129 @@
+---
+import { CURRENT_YEAR } from "../config/site";
+
+interface Props {
+  year: string;
+}
+
+const { year } = Astro.props;
+---
+
+<nav class="navbar archive-navbar" aria-label="過去年度アーカイブ案内">
+  <div class="archive-menu">
+    <div class="archive-info">
+      <span class="archive-badge">⚠️ アーカイブ</span>
+      <span class="archive-label">{year}年度のデータです。</span>
+    </div>
+    <div class="archive-actions">
+      <a href="/" class="archive-btn archive-latest-btn"> 最新はこちら </a>
+    </div>
+  </div>
+  <div class="empty_space"></div>
+</nav>
+
+<style>
+  .archive-menu {
+    position: fixed;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: calc(100% - 24px);
+    max-width: 380px;
+    height: 64px;
+    background: var(--color-background-navbar);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    box-shadow: inset 0 0 0 1.5px var(--color-border-navbar);
+    border-radius: 32px;
+    box-sizing: border-box;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .archive-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: 12px;
+  }
+
+  .archive-badge {
+    color: #ffffff;
+    font-size: 16.5px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.2px;
+    text-shadow: none;
+  }
+
+  .archive-label {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.2;
+    opacity: 0.92;
+    text-shadow: none;
+    margin-top: 2px;
+  }
+
+  .archive-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .archive-btn {
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 24px;
+    transition:
+      transform 0.15s ease,
+      background-color 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .archive-latest-btn {
+    background-color: #ffffff;
+    color: #000000;
+    mix-blend-mode: screen;
+    border: none;
+    box-shadow: none;
+    font-weight: bold;
+  }
+
+  .archive-latest-btn:hover {
+    background: rgba(256, 256, 256, 0.75);
+  }
+
+  @media (max-width: 320px) {
+    .archive-info {
+      padding-left: 12px;
+    }
+
+    .archive-badge {
+      font-size: 15px;
+    }
+
+    .archive-label {
+      font-size: 12px;
+    }
+
+    .archive-btn {
+      font-size: 13.5px;
+      padding: 8px 12px;
+    }
+  }
+</style>

@@ -1,0 +1,1008 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import type { EventItem, Campus } from "../../utils/events";
+import {
+  getSearchFilterCategories,
+  getTagColorClass,
+  getFieldTagColorClass,
+} from "../../utils/tags";
+
+interface Props {
+  year: string;
+  projects: EventItem[];
+  campuses: Campus[];
+  isLatest: boolean;
+}
+
+const { year, projects, campuses, isLatest } = Astro.props;
+const categories = getSearchFilterCategories(projects);
+---
+
+<Layout title={`${year}年度 検索結果｜学祭ポータル`} year={year}>
+  <div class="page-header" data-year={year} id="events-page-root">
+    <div class="page-title">
+      <img
+        src="/img/events/search_page.svg"
+        alt="検索結果アイコン"
+        class="page-icon"
+      />
+      <h1>検索結果</h1>
+    </div>
+    <div class="events-header-bar">
+      <button
+        class="main-btn tutorial-btn"
+        id="tutorial-btn-event-introduction"
+      >
+        このページの使い方
+      </button>
+      <div class="events-count" id="events-count">
+        {projects.length}件
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <!-- active search conditions bar (keywords and selected tags) -->
+  <div id="active-query-bar" class="active-query-bar">
+    <span class="active-query-label">検索条件:</span>
+    <div id="active-query-tags-container" class="active-query-tags-container">
+      <span class="active-query-none">なし</span>
+    </div>
+    <button
+      type="button"
+      class="main-btn search-again-btn"
+      id="search-again-btn"
+      data-open-search-modal
+    >
+      別の条件で検索
+    </button>
+  </div>
+
+  <!-- UI component for filtering projects by selecting tags -->
+  <div class="tag-filter-container" id="tag-filter">
+    <div class="tag-filter-top">
+      <h2>タグで探す</h2>
+      <button class="main-btn filter-btn active" data-tag="all">すべて</button>
+    </div>
+
+    <div class="tag-categories-wrapper">
+      <div class="tag-category-section">
+        <h3 class="tag-category-title">キャンパスで絞る</h3>
+        <div class="tag-list">
+          <button class="main-btn filter-btn active" data-campus="all"
+            >すべて</button
+          >
+          {
+            campuses.map((c) => (
+              <button class="main-btn filter-btn" data-campus={c.id}>
+                {c.name}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+      {
+        categories.map((category) => (
+          <div class="tag-category-section">
+            <h3 class="tag-category-title">{category.title}</h3>
+            {category.subCategories ? (
+              <div class="tag-subcategories-wrapper">
+                {category.subCategories.map((sub) => (
+                  <div class="tag-subcategory-section">
+                    <h4
+                      class={`tag-subcategory-title ${sub.colorKey ? `cat-${sub.colorKey}` : ""}`}
+                    >
+                      {sub.title}
+                    </h4>
+                    <div class="tag-list">
+                      {sub.tags.map((tag) => (
+                        <button
+                          class={`main-btn filter-btn ${sub.colorKey ? `tag-${sub.colorKey}` : ""}`}
+                          data-category={category.categoryType}
+                          data-tag={tag}
+                        >
+                          #{tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div class="tag-list">
+                {category.tags?.map((tag) => (
+                  <button
+                    class="main-btn filter-btn"
+                    data-category={category.categoryType}
+                    data-tag={tag}
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- event cards -->
+  <div class="events-grid" id="events-grid">
+    {
+      projects.slice(0, 24).map((project) => {
+        const allTags = [
+          ...project.tags.date,
+          ...project.tags.format,
+          ...project.tags.field,
+          ...project.tags.features,
+        ];
+        const cardColorClass = getFieldTagColorClass(project.tags?.field);
+        return (
+          <a
+            href={`/${project.year}/events/${project.id}`}
+            class={`event-card ${cardColorClass}`.trim()}
+            data-id={project.id}
+          >
+            <img src={project.image} alt={project.name} loading="lazy" />
+            <div class="event-card-content">
+              <h3>{project.name}</h3>
+              <div class="event-card-tags">
+                {allTags.map((tag) => (
+                  <span
+                    class={`tag-span ${getTagColorClass(tag)}`}
+                    data-tag={tag}
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </a>
+        );
+      })
+    }
+  </div>
+
+  <!-- 0 results message -->
+  <div id="no-events-message" class="no-events-message" style="display: none;">
+    <p>条件に一致する企画が見つかりませんでした。</p>
+  </div>
+
+  <!-- infinite scroll sentinel element -->
+  <div id="scroll-sentinel" class="scroll-sentinel"></div>
+
+  <!-- template for dynamic card rendering -->
+  <template id="event-card-template">
+    <a href="" class="event-card">
+      <img src="" alt="" loading="lazy" />
+      <div class="event-card-content">
+        <h3></h3>
+        <div class="event-card-tags"></div>
+      </div>
+    </a>
+  </template>
+
+  <!-- style only for this page -->
+  <style>
+    hr {
+      margin-top: 0px;
+    }
+
+    .events-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8em;
+    }
+
+    .events-header-bar .tutorial-btn {
+      margin-bottom: 0;
+    }
+
+    .events-count {
+      color: var(--color-main);
+      font-size: 20px;
+      text-align: right;
+    }
+
+    @media (max-width: 319.98px) {
+      .events-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .events-count {
+        text-align: left;
+      }
+    }
+
+    /* active search conditions bar */
+    .active-query-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 0px;
+      font-size: 14px;
+      color: var(--color-text-main);
+      flex-wrap: wrap;
+    }
+
+    .active-query-label {
+      font-weight: bold;
+      color: var(--color-text-main);
+      white-space: nowrap;
+    }
+
+    :global(.active-query-tags-container) {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    :global(.active-query-none) {
+      color: color-mix(in srgb, var(--color-text-main) 70%, transparent);
+      font-size: 14px;
+    }
+
+    :global(.active-query-tag) {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--color-main);
+      color: #ffffff;
+      height: 28px;
+      padding: 0 6px 0 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+
+    :global(.active-query-tag .active-query-tag-text) {
+      display: inline-block;
+      line-height: 28px;
+      height: 28px;
+      transform: translateY(0.5px);
+    }
+
+    :global(.clear-query-btn) {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      transform: translateY(-0.5px);
+      transition:
+        background-color 0.15s ease,
+        opacity 0.15s ease,
+        transform 0.15s ease;
+    }
+
+    :global(.clear-query-btn svg) {
+      display: block;
+      width: 12px;
+      height: 12px;
+    }
+
+    :global(.clear-query-btn:hover) {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .search-again-btn {
+      margin-bottom: 0;
+      height: 30px;
+      font-size: 14px;
+      border-radius: 15px;
+      padding: 0 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .no-events-message {
+      padding: 48px 20px;
+      text-align: center;
+      color: var(--color-text-main);
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    .scroll-sentinel {
+      height: 20px;
+      width: 100%;
+    }
+
+    .tag-filter-container {
+      margin: 20px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      display: none;
+    }
+
+    .tag-filter-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tag-filter-top h2 {
+      margin: 0;
+      font-size: 20px;
+      text-align: left;
+    }
+
+    .tag-categories-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-color: var(--color-btn-main);
+      border: 1.5px solid var(--color-border-main);
+      border-radius: 14px;
+      padding: 16px 20px;
+      box-sizing: border-box;
+    }
+
+    .tag-category-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tag-category-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: bold;
+      color: var(--color-text-main);
+      text-align: left;
+    }
+
+    .tag-subcategories-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-left: 2px;
+    }
+
+    .tag-subcategory-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tag-subcategory-title {
+      margin: 0;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--color-text-main);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.85;
+    }
+
+    .tag-subcategory-title::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .tag-subcategory-title.cat-performance::before {
+      background: var(--tag-gradient-performance);
+    }
+
+    .tag-subcategory-title.cat-creative::before {
+      background: var(--tag-gradient-creative);
+    }
+
+    .tag-subcategory-title.cat-tech::before {
+      background: var(--tag-gradient-tech);
+    }
+
+    .tag-subcategory-title.cat-society::before {
+      background: var(--tag-gradient-society);
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+  </style>
+
+  <script id="projects-data" type="application/json" set:html={JSON.stringify(projects)}></script>
+
+  <!-- JS code for filtering: miniSearch fuzzy search + multiple tag selection + infinite scrolling -->
+  <script>
+    import MiniSearch from "minisearch";
+    import { getTagColorClass, getFieldTagColorClass } from "../../utils/tags";
+
+    const projectsElement = document.getElementById('projects-data');
+    const projects = projectsElement ? JSON.parse(projectsElement.textContent || '[]') : [];
+
+    type ProjectType = any;
+
+    const initFilter = () => {
+      const year =
+        document
+          .getElementById("events-page-root")
+          ?.getAttribute("data-year") || "2026";
+      const filterContainer = document.getElementById("tag-filter");
+      const gridEl = document.getElementById("events-grid");
+      const templateEl = document.getElementById(
+        "event-card-template",
+      ) as HTMLTemplateElement | null;
+      const countEl = document.getElementById("events-count");
+      const noEventsEl = document.getElementById("no-events-message");
+      const sentinelEl = document.getElementById("scroll-sentinel");
+      const queryTagsContainer = document.getElementById(
+        "active-query-tags-container",
+      );
+
+      if (!gridEl || !templateEl) return;
+
+      const allBtn = filterContainer?.querySelector(
+        '.filter-btn[data-tag="all"]',
+      );
+      const tagBtns = filterContainer?.querySelectorAll(
+        '.filter-btn:not([data-tag="all"])',
+      );
+      const campusBtns = filterContainer?.querySelectorAll(
+        ".filter-btn[data-campus]",
+      );
+
+      // 1. initialize tokenizer using Intl.Segmenter with fallback
+      const segmenter =
+        typeof Intl !== "undefined" && (Intl as any).Segmenter
+          ? new (Intl as any).Segmenter("ja", { granularity: "word" })
+          : null;
+
+      const tokenize = (text: string): string[] => {
+        if (!text) return [];
+        if (segmenter) {
+          const words: string[] = [];
+          for (const seg of segmenter.segment(text)) {
+            const w = seg.segment.trim().toLowerCase();
+            if (w) words.push(w);
+          }
+          return words;
+        }
+        return text
+          .toLowerCase()
+          .split(/[\s,、。！？\-_/]+/g)
+          .filter(Boolean);
+      };
+
+      // 2. prepare search documents map and MiniSearch index
+      const projectsMap = new Map<string, ProjectType>();
+      const searchDocuments = projects.map((p) => {
+        projectsMap.set(p.id, p);
+        const allTags = [
+          ...(p.tags.date || []),
+          ...(p.tags.format || []),
+          ...(p.tags.field || []),
+          ...(p.tags.features || []),
+        ];
+        return {
+          id: p.id,
+          name: p.name,
+          description: p.description || "",
+          campus: p.place?.campus || "",
+          room: p.place?.room || "",
+          tagsText: allTags.join(" "),
+        };
+      });
+
+      const miniSearch = new MiniSearch({
+        fields: ["name", "tagsText", "description", "campus", "room"],
+        storeFields: ["id"],
+        searchOptions: {
+          boost: {
+            name: 3,
+            tagsText: 2,
+            campus: 1.5,
+            room: 1.5,
+            description: 1,
+          },
+          fuzzy: 0.2,
+          prefix: true,
+        },
+        tokenize,
+        processTerm: (term) => term.toLowerCase().normalize("NFKC"),
+      });
+
+      miniSearch.addAll(searchDocuments);
+
+      // 3. infinite scrolling & dynamic card rendering logic
+      const PAGE_SIZE = 24;
+      let currentFilteredList: ProjectType[] = [];
+      let renderedCount = 0;
+
+      const createCardElement = (p: ProjectType): HTMLElement => {
+        const clone = templateEl.content.cloneNode(true) as DocumentFragment;
+        const link = clone.querySelector("a") as HTMLAnchorElement;
+        link.href = `/${year}/events/${p.id}`;
+        link.setAttribute("data-id", p.id);
+
+        const cardColorClass = getFieldTagColorClass(p.tags?.field);
+        if (cardColorClass) {
+          link.classList.add(cardColorClass);
+        }
+
+        const img = clone.querySelector("img") as HTMLImageElement;
+        img.src = p.image;
+        img.alt = p.name;
+
+        const title = clone.querySelector("h3") as HTMLElement;
+        title.textContent = p.name;
+
+        const tagsContainer = clone.querySelector(
+          ".event-card-tags",
+        ) as HTMLElement;
+        const allTags = [
+          ...(p.tags.date || []),
+          ...(p.tags.format || []),
+          ...(p.tags.field || []),
+          ...(p.tags.features || []),
+        ];
+        allTags.forEach((tag) => {
+          const span = document.createElement("span");
+          const colorClass = getTagColorClass(tag);
+          span.className = colorClass ? `tag-span ${colorClass}` : "tag-span";
+          span.textContent = `#${tag}`;
+          span.setAttribute("data-tag", tag);
+          tagsContainer.appendChild(span);
+        });
+
+        return link;
+      };
+
+      const renderNextPage = () => {
+        if (renderedCount >= currentFilteredList.length) return;
+        const nextBatch = currentFilteredList.slice(
+          renderedCount,
+          renderedCount + PAGE_SIZE,
+        );
+        const fragment = document.createDocumentFragment();
+        nextBatch.forEach((p) => {
+          fragment.appendChild(createCardElement(p));
+        });
+        gridEl.appendChild(fragment);
+        renderedCount += nextBatch.length;
+      };
+
+      const resetAndRender = (list: ProjectType[]) => {
+        currentFilteredList = list;
+        gridEl.innerHTML = "";
+        renderedCount = 0;
+
+        if (list.length === 0) {
+          if (noEventsEl) noEventsEl.style.display = "block";
+        } else {
+          if (noEventsEl) noEventsEl.style.display = "none";
+          renderNextPage();
+        }
+      };
+
+      // set up IntersectionObserver for infinite scrolling
+      if (sentinelEl) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            if (entries[0].isIntersecting) {
+              renderNextPage();
+            }
+          },
+          { rootMargin: "300px" },
+        );
+        observer.observe(sentinelEl);
+      }
+
+      // 4. tag matching logic: OR within category, AND between categories
+      const matchesCategoryTags = (
+        p: ProjectType,
+        selectedByCat: Record<string, string[]>,
+      ): boolean => {
+        for (const [catKey, selectedTags] of Object.entries(selectedByCat)) {
+          if (selectedTags.length === 0) continue;
+          const projectTags = (p.tags as any)[catKey] || [];
+          const hasAny = selectedTags.some((t: string) =>
+            projectTags.includes(t),
+          );
+          if (!hasAny) return false;
+        }
+        return true;
+      };
+
+      // 5. update URL function
+      const updateURL = (query: string, tags: string[], campus = "all") => {
+        const url = new URL(window.location.href);
+        if (query) {
+          url.searchParams.set("q", query);
+        } else {
+          url.searchParams.delete("q");
+        }
+
+        if (tags && tags.length > 0) {
+          url.searchParams.set("tags", tags.join(","));
+        } else {
+          url.searchParams.delete("tags");
+        }
+
+        if (campus && campus !== "all") {
+          url.searchParams.set("campus", campus);
+        } else {
+          url.searchParams.delete("campus");
+        }
+        window.history.replaceState({}, "", url.toString());
+      };
+
+      // 6. update filtering according to current state
+      const updateFiltering = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentQuery = (urlParams.get("q") || "").trim();
+        const urlTags = urlParams.get("tags");
+        const currentTags = urlTags
+          ? urlTags
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean)
+          : [];
+        const currentCampus = urlParams.get("campus") || "all";
+
+        // collect selected tags by category
+        const selectedByCat: Record<string, string[]> = {
+          date: [],
+          format: [],
+          field: [],
+          features: [],
+        };
+        const selectedTagList: { cat: string; tag: string; btn: Element }[] =
+          [];
+
+        tagBtns?.forEach((btn) => {
+          if (btn.classList.contains("active")) {
+            const cat = btn.getAttribute("data-category");
+            const tag = btn.getAttribute("data-tag");
+            if (cat && selectedByCat[cat] && tag) {
+              selectedByCat[cat].push(tag);
+              selectedTagList.push({ cat, tag, btn });
+            }
+          }
+        });
+
+        // update active conditions (keyword + tags) badge container
+        if (queryTagsContainer) {
+          queryTagsContainer.innerHTML = "";
+          const hasKeyword = Boolean(currentQuery);
+          const hasTags = selectedTagList.length > 0;
+
+          if (!hasKeyword && !hasTags) {
+            const noneSpan = document.createElement("span");
+            noneSpan.className = "active-query-none";
+            noneSpan.textContent = "なし";
+            queryTagsContainer.appendChild(noneSpan);
+          } else {
+            // 1. keyword badge
+            if (hasKeyword) {
+              const badge = document.createElement("span");
+              badge.className = "active-query-tag";
+
+              const textSpan = document.createElement("span");
+              textSpan.className = "active-query-tag-text";
+              textSpan.textContent = currentQuery;
+
+              const clearBtn = document.createElement("button");
+              clearBtn.type = "button";
+              clearBtn.className = "clear-query-btn";
+              clearBtn.setAttribute("aria-label", "検索ワードを解除");
+              clearBtn.innerHTML = `
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              `;
+              clearBtn.addEventListener("click", () => {
+                const activeCampusBtn = filterContainer?.querySelector(
+                  ".filter-btn[data-campus].active",
+                );
+                const campus = activeCampusBtn
+                  ? activeCampusBtn.getAttribute("data-campus") || "all"
+                  : "all";
+                const activeTagList: string[] = [];
+                tagBtns?.forEach((b) => {
+                  if (b.classList.contains("active")) {
+                    const t = b.getAttribute("data-tag");
+                    if (t) activeTagList.push(t);
+                  }
+                });
+                updateURL("", activeTagList, campus);
+                updateFiltering();
+              });
+
+              badge.appendChild(textSpan);
+              badge.appendChild(clearBtn);
+              queryTagsContainer.appendChild(badge);
+            }
+
+            // 2. tag badges
+            selectedTagList.forEach(({ tag, btn }) => {
+              const badge = document.createElement("span");
+              const colorClass = getTagColorClass(tag);
+              badge.className = colorClass
+                ? `active-query-tag ${colorClass}`
+                : "active-query-tag";
+
+              const textSpan = document.createElement("span");
+              textSpan.className = "active-query-tag-text";
+              textSpan.textContent = `#${tag}`;
+
+              const clearBtn = document.createElement("button");
+              clearBtn.type = "button";
+              clearBtn.className = "clear-query-btn";
+              clearBtn.setAttribute("aria-label", `${tag}タグを解除`);
+              clearBtn.innerHTML = `
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              `;
+              clearBtn.addEventListener("click", () => {
+                btn.classList.remove("active");
+                const activeCampusBtn = filterContainer?.querySelector(
+                  ".filter-btn[data-campus].active",
+                );
+                const campus = activeCampusBtn
+                  ? activeCampusBtn.getAttribute("data-campus") || "all"
+                  : "all";
+                const activeTagList: string[] = [];
+                tagBtns?.forEach((b) => {
+                  if (b.classList.contains("active")) {
+                    const t = b.getAttribute("data-tag");
+                    if (t) activeTagList.push(t);
+                  }
+                });
+                updateURL(currentQuery, activeTagList, campus);
+                updateFiltering();
+              });
+
+              badge.appendChild(textSpan);
+              badge.appendChild(clearBtn);
+              queryTagsContainer.appendChild(badge);
+            });
+          }
+        }
+
+        // update 'All' tag button state
+        if (allBtn) {
+          if (selectedTagList.length === 0) {
+            allBtn.classList.add("active");
+          } else {
+            allBtn.classList.remove("active");
+          }
+        }
+
+        // candidates filtering (MiniSearch fuzzy search)
+        let candidates: ProjectType[] = [];
+        if (currentQuery.trim() !== "") {
+          const searchResults = miniSearch.search(currentQuery, {
+            combineWith: "AND",
+            prefix: true,
+            fuzzy: 0.2,
+          });
+          candidates = searchResults
+            .map((res) => projectsMap.get(res.id)!)
+            .filter(Boolean);
+        } else {
+          candidates = [...projects];
+        }
+
+        // apply campus filtering
+        if (currentCampus !== "all") {
+          candidates = candidates.filter(
+            (p) =>
+              p.place?.campus === currentCampus ||
+              (p as any).campusId === currentCampus,
+          );
+        }
+
+        // filter by tags
+        const hasTagFilters = selectedTagList.length > 0;
+        const finalResults = hasTagFilters
+          ? candidates.filter((p) => matchesCategoryTags(p, selectedByCat))
+          : candidates;
+
+        // update count element
+        if (countEl) {
+          countEl.textContent = `${finalResults.length}件`;
+        }
+
+        // render card items
+        resetAndRender(finalResults);
+      };
+
+      // 6. apply URL params to UI and execute filtering
+      const applyUrlParams = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlTags = urlParams.get("tags");
+        const urlTagsList = urlTags
+          ? urlTags.split(",").map((t) => t.trim())
+          : [];
+        const urlCampus = urlParams.get("campus") || "all";
+
+        if (tagBtns) {
+          let hasMatch = false;
+          tagBtns.forEach((btn) => {
+            const tag = btn.getAttribute("data-tag");
+            if (tag && urlTagsList.includes(tag)) {
+              btn.classList.add("active");
+              hasMatch = true;
+            } else {
+              btn.classList.remove("active");
+            }
+          });
+
+          if (allBtn) {
+            if (hasMatch) {
+              allBtn.classList.remove("active");
+            } else {
+              allBtn.classList.add("active");
+            }
+          }
+        }
+
+        if (campusBtns) {
+          campusBtns.forEach((btn) => {
+            const campus = btn.getAttribute("data-campus");
+            if (campus === urlCampus) {
+              btn.classList.add("active");
+            } else {
+              btn.classList.remove("active");
+            }
+          });
+        }
+
+        updateFiltering();
+      };
+
+      // 7. event listeners
+      if (allBtn) {
+        allBtn.addEventListener("click", () => {
+          tagBtns?.forEach((btn) => btn.classList.remove("active"));
+          allBtn.classList.add("active");
+          const activeCampusBtn = filterContainer?.querySelector(
+            ".filter-btn[data-campus].active",
+          );
+          const campus = activeCampusBtn
+            ? activeCampusBtn.getAttribute("data-campus") || "all"
+            : "all";
+          const query = (
+            new URLSearchParams(window.location.search).get("q") || ""
+          ).trim();
+          updateURL(query, [], campus);
+          updateFiltering();
+        });
+      }
+
+      tagBtns?.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          btn.classList.toggle("active");
+          const activeCampusBtn = filterContainer?.querySelector(
+            ".filter-btn[data-campus].active",
+          );
+          const campus = activeCampusBtn
+            ? activeCampusBtn.getAttribute("data-campus") || "all"
+            : "all";
+          const query = (
+            new URLSearchParams(window.location.search).get("q") || ""
+          ).trim();
+          const activeTagList: string[] = [];
+          tagBtns.forEach((b) => {
+            if (b.classList.contains("active")) {
+              const t = b.getAttribute("data-tag");
+              if (t) activeTagList.push(t);
+            }
+          });
+          updateURL(query, activeTagList, campus);
+          updateFiltering();
+        });
+      });
+
+      campusBtns?.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const target = e.currentTarget as HTMLElement;
+          campusBtns.forEach((b) => b.classList.remove("active"));
+          target.classList.add("active");
+          const campus = target.getAttribute("data-campus") || "all";
+          const query = (
+            new URLSearchParams(window.location.search).get("q") || ""
+          ).trim();
+          const activeTagList: string[] = [];
+          tagBtns?.forEach((b) => {
+            if (b.classList.contains("active")) {
+              const t = b.getAttribute("data-tag");
+              if (t) activeTagList.push(t);
+            }
+          });
+          updateURL(query, activeTagList, campus);
+          updateFiltering();
+        });
+      });
+
+      // handle click on tags within event cards
+      gridEl.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        const tagSpan = target.closest(".tag-span");
+        if (tagSpan) {
+          e.preventDefault();
+          e.stopPropagation();
+          const tag =
+            tagSpan.getAttribute("data-tag") ||
+            tagSpan.textContent?.replace(/^#/, "").trim();
+          if (tag) {
+            let matchedBtn: HTMLElement | null = null;
+            tagBtns?.forEach((btn) => {
+              if (btn.getAttribute("data-tag") === tag) {
+                matchedBtn = btn as HTMLElement;
+              }
+            });
+
+            if (matchedBtn) {
+              (matchedBtn as HTMLElement).classList.add("active");
+              const activeCampusBtn = filterContainer?.querySelector(
+                ".filter-btn[data-campus].active",
+              );
+              const campus = activeCampusBtn
+                ? activeCampusBtn.getAttribute("data-campus") || "all"
+                : "all";
+              const query = (
+                new URLSearchParams(window.location.search).get("q") || ""
+              ).trim();
+              const activeTagList: string[] = [];
+              tagBtns?.forEach((b) => {
+                if (b.classList.contains("active")) {
+                  const t = b.getAttribute("data-tag");
+                  if (t) activeTagList.push(t);
+                }
+              });
+              updateURL(query, activeTagList, campus);
+              updateFiltering();
+            }
+          }
+        }
+      });
+
+      // handle back/forward and custom modal search events
+      window.addEventListener("popstate", applyUrlParams);
+      window.addEventListener("searchparamschange", applyUrlParams);
+
+      // initial apply
+      applyUrlParams();
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initFilter);
+    } else {
+      initFilter();
+    }
+  </script>
+</Layout>

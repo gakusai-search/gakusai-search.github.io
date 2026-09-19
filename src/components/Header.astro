@@ -1,9 +1,17 @@
 ---
+import { CURRENT_YEAR } from "../config/site";
+
+export interface Props {
+  year?: string;
+}
+
+const { year = CURRENT_YEAR } = Astro.props;
+const homeUrl = year === CURRENT_YEAR ? "/" : `/${year}/`;
 ---
 <header id="header-container">
   <div class="global-header">
     <div class="header-logo">
-      <a href="/">
+      <a href={homeUrl}>
         <img src="/img/nav/logo.png" alt="サイトロゴ" class="logo-img" />
       </a>
     </div>

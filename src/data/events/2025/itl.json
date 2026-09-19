@@ -1,0 +1,56 @@
+[
+  {
+    "id": "itl-2025-food-01",
+    "name": "市ヶ谷田町 2025年模擬店",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["10月30日(土)"],
+      "format": ["グルメ・屋台"],
+      "field": ["食"],
+      "features": ["予約不要"]
+    },
+    "datetime": "2025年 10月30日(土) 10:00～17:00",
+    "place": {
+      "campus": "市ヶ谷田町キャンパス",
+      "room": "1F ロビー"
+    },
+    "description": "2025年の市ヶ谷田町キャンパス模擬店です。",
+    "accounts": {}
+  },
+  {
+    "id": "itl-2025-stage-01",
+    "name": "市ヶ谷田町 2025年ステージ",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["10月31日(日)"],
+      "format": ["ステージ・公演"],
+      "field": ["音楽", "ダンス"],
+      "features": ["完全無料"]
+    },
+    "datetime": "2025年 10月31日(日) 13:00～14:30",
+    "place": {
+      "campus": "市ヶ谷田町キャンパス",
+      "room": "ステージ"
+    },
+    "description": "2025年の市ヶ谷田町キャンパスステージです。",
+    "accounts": {}
+  },
+  {
+    "id": "itl-2025-exhibit-01",
+    "name": "市ヶ谷田町 2025年展示会",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["10月30日(土)", "10月31日(日)"],
+      "format": ["展示"],
+      "field": ["芸術", "アカデミック"],
+      "features": ["予約不要"]
+    },
+    "datetime": "2025年 10月30日〜31日",
+    "place": {
+      "campus": "市ヶ谷田町キャンパス",
+      "room": "会議室"
+    },
+    "description": "2025年の展示企画です。",
+    "accounts": {}
+  }
+]

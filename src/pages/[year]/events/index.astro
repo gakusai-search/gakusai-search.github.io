@@ -1,0 +1,17 @@
+---
+import EventsSearch from "../../../components/portal/EventsSearch.astro";
+import { ARCHIVE_YEARS } from "../../../config/site";
+import { getEventsByYear, getCampusesByYear } from "../../../utils/events";
+
+export async function getStaticPaths() {
+  return ARCHIVE_YEARS.map(year => ({
+    params: { year },
+    props: { year }
+  }));
+}
+
+const { year } = Astro.props;
+const events = getEventsByYear(year);
+const campuses = getCampusesByYear(year);
+---
+<EventsSearch year={year} projects={events} campuses={campuses} isLatest={false} />

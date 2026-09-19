@@ -1,0 +1,56 @@
+[
+  {
+    "id": "tama-food-01",
+    "name": "多摩キャンパス 模擬店A",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["11月1日(日)"],
+      "format": ["グルメ・屋台"],
+      "field": ["食"],
+      "features": ["予約不要"]
+    },
+    "datetime": "2026年 11月1日(日) 10:00～17:00",
+    "place": {
+      "campus": "多摩キャンパス",
+      "room": "ペデストリアンデッキ"
+    },
+    "description": "多摩キャンパスでおいしい焼きそばを販売します！",
+    "accounts": {}
+  },
+  {
+    "id": "tama-stage-01",
+    "name": "多摩キャンパス メインステージ企画",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["11月2日(月)"],
+      "format": ["ステージ・公演"],
+      "field": ["音楽", "ダンス"],
+      "features": ["完全無料"]
+    },
+    "datetime": "2026年 11月2日(月) 13:00～14:30",
+    "place": {
+      "campus": "多摩キャンパス",
+      "room": "メインステージ"
+    },
+    "description": "多摩キャンパスのメインステージで迫力あるパフォーマンスをお届けします。",
+    "accounts": {}
+  },
+  {
+    "id": "tama-exhibit-01",
+    "name": "多摩キャンパス 展示会",
+    "image": "/img/events/events_hero_example.jpg",
+    "tags": {
+      "date": ["11月1日(日)", "11月2日(月)"],
+      "format": ["展示"],
+      "field": ["芸術", "アカデミック"],
+      "features": ["予約不要"]
+    },
+    "datetime": "2026年 11月1日〜2日",
+    "place": {
+      "campus": "多摩キャンパス",
+      "room": "11号館"
+    },
+    "description": "学生の作品展示や研究発表を行います。",
+    "accounts": {}
+  }
+]
