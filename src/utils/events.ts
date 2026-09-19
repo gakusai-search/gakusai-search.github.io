@@ -8,6 +8,7 @@ export interface EventItem {
   name: string;
   image: string;
   tags: {
+    campus?: string[];
     date: string[];
     format: string[];
     field: string[];
@@ -27,12 +28,12 @@ export interface Campus {
   name: string;
 }
 
-// Vite's import.meta.glob to load all JSON files under src/data/events/
+// vite's import.meta.glob to load all JSON files under src/data/events/
 // eager: true forces Vite to load them immediately instead of dynamic imports
 const allDataModules = import.meta.glob('/src/data/events/*/*.json', { eager: true }) as Record<string, any>;
 
 /**
- * Get all campuses defined for a specific year
+ * get all campuses defined for a specific year
  */
 export function getCampusesByYear(year: string): Campus[] {
   const path = `/src/data/events/${year}/campuses.json`;
@@ -43,7 +44,7 @@ export function getCampusesByYear(year: string): Campus[] {
 }
 
 /**
- * Get all events for a specific year, aggregated across all campuses
+ * get all events for a specific year, aggregated across all campuses
  */
 export function getEventsByYear(year: string): EventItem[] {
   const events: EventItem[] = [];
@@ -53,29 +54,47 @@ export function getEventsByYear(year: string): EventItem[] {
   for (const [path, module] of Object.entries(allDataModules)) {
     if (path.startsWith(prefix) && !path.endsWith('campuses.json')) {
       const campusEvents = module.default || module;
-      // Extract campusId from filename (e.g. 'itl.json' -> 'itl')
+      // extract campusId from filename (e.g. 'itl.json' -> 'itl')
       const filename = path.split('/').pop() || '';
       const campusId = filename.replace('.json', '');
       const campusName = campuses.find(c => c.id === campusId)?.name || campusId;
 
       campusEvents.forEach((ev: any) => {
+        const campusTags =
+          Array.isArray(ev.tags?.campus) && ev.tags.campus.length > 0
+            ? ev.tags.campus
+            : [campusName];
+
         events.push({
           ...ev,
           year,
           campusId,
-          campusName
+          campusName,
+          tags: {
+            ...ev.tags,
+            campus: campusTags,
+            date: Array.isArray(ev.tags?.date) ? ev.tags.date : [],
+            format: Array.isArray(ev.tags?.format) ? ev.tags.format : [],
+            field: Array.isArray(ev.tags?.field) ? ev.tags.field : [],
+            features: Array.isArray(ev.tags?.features) ? ev.tags.features : [],
+          },
+          place: {
+            ...ev.place,
+            campus: ev.place?.campus || campusName,
+            room: ev.place?.room || "",
+          },
         });
       });
     }
   }
-  
+
   return events;
 }
 
 /**
- * Get all events across all defined years (current and archives)
+ * get all events across all defined years (current and archives)
  */
 export function getAllEvents(): EventItem[] {
-  const years = [CURRENT_YEAR, ...ARCHIVE_YEARS];
+  const years = [...new Set([CURRENT_YEAR, ...ARCHIVE_YEARS])];
   return years.flatMap(y => getEventsByYear(y));
 }

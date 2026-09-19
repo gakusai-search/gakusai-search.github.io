@@ -10,12 +10,16 @@ import {
 interface Props {
   year: string;
   projects: EventItem[];
-  campuses: Campus[];
+  campuses?: Campus[];
   isLatest: boolean;
 }
 
 const { year, projects, campuses, isLatest } = Astro.props;
 const categories = getSearchFilterCategories(projects);
+const uniqueCampuses = new Set(
+  projects.flatMap((p) => p.tags?.campus || []),
+);
+const showCampusTag = uniqueCampuses.size > 1;
 ---
 
 <Layout title={`${year}年度 検索結果｜学祭ポータル`} year={year}>
@@ -67,21 +71,6 @@ const categories = getSearchFilterCategories(projects);
     </div>
 
     <div class="tag-categories-wrapper">
-      <div class="tag-category-section">
-        <h3 class="tag-category-title">キャンパスで絞る</h3>
-        <div class="tag-list">
-          <button class="main-btn filter-btn active" data-campus="all"
-            >すべて</button
-          >
-          {
-            campuses.map((c) => (
-              <button class="main-btn filter-btn" data-campus={c.id}>
-                {c.name}
-              </button>
-            ))
-          }
-        </div>
-      </div>
       {
         categories.map((category) => (
           <div class="tag-category-section">
@@ -133,10 +122,11 @@ const categories = getSearchFilterCategories(projects);
     {
       projects.slice(0, 24).map((project) => {
         const allTags = [
-          ...project.tags.date,
-          ...project.tags.format,
-          ...project.tags.field,
-          ...project.tags.features,
+          ...(showCampusTag ? (project.tags?.campus || []) : []),
+          ...(project.tags?.date || []),
+          ...(project.tags?.format || []),
+          ...(project.tags?.field || []),
+          ...(project.tags?.features || []),
         ];
         const cardColorClass = getFieldTagColorClass(project.tags?.field);
         return (
@@ -437,12 +427,11 @@ const categories = getSearchFilterCategories(projects);
     import MiniSearch from "minisearch";
     import { getTagColorClass, getFieldTagColorClass } from "../../utils/tags";
 
-    const projectsElement = document.getElementById('projects-data');
-    const projects = projectsElement ? JSON.parse(projectsElement.textContent || '[]') : [];
-
     type ProjectType = any;
 
     const initFilter = () => {
+      const projectsElement = document.getElementById('projects-data');
+      const projects: ProjectType[] = projectsElement ? JSON.parse(projectsElement.textContent || '[]') : [];
       const year =
         document
           .getElementById("events-page-root")
@@ -467,9 +456,11 @@ const categories = getSearchFilterCategories(projects);
       const tagBtns = filterContainer?.querySelectorAll(
         '.filter-btn:not([data-tag="all"])',
       );
-      const campusBtns = filterContainer?.querySelectorAll(
-        ".filter-btn[data-campus]",
+
+      const uniqueCampusesClient = new Set(
+        projects.flatMap((p) => p.tags?.campus || []),
       );
+      const showCampusTagClient = uniqueCampusesClient.size > 1;
 
       // 1. initialize tokenizer using Intl.Segmenter with fallback
       const segmenter =
@@ -498,10 +489,11 @@ const categories = getSearchFilterCategories(projects);
       const searchDocuments = projects.map((p) => {
         projectsMap.set(p.id, p);
         const allTags = [
-          ...(p.tags.date || []),
-          ...(p.tags.format || []),
-          ...(p.tags.field || []),
-          ...(p.tags.features || []),
+          ...(p.tags?.campus || []),
+          ...(p.tags?.date || []),
+          ...(p.tags?.format || []),
+          ...(p.tags?.field || []),
+          ...(p.tags?.features || []),
         ];
         return {
           id: p.id,
@@ -560,10 +552,11 @@ const categories = getSearchFilterCategories(projects);
           ".event-card-tags",
         ) as HTMLElement;
         const allTags = [
-          ...(p.tags.date || []),
-          ...(p.tags.format || []),
-          ...(p.tags.field || []),
-          ...(p.tags.features || []),
+          ...(showCampusTagClient ? (p.tags?.campus || []) : []),
+          ...(p.tags?.date || []),
+          ...(p.tags?.format || []),
+          ...(p.tags?.field || []),
+          ...(p.tags?.features || []),
         ];
         allTags.forEach((tag) => {
           const span = document.createElement("span");
@@ -634,7 +627,7 @@ const categories = getSearchFilterCategories(projects);
       };
 
       // 5. update URL function
-      const updateURL = (query: string, tags: string[], campus = "all") => {
+      const updateURL = (query: string, tags: string[]) => {
         const url = new URL(window.location.href);
         if (query) {
           url.searchParams.set("q", query);
@@ -648,11 +641,6 @@ const categories = getSearchFilterCategories(projects);
           url.searchParams.delete("tags");
         }
 
-        if (campus && campus !== "all") {
-          url.searchParams.set("campus", campus);
-        } else {
-          url.searchParams.delete("campus");
-        }
         window.history.replaceState({}, "", url.toString());
       };
 
@@ -660,17 +648,15 @@ const categories = getSearchFilterCategories(projects);
       const updateFiltering = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const currentQuery = (urlParams.get("q") || "").trim();
-        const urlTags = urlParams.get("tags");
-        const currentTags = urlTags
-          ? urlTags
-              .split(",")
-              .map((t) => t.trim())
-              .filter(Boolean)
-          : [];
-        const currentCampus = urlParams.get("campus") || "all";
+        const currentTags = urlParams
+          .getAll("tags")
+          .flatMap((t) => t.split(","))
+          .map((t) => t.trim())
+          .filter(Boolean);
 
         // collect selected tags by category
         const selectedByCat: Record<string, string[]> = {
+          campus: [],
           date: [],
           format: [],
           field: [],
@@ -722,12 +708,6 @@ const categories = getSearchFilterCategories(projects);
                 </svg>
               `;
               clearBtn.addEventListener("click", () => {
-                const activeCampusBtn = filterContainer?.querySelector(
-                  ".filter-btn[data-campus].active",
-                );
-                const campus = activeCampusBtn
-                  ? activeCampusBtn.getAttribute("data-campus") || "all"
-                  : "all";
                 const activeTagList: string[] = [];
                 tagBtns?.forEach((b) => {
                   if (b.classList.contains("active")) {
@@ -735,7 +715,7 @@ const categories = getSearchFilterCategories(projects);
                     if (t) activeTagList.push(t);
                   }
                 });
-                updateURL("", activeTagList, campus);
+                updateURL("", activeTagList);
                 updateFiltering();
               });
 
@@ -768,12 +748,6 @@ const categories = getSearchFilterCategories(projects);
               `;
               clearBtn.addEventListener("click", () => {
                 btn.classList.remove("active");
-                const activeCampusBtn = filterContainer?.querySelector(
-                  ".filter-btn[data-campus].active",
-                );
-                const campus = activeCampusBtn
-                  ? activeCampusBtn.getAttribute("data-campus") || "all"
-                  : "all";
                 const activeTagList: string[] = [];
                 tagBtns?.forEach((b) => {
                   if (b.classList.contains("active")) {
@@ -781,7 +755,7 @@ const categories = getSearchFilterCategories(projects);
                     if (t) activeTagList.push(t);
                   }
                 });
-                updateURL(currentQuery, activeTagList, campus);
+                updateURL(currentQuery, activeTagList);
                 updateFiltering();
               });
 
@@ -816,15 +790,6 @@ const categories = getSearchFilterCategories(projects);
           candidates = [...projects];
         }
 
-        // apply campus filtering
-        if (currentCampus !== "all") {
-          candidates = candidates.filter(
-            (p) =>
-              p.place?.campus === currentCampus ||
-              (p as any).campusId === currentCampus,
-          );
-        }
-
         // filter by tags
         const hasTagFilters = selectedTagList.length > 0;
         const finalResults = hasTagFilters
@@ -843,11 +808,11 @@ const categories = getSearchFilterCategories(projects);
       // 6. apply URL params to UI and execute filtering
       const applyUrlParams = () => {
         const urlParams = new URLSearchParams(window.location.search);
-        const urlTags = urlParams.get("tags");
-        const urlTagsList = urlTags
-          ? urlTags.split(",").map((t) => t.trim())
-          : [];
-        const urlCampus = urlParams.get("campus") || "all";
+        const urlTagsList = urlParams
+          .getAll("tags")
+          .flatMap((t) => t.split(","))
+          .map((t) => t.trim())
+          .filter(Boolean);
 
         if (tagBtns) {
           let hasMatch = false;
@@ -870,17 +835,6 @@ const categories = getSearchFilterCategories(projects);
           }
         }
 
-        if (campusBtns) {
-          campusBtns.forEach((btn) => {
-            const campus = btn.getAttribute("data-campus");
-            if (campus === urlCampus) {
-              btn.classList.add("active");
-            } else {
-              btn.classList.remove("active");
-            }
-          });
-        }
-
         updateFiltering();
       };
 
@@ -889,16 +843,10 @@ const categories = getSearchFilterCategories(projects);
         allBtn.addEventListener("click", () => {
           tagBtns?.forEach((btn) => btn.classList.remove("active"));
           allBtn.classList.add("active");
-          const activeCampusBtn = filterContainer?.querySelector(
-            ".filter-btn[data-campus].active",
-          );
-          const campus = activeCampusBtn
-            ? activeCampusBtn.getAttribute("data-campus") || "all"
-            : "all";
           const query = (
             new URLSearchParams(window.location.search).get("q") || ""
           ).trim();
-          updateURL(query, [], campus);
+          updateURL(query, []);
           updateFiltering();
         });
       }
@@ -906,12 +854,6 @@ const categories = getSearchFilterCategories(projects);
       tagBtns?.forEach((btn) => {
         btn.addEventListener("click", () => {
           btn.classList.toggle("active");
-          const activeCampusBtn = filterContainer?.querySelector(
-            ".filter-btn[data-campus].active",
-          );
-          const campus = activeCampusBtn
-            ? activeCampusBtn.getAttribute("data-campus") || "all"
-            : "all";
           const query = (
             new URLSearchParams(window.location.search).get("q") || ""
           ).trim();
@@ -922,28 +864,7 @@ const categories = getSearchFilterCategories(projects);
               if (t) activeTagList.push(t);
             }
           });
-          updateURL(query, activeTagList, campus);
-          updateFiltering();
-        });
-      });
-
-      campusBtns?.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          const target = e.currentTarget as HTMLElement;
-          campusBtns.forEach((b) => b.classList.remove("active"));
-          target.classList.add("active");
-          const campus = target.getAttribute("data-campus") || "all";
-          const query = (
-            new URLSearchParams(window.location.search).get("q") || ""
-          ).trim();
-          const activeTagList: string[] = [];
-          tagBtns?.forEach((b) => {
-            if (b.classList.contains("active")) {
-              const t = b.getAttribute("data-tag");
-              if (t) activeTagList.push(t);
-            }
-          });
-          updateURL(query, activeTagList, campus);
+          updateURL(query, activeTagList);
           updateFiltering();
         });
       });
@@ -968,12 +889,6 @@ const categories = getSearchFilterCategories(projects);
 
             if (matchedBtn) {
               (matchedBtn as HTMLElement).classList.add("active");
-              const activeCampusBtn = filterContainer?.querySelector(
-                ".filter-btn[data-campus].active",
-              );
-              const campus = activeCampusBtn
-                ? activeCampusBtn.getAttribute("data-campus") || "all"
-                : "all";
               const query = (
                 new URLSearchParams(window.location.search).get("q") || ""
               ).trim();
@@ -984,7 +899,7 @@ const categories = getSearchFilterCategories(projects);
                   if (t) activeTagList.push(t);
                 }
               });
-              updateURL(query, activeTagList, campus);
+              updateURL(query, activeTagList);
               updateFiltering();
             }
           }

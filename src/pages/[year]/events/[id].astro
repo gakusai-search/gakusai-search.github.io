@@ -1,7 +1,7 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import "../../../styles/events.css";
-import { getAllEvents } from "../../../utils/events";
+import { getAllEvents, getEventsByYear } from "../../../utils/events";
 import { getTagColorClass } from "../../../utils/tags";
 import { CURRENT_YEAR } from "../../../config/site";
 
@@ -19,11 +19,20 @@ const { year } = Astro.params;
 const isLatest = year === CURRENT_YEAR;
 const eventsBasePath = isLatest ? "/events/" : `/${year}/events/`;
 
+const yearEvents = getEventsByYear(year);
+const uniqueCampuses = new Set(
+  yearEvents.flatMap((e) => e.tags?.campus || (e.campusName ? [e.campusName] : [])),
+);
+const showCampusTag = uniqueCampuses.size > 1;
+
 const allProjectTags = [
-  ...(project.tags?.date || []),
-  ...(project.tags?.format || []),
-  ...(project.tags?.field || []),
-  ...(project.tags?.features || []),
+  ...new Set([
+    ...(showCampusTag ? (project.tags?.campus || []) : []),
+    ...(project.tags?.date || []),
+    ...(project.tags?.format || []),
+    ...(project.tags?.field || []),
+    ...(project.tags?.features || []),
+  ]),
 ];
 ---
 

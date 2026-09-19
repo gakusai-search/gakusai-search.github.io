@@ -98,7 +98,7 @@ export interface SubCategoryGroup {
 
 export interface CategoryGroup {
   key: string;
-  categoryType: "date" | "format" | "field" | "features";
+  categoryType: "campus" | "date" | "format" | "field" | "features";
   title: string;
   tags?: string[];
   subCategories?: SubCategoryGroup[];
@@ -110,6 +110,19 @@ export function getSearchFilterCategories(projects: any[]): CategoryGroup[] {
   );
 
   const groups: CategoryGroup[] = [];
+
+  // campus (1キャンパス分のデータしかない場合は非表示)
+  const campusTags = [
+    ...new Set(projects.flatMap((p) => p.tags?.campus || [])),
+  ] as string[];
+  if (campusTags.length > 1) {
+    groups.push({
+      key: "campus",
+      categoryType: "campus",
+      title: "キャンパス",
+      tags: campusTags,
+    });
+  }
 
   // date
   const dateTags = [
