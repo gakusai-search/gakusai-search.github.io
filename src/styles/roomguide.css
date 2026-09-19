@@ -20,6 +20,16 @@ hr {
     text-align: left;
 }
 
+.roomguide-btn:disabled {
+    opacity: 0.7;
+    -webkit-opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.roomguide-btn option:disabled {
+    opacity: 0.7;
+}
+
 .roomguide-search-btn {
     position: relative;
     font-size: 18px;
@@ -35,6 +45,14 @@ hr {
     font-weight: bold;
     cursor: not-allowed;
     margin-top: 12px;
+}
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .roomguide-search-btn:not(.activated) {
+        background: linear-gradient(to right, #777777 0%, #a4a4a4 100%);
+        color: #e9e9e9;
+        box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.3);
+    }
 }
 
 .roomguide-search-btn.activated {
@@ -54,8 +72,15 @@ hr {
     margin-bottom: 30px;
 }
 
-.map-icon {
-    size: 48px;
+.txt-guide {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#campus-icon {
+    width: 24px;
+    height: auto;
 }
 
 .floor-txt {
@@ -63,12 +88,12 @@ hr {
 }
 
 .fl-main {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
 }
 
 .fl-sub {
-    font-size: 15px;
+    font-size: 12px;
 }
 
 @media (min-width: 940px) {

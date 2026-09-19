@@ -47,7 +47,6 @@ import "../../styles/roomguide.css";
         <option value="itl-8">8階</option>
         <option value="itl-9">9階</option>
         <option value="itl-10">10階</option>
-        <option value="itl-2">2階（テスト用）</option>
         <option value="none">2階、および11階は立入できません</option>
       </select>
       <button class="roomguide-search-btn" id="access-code">
@@ -56,15 +55,17 @@ import "../../styles/roomguide.css";
     </div>
     <div class="roomguide-map" id="roomguide-map" style="display:none;">
       <div class="map-card">
-        <div class="map-icon">
-          <img src="/img/roomguide/icons/orange_icon.svg" />
-        </div>
-        <div class="floor-txt">
-          <div class="fl-main">
-            <span id="floor-main"></span>
+        <div class="txt-guide">
+          <div class="map-icon">
+            <img id="campus-icon" src=" " />
           </div>
-          <div class="fl-sub">
-            <span id="floor-sub"></span>
+          <div class="floor-txt">
+            <div class="fl-main">
+              <span id="floor-main"></span>
+            </div>
+            <div class="fl-sub">
+              <span id="floor-sub"></span>
+            </div>
           </div>
         </div>
         <img id="display-image" src=" " alt="フロアマップ" />
@@ -93,7 +94,15 @@ const fl_classrooms = {
   /*フロアマップのoptionも整理しよう！※画像ファイルのタグは/img/roomguide/大学_キャンパス_建物_階数.png */
 
   const floor_map = {
-    "itl-2": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-2.png",
+    "itl-1": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-1.png",
+    "itl-3": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-3.png",
+    "itl-4": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-4.png",
+    "itl-5": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-5.png",
+    "itl-6": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-6.png",
+    "itl-7": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-7.png",
+    "itl-8": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-8.png",
+    "itl-9": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-9.png",
+    "itl-10": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-10.png",
   };
 
   /*フロアマップにつける補足説明のoptionも整理しよう！*/
@@ -135,10 +144,20 @@ const fl_classrooms = {
       main: "中央大学 市ヶ谷田町キャンパス",
       sub: "ミドルブリッジ 10階",
     },
-    "itl-2": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 2階（テスト用）",
-    },
+  };
+
+  /*フロアマップにつけるアイコンのoptionも整理しよう！*/
+
+  const campus_icon = {
+    "itl-1": "/img/roomguide/icons/orange_icon.svg",
+    "itl-3": "/img/roomguide/icons/orange_icon.svg",
+    "itl-4": "/img/roomguide/icons/orange_icon.svg",
+    "itl-5": "/img/roomguide/icons/orange_icon.svg",
+    "itl-6": "/img/roomguide/icons/orange_icon.svg",
+    "itl-7": "/img/roomguide/icons/orange_icon.svg",
+    "itl-8": "/img/roomguide/icons/orange_icon.svg",
+    "itl-9": "/img/roomguide/icons/orange_icon.svg",
+    "itl-10": "/img/roomguide/icons/orange_icon.svg",
   };
 
   /*上から順に選ばないと次には進めないよ～ん */
@@ -205,7 +224,7 @@ const fl_classrooms = {
     const floorNum = flSelect.value.replace("itl-", "");
   });
 
-  /*fl_selectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムをこの下に置くつもり */
+  /*fl_selectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムだったけど、テキスト等も引っ張れるように太らせたもの */
 
   const access_floor_map = document.getElementById("access-code");
   const map_search = document.getElementById("fl_select");
@@ -213,9 +232,11 @@ const fl_classrooms = {
   const img = document.getElementById("display-image");
   const floor_main = document.getElementById("floor-main");
   const floor_sub = document.getElementById("floor-sub");
+  const campus_icon_file = document.getElementById("campus-icon");
 
   access_floor_map.addEventListener("click", () => {
     const selectedValue = map_search.value;
+
     const imageSrc = floor_map[selectedValue];
     const labelinfo = floor_labels[selectedValue];
 
@@ -234,6 +255,14 @@ const fl_classrooms = {
         "floor map is not prepared now. comming soon:",
         selectedValue,
       );
+    }
+
+    /*同一処理にしたらバグり散らかしたので、アイコンの処理だけ分けて記述します */
+
+    const iconSrc = campus_icon[selectedValue];
+
+    if (iconSrc) {
+      campus_icon_file.src = iconSrc;
     }
   });
 </script>
