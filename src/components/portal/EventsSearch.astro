@@ -498,6 +498,7 @@ const showCampusTag = uniqueCampuses.size > 1;
         return {
           id: p.id,
           name: p.name,
+          organizerName: p.organizerName || "",
           description: p.description || "",
           campus: p.place?.campus || "",
           room: p.place?.room || "",
@@ -506,11 +507,12 @@ const showCampusTag = uniqueCampuses.size > 1;
       });
 
       const miniSearch = new MiniSearch({
-        fields: ["name", "tagsText", "description", "campus", "room"],
+        fields: ["name", "organizerName", "tagsText", "description", "campus", "room"],
         storeFields: ["id"],
         searchOptions: {
           boost: {
             name: 3,
+            organizerName: 2,
             tagsText: 2,
             campus: 1.5,
             room: 1.5,

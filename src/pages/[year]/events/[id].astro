@@ -39,8 +39,9 @@ const allProjectTags = [
 ---
 
 <Layout title={`${project.name}｜学祭ポータル`} hideNav={true} year={year}>
-  <button onclick={`location.href='${eventsBasePath}'`} class="back-button"
-    >←戻る</button
+  <button
+    onclick="if (window.history.length > 1 && document.referrer && document.referrer.startsWith(window.location.origin)) { history.back(); } else { location.href='/events/'; }"
+    class="back-button">←戻る</button
   >
   <button class="share-button"
     ><img src="/img/icons/share.svg" alt="シェア" /></button

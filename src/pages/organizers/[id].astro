@@ -83,6 +83,14 @@ function getAccountHref(service: string, rawVal: string): string {
 ---
 
 <Layout title={`${organizer.name}｜企画者紹介｜学祭ポータル`} hideNav={true}>
+  <button
+    onclick="if (window.history.length > 1 && document.referrer && document.referrer.startsWith(window.location.origin)) { history.back(); } else { location.href='/organizers/'; }"
+    class="back-button">←戻る</button
+  >
+  <button class="share-button"
+    ><img src="/img/icons/share.svg" alt="シェア" /></button
+  >
+
   <div class="organizer-detail-page">
     <div class="page-header">
       <div class="page-title">
