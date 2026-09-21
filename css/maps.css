@@ -37,6 +37,20 @@ hr {
   flex-direction: column;    
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 11fr 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+/*.grid-item{
+    
+padding: 1px;
+text-align: center;
+font-size: 10px;
+}*/
+
 .access-info2{
     background-color: var(--color-btn-main);
     color: var(--color-text-main);
@@ -46,7 +60,7 @@ hr {
     width: 100%;
 }
 
-.access-info2 .text2 span:first-child{
+.access-info2 .grid-item .title{
     font-weight: bold;
     font-size: 15px;
     color: var(--color-text-main);
@@ -57,6 +71,7 @@ hr {
   text-align: left;
   flex-direction: column;    
 }
+
 
 @media (min-width: 940px) {
     body {
