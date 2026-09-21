@@ -1,0 +1,177 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/events.css";
+import { getOrganizersWithEvents } from "../../utils/events";
+
+const sortedOrganizers = getOrganizersWithEvents().sort((a, b) => {
+  return a.organizer.name.localeCompare(b.organizer.name, "ja");
+});
+---
+
+<Layout title="企画者一覧｜学祭ポータル" hideNav={true}>
+  <div class="organizers-index-page">
+    <div class="page-header">
+      <div class="page-title">
+        <h1>これまでにご協力いただいた企画者様</h1>
+      </div>
+      <div class="organizers-count">
+        全 {sortedOrganizers.length} 企画者
+      </div>
+    </div>
+
+    <hr />
+
+    <ul class="organizer-list">
+      {
+        sortedOrganizers.map(({ organizer, events }) => (
+          <li class="organizer-list-item-wrapper">
+            <a href={`/organizers/${organizer.id}`} class="organizer-list-item">
+              <span class="organizer-name">{organizer.name}</span>
+              <div class="organizer-meta">
+                <span class="events-count-pill">{events.length} 企画</span>
+                <img src="/img/maps/arrow.svg" alt="" class="chevron" />
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Layout>
+
+<style>
+  .organizers-index-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px 0 60px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .page-title h1 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin: 0;
+    color: var(--color-text-main);
+  }
+
+  .organizers-count {
+    font-size: 1.2rem;
+    color: var(--color-main);
+  }
+
+  hr {
+    margin-top: 0px;
+    margin-bottom: 24px;
+  }
+
+  .organizer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .organizer-list-item-wrapper {
+    margin: 0;
+    padding: 0;
+  }
+
+  .organizer-list-item {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background-color: var(--color-btn-main);
+    border: 1px solid var(--color-border-main);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--color-text-main);
+  }
+
+  .organizer-list-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .organizer-list-item:active::before {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s ease;
+  }
+
+  @media (hover: hover) {
+    .organizer-list-item:hover::before {
+      opacity: 1;
+    }
+  }
+
+  .organizer-name {
+    flex: 1;
+    min-width: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color-text-main);
+    word-break: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+  }
+
+  .organizer-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .events-count-pill {
+    font-size: 0.8rem;
+    color: var(--color-text-main);
+    opacity: 0.7;
+    background: color-mix(in srgb, var(--color-text-main) 10%, transparent);
+    padding: 2px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .chevron {
+    width: 20px;
+    height: 20px;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  @media screen and (max-width: 600px) {
+    .organizer-list-item {
+      padding: 12px 14px;
+    }
+
+    .organizer-name {
+      font-size: 0.95rem;
+    }
+  }
+</style>

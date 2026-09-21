@@ -1,0 +1,144 @@
+[
+  {
+    "id": "itlfest-exec",
+    "name": "iTLFest.実行委員会",
+    "description": "iTLFest実行委員会です。",
+    "accounts": {
+      "Web": "https://itlfest.com",
+      "X": "@Festival_iTL",
+      "Instagram": "@festival_itl",
+      "Threads": "@festival_itl",
+      "LINE": "@513fripz",
+      "Mail": "itlfestdrive[at]gmail.com"
+    }
+  },
+  {
+    "id": "itl-keion",
+    "name": "iTL軽音楽サークル",
+    "description": "軽音です！よろしくお願いします。",
+    "accounts": {
+      "Instagram": "@itl_kon"
+    }
+  },
+  {
+    "id": "itl-gallery",
+    "name": "iTL展示企画団体",
+    "description": "iTL展示企画団体です。",
+    "accounts": {
+      "Instagram": "@itl_tenji"
+    }
+  },
+  {
+    "id": "chuo-mogiten",
+    "name": "中央大学模擬店企画団体",
+    "description": "模擬店企画団体です。",
+    "accounts": {
+      "X": "@chuo_mogiten"
+    }
+  },
+  {
+    "id": "chuo-mainstage",
+    "name": "中央大学メインステージ企画団体",
+    "description": "メインステージ企画団体です。",
+    "accounts": {
+      "Instagram": "@mainstage_chuouniv"
+    }
+  },
+  {
+    "id": "tama-gallery",
+    "name": "たまギャラリー",
+    "description": "たまギャラリーです。",
+    "accounts": {
+      "Instagram": "@tama_gallery"
+    }
+  },
+  {
+    "id": "itl-piano",
+    "name": "iTLピアノサークル",
+    "description": "iTLピアノサークルです。",
+    "accounts": {
+      "Instagram": "@itlpiano"
+    }
+  },
+  {
+    "id": "chuo-4campus",
+    "name": "中央大学4キャンパス合同企画",
+    "description": "4キャンパス合同企画です。",
+    "accounts": {}
+  },
+  {
+    "id": "ccacnet",
+    "name": "中央大学アニメーション研究会",
+    "description": "中央大学アニメーション研究会(CACC)です。【活動拠点：多摩キャンパス】アニメ制作を活動としてます。",
+    "accounts": {
+      "X": "@caccnet"
+    }
+  },
+  {
+    "id": "c3ofcl",
+    "name": "C3(Creative Computing Club)",
+    "description": "中央大学 市ヶ谷田町キャンパス（iTL）を拠点に、コンピュータをツールとして活用した創作活動を行っています。",
+    "accounts": {
+      "Web": "https://c3ofcl.github.io",
+      "X": "@c3ofcl",
+      "Instagram": "@c3.ofcl",
+      "Threads": "@c3.ofcl",
+      "YouTube": "@c3ofcl",
+      "TikTok": "@c3ofcl",
+      "LINE": "@112ebwax",
+      "GitHub": "@c3ofcl",
+      "Linktree": "@c3ofcl"
+    }
+  },
+  {
+    "id": "itl-pokemon",
+    "name": "iTLポケモン部",
+    "description": "iTLポケモン部です。",
+    "accounts": {
+      "Instagram": "@itl-pokemon"
+    }
+  },
+  {
+    "id": "itlfest-gamecenter",
+    "name": "iTLFest.ゲームセンター",
+    "description": "iTLFest.ゲームセンターです。",
+    "accounts": {}
+  },
+  {
+    "id": "itl-contprod",
+    "name": "iTLコンテンツプロダクション",
+    "description": "中央大学市谷田町キャンパス(通称:iTL)で活動する、総合創作活動サークルです！",
+    "accounts": {
+      "X": "@itl_contprod"
+    }
+  },
+  {
+    "id": "itl-2jigen-life",
+    "name": "iTL二次元らいふ！同好会",
+    "description": "iTL二次元らいふ！同好会です。",
+    "accounts": {}
+  },
+  {
+    "id": "gdg-chuo",
+    "name": "GDG on Campus Chuo University",
+    "description": "Google Developersのサポートを受けている、独立したディベロッパーコミュニティです。 中央大学国際情報学部を中心に活動を展開しています！",
+    "accounts": {
+      "X": "@gdgs_chuo",
+      "Instagram": "@gdgs_chuo"
+    }
+  },
+  {
+    "id": "itl-photo",
+    "name": "iTL写真部",
+    "description": "中央大学市ヶ谷田町キャンパスを主な拠点に、写真を撮る・学ぶ・共有する場をつくる学生団体です。",
+    "accounts": {
+      "Instagram": "@itl.photo"
+    }
+  },
+  {
+    "id": "itlfest-nazotoki",
+    "name": "iTLFest.謎解き企画",
+    "description": "iTLFest.謎解き企画です。",
+    "accounts": {}
+  }
+]

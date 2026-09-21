@@ -2,6 +2,7 @@
   {
     "id": "itl-2025-food-01",
     "name": "市ヶ谷田町 2025年模擬店",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -34,6 +35,7 @@
   {
     "id": "itl-2025-stage-01",
     "name": "市ヶ谷田町 2025年ステージ",
+    "organizerId": "itl-keion",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -66,6 +68,7 @@
   {
     "id": "itl-2025-exhibit-01",
     "name": "市ヶ谷田町 2025年展示会",
+    "organizerId": "itl-gallery",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [

@@ -1,4 +1,12 @@
 import { CURRENT_YEAR, ARCHIVE_YEARS } from '../config/site';
+import rawOrganizers from '../data/organizers.json';
+
+export interface Organizer {
+  id: string;
+  name: string;
+  description?: string;
+  accounts?: Record<string, string>;
+}
 
 export interface EventItem {
   id: string;
@@ -6,6 +14,8 @@ export interface EventItem {
   campusId: string;
   campusName: string;
   name: string;
+  organizerId: string;
+  organizerName: string;
   image: string;
   tags: {
     campus?: string[];
@@ -31,6 +41,20 @@ export interface Campus {
 // vite's import.meta.glob to load all JSON files under src/data/events/
 // eager: true forces Vite to load them immediately instead of dynamic imports
 const allDataModules = import.meta.glob('/src/data/events/*/*.json', { eager: true }) as Record<string, any>;
+
+/**
+ * get all organizers from master
+ */
+export function getAllOrganizers(): Organizer[] {
+  return rawOrganizers as Organizer[];
+}
+
+/**
+ * get organizer by id
+ */
+export function getOrganizerById(id: string): Organizer | undefined {
+  return getAllOrganizers().find(o => o.id === id);
+}
 
 /**
  * get all campuses defined for a specific year
@@ -65,11 +89,17 @@ export function getEventsByYear(year: string): EventItem[] {
             ? ev.tags.campus
             : [campusName];
 
+        const organizerId = ev.organizerId || 'unknown';
+        const organizerObj = getOrganizerById(organizerId);
+        const organizerName = organizerObj?.name || ev.organizer || organizerId;
+
         events.push({
           ...ev,
           year,
           campusId,
           campusName,
+          organizerId,
+          organizerName,
           tags: {
             ...ev.tags,
             campus: campusTags,
@@ -98,3 +128,33 @@ export function getAllEvents(): EventItem[] {
   const years = [...new Set([CURRENT_YEAR, ...ARCHIVE_YEARS])];
   return years.flatMap(y => getEventsByYear(y));
 }
+
+/**
+ * get all events by a specific organizer across all years and campuses
+ * sorted by year descending, and then by event name ascending within the same year
+ */
+export function getEventsByOrganizer(organizerId: string): EventItem[] {
+  const allEvents = getAllEvents();
+  return allEvents
+    .filter(e => e.organizerId === organizerId)
+    .sort((a, b) => {
+      // 1. in descending year order
+      const yearDiff = Number(b.year) - Number(a.year);
+      if (yearDiff !== 0) return yearDiff;
+      // 2. within the same year, in ascending order by event name
+      return a.name.localeCompare(b.name, 'ja');
+    });
+}
+
+/**
+ * get all organizers along with their events count and events list
+ */
+export function getOrganizersWithEvents(): { organizer: Organizer; events: EventItem[] }[] {
+  const organizers = getAllOrganizers();
+  return organizers.map(organizer => ({
+    organizer,
+    events: getEventsByOrganizer(organizer.id),
+  }));
+}
+
+

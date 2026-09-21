@@ -2,6 +2,7 @@
   {
     "id": "tama-2025-food-01",
     "name": "多摩 2025年模擬店",
+    "organizerId": "chuo-mogiten",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -34,6 +35,7 @@
   {
     "id": "tama-2025-stage-01",
     "name": "多摩 2025年ステージ",
+    "organizerId": "chuo-mainstage",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -66,6 +68,7 @@
   {
     "id": "tama-2025-exhibit-01",
     "name": "多摩 2025年展示会",
+    "organizerId": "tama-gallery",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [

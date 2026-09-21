@@ -2,6 +2,7 @@
   {
     "id": "itl-piano",
     "name": "iTLピアノサークル",
+    "organizerId": "itl-piano",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -35,6 +36,7 @@
   {
     "id": "itl-music-fest",
     "name": "iTL MUSIC FESTiVAL 2026",
+    "organizerId": "itl-keion",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -70,6 +72,7 @@
   {
     "id": "joint-4campus-event-itl",
     "name": "4キャンパス合同企画　〜中央大学が1つになる日〜",
+    "organizerId": "chuo-4campus",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -105,6 +108,7 @@
   {
     "id": "itl-ennichi",
     "name": "縁日企画",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -141,6 +145,7 @@
   {
     "id": "indie-anime-1f",
     "name": "自主制作アニメーション上映企画",
+    "organizerId": "ccacnet",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -175,6 +180,7 @@
   {
     "id": "itl-cafe-space",
     "name": "喫茶コーナー",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -212,6 +218,7 @@
   {
     "id": "itl-owarai",
     "name": "iTLFest. お笑いライブ 2026",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -241,6 +248,7 @@
   {
     "id": "itl-guest-talk",
     "name": "ゲスト講演会",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -271,6 +279,7 @@
   {
     "id": "itl-deco-3f",
     "name": "装飾企画 3F",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -305,6 +314,7 @@
   {
     "id": "itl-bgcafe",
     "name": "ボードゲームカフェ",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -343,6 +353,7 @@
   {
     "id": "jiku-999",
     "name": "時空鉄道 999〜教授たちのiTLストーリー〜",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -380,6 +391,7 @@
   {
     "id": "c3-playlab",
     "name": "C3 PlayLab",
+    "organizerId": "c3ofcl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -422,7 +434,8 @@
   },
   {
     "id": "itl-pokemon",
-    "name": "iTL ポケモン部",
+    "name": "iTLポケモン部",
+    "organizerId": "itl-pokemon",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -458,7 +471,8 @@
   },
   {
     "id": "itl-game-center",
-    "name": "iTLFest. ゲームセンター",
+    "name": "iTLFest.ゲームセンター",
+    "organizerId": "itlfest-gamecenter",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -494,6 +508,7 @@
   {
     "id": "itl-contprod",
     "name": "iTLコンテンツプロダクション制作展示企画",
+    "organizerId": "itl-contprod",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -531,6 +546,7 @@
   {
     "id": "indie-anime-9f",
     "name": "自主制作アニメーション上映会",
+    "organizerId": "ccacnet",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -565,6 +581,7 @@
   {
     "id": "itl-cosplay-dance",
     "name": "コスプレダンス",
+    "organizerId": "itl-2jigen-life",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -598,6 +615,7 @@
   {
     "id": "itl-karaoke",
     "name": "カラオケ企画",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -631,6 +649,7 @@
   {
     "id": "itl-deco-9f",
     "name": "装飾企画 9F",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -665,6 +684,7 @@
   {
     "id": "be-a-game-creator",
     "name": "ゲームクリエーターになってみよう！",
+    "organizerId": "gdg-chuo",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -700,6 +720,7 @@
   {
     "id": "film-camera-trial",
     "name": "フィルムカメラ体験会",
+    "organizerId": "itl-photo",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -733,7 +754,8 @@
   },
   {
     "id": "itl-photoclub",
-    "name": "iTL 写真部",
+    "name": "iTL写真部",
+    "organizerId": "itl-photo",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -767,6 +789,7 @@
   {
     "id": "itl-ar",
     "name": "AR企画",
+    "organizerId": "itlfest-exec",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -803,6 +826,7 @@
   {
     "id": "itl-nazo",
     "name": "市ヶ谷荘、XXXX号室にて。〜時代をつなぐ不思議な折り紙〜",
+    "organizerId": "itlfest-nazotoki",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
