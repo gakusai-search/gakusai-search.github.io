@@ -56,7 +56,7 @@ const allProjectTags = [
           src="/img/icons/campus_icon_test.svg"
           alt="アイコン"
         />
-        <h1>{project.name}</h1>
+        <h1 class="event-title">{project.name}</h1>
       </div>
       <button class="main-btn" id="tutorial-btn-event-introduction">
         このページの使い方
@@ -187,13 +187,114 @@ const allProjectTags = [
     align-self: center;
   }
 
+  .title {
+    align-items: center;
+  }
+
+  .campus-icon {
+    flex-shrink: 0;
+    align-self: center;
+  }
+
   @media screen and (max-width: 767px) {
-    .title h1 {
-      font-size: 1.35rem;
+    .event-title {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      word-break: break-word;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    img.campus-icon {
-      margin-bottom: 8px;
+    .event-title.is-clampable {
+      cursor: pointer;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .event-title.is-clampable:active {
+      opacity: 0.8;
+    }
+
+    .event-title.is-clampable.is-expanded {
+      display: block;
+      -webkit-line-clamp: unset;
+      overflow: visible;
     }
   }
 </style>
+
+<script>
+  function setupTitleClamp() {
+    const titleEl = document.querySelector<HTMLElement>(".event-title");
+    if (!titleEl) return;
+
+    const checkClamp = () => {
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      if (!isMobile) {
+        titleEl.classList.remove("is-clampable", "is-expanded");
+        titleEl.removeAttribute("role");
+        titleEl.removeAttribute("tabindex");
+        titleEl.removeAttribute("aria-expanded");
+        return;
+      }
+
+      const wasExpanded = titleEl.classList.contains("is-expanded");
+      if (wasExpanded) {
+        titleEl.classList.remove("is-expanded");
+      }
+
+      const isClamped = titleEl.scrollHeight > titleEl.clientHeight + 1;
+
+      if (isClamped) {
+        titleEl.classList.add("is-clampable");
+        titleEl.setAttribute("role", "button");
+        titleEl.setAttribute("tabindex", "0");
+        if (wasExpanded) {
+          titleEl.classList.add("is-expanded");
+          titleEl.setAttribute("aria-expanded", "true");
+        } else {
+          titleEl.setAttribute("aria-expanded", "false");
+        }
+      } else {
+        titleEl.classList.remove("is-clampable", "is-expanded");
+        titleEl.removeAttribute("role");
+        titleEl.removeAttribute("tabindex");
+        titleEl.removeAttribute("aria-expanded");
+      }
+    };
+
+    checkClamp();
+
+    if (!(titleEl as any)._hasClampListener) {
+      (titleEl as any)._hasClampListener = true;
+
+      titleEl.addEventListener("click", () => {
+        if (!titleEl.classList.contains("is-clampable")) return;
+        const willExpand = !titleEl.classList.contains("is-expanded");
+        titleEl.classList.toggle("is-expanded", willExpand);
+        titleEl.setAttribute("aria-expanded", willExpand ? "true" : "false");
+      });
+
+      titleEl.addEventListener("keydown", (e) => {
+        if (!titleEl.classList.contains("is-clampable")) return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          titleEl.click();
+        }
+      });
+
+      window.addEventListener("resize", checkClamp);
+      if ("fonts" in document) {
+        document.fonts.ready.then(checkClamp);
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupTitleClamp);
+  } else {
+    setupTitleClamp();
+  }
+  document.addEventListener("astro:page-load", setupTitleClamp);
+</script>
