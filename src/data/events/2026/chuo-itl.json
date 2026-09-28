@@ -108,7 +108,7 @@
   {
     "id": "itl-ennichi",
     "name": "縁日企画",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -180,7 +180,7 @@
   {
     "id": "itl-cafe-space",
     "name": "喫茶コーナー",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -218,7 +218,7 @@
   {
     "id": "itl-owarai",
     "name": "iTLFest. お笑いライブ 2026",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -248,7 +248,7 @@
   {
     "id": "itl-guest-talk",
     "name": "ゲスト講演会",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -279,7 +279,7 @@
   {
     "id": "itl-deco-3f",
     "name": "装飾企画 3F",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -314,7 +314,7 @@
   {
     "id": "itl-bgcafe",
     "name": "ボードゲームカフェ",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -353,7 +353,7 @@
   {
     "id": "jiku-999",
     "name": "時空鉄道 999〜教授たちのiTLストーリー〜",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -615,7 +615,7 @@
   {
     "id": "itl-karaoke",
     "name": "カラオケ企画",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -649,7 +649,7 @@
   {
     "id": "itl-deco-9f",
     "name": "装飾企画 9F",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [
@@ -789,7 +789,7 @@
   {
     "id": "itl-ar",
     "name": "AR企画",
-    "organizerId": "itlfest-exec",
+    "organizerId": "festival_itl",
     "image": "/img/events/events_hero_example.jpg",
     "tags": {
       "campus": [

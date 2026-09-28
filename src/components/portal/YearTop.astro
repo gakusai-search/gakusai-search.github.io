@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/index.css";
 import type { EventItem } from "../../utils/events";
+import { getTagColorClass } from "../../utils/tags";
 
 interface Props {
   year: string;
@@ -10,84 +11,400 @@ interface Props {
 }
 
 const { year, events, isLatest } = Astro.props;
+
+function getInitialDateStr(): string {
+  try {
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Tokyo",
+      month: "2-digit",
+      day: "numeric",
+      weekday: "short",
+    });
+    const parts = formatter.formatToParts(new Date());
+    const month = parts.find((p) => p.type === "month")?.value || "";
+    const day = parts.find((p) => p.type === "day")?.value || "";
+    const weekday = parts.find((p) => p.type === "weekday")?.value || "";
+    return `${month}/${day} (${weekday})`;
+  } catch {
+    return "";
+  }
+}
+
+const initialDate = isLatest ? getInitialDateStr() : "";
+const pageTitle = isLatest ? "ホーム｜学祭ポータル" : `${year}年度 ホーム｜学祭ポータル`;
+const eventsBasePath = isLatest ? "/events/" : `/${year}/events/`;
+
+// get all tags for the year
+const rawTags = [
+  ...new Set(
+    (events || []).flatMap((e) => [
+      ...(e.tags?.campus || (e.campusName ? [e.campusName] : [])),
+      ...(e.tags?.date || []),
+      ...(e.tags?.format || []),
+      ...(e.tags?.field || []),
+      ...(e.tags?.features || []),
+    ])
+  ),
+].filter(Boolean);
+
+// shuffle randomly
+const shuffledTags = [...rawTags];
+for (let i = shuffledTags.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [shuffledTags[i], shuffledTags[j]] = [shuffledTags[j], shuffledTags[i]];
+}
+
+// top pics
+const c3Events = (events || []).filter((e) => e.organizerId === "c3ofcl");
+const itlEvents = (events || []).filter((e) => e.organizerId === "festival_itl");
+
+const selectedC3 =
+  c3Events.length > 0
+    ? c3Events[Math.floor(Math.random() * c3Events.length)]
+    : null;
+const selectedItlPrimary =
+  itlEvents.length > 0
+    ? itlEvents[Math.floor(Math.random() * itlEvents.length)]
+    : null;
+const firstSlot: EventItem[] = [];
+if (selectedC3 && selectedItlPrimary) {
+  if (Math.random() < 0.5) {
+    firstSlot.push(selectedC3, selectedItlPrimary);
+  } else {
+    firstSlot.push(selectedItlPrimary, selectedC3);
+  }
+} else if (selectedC3) {
+  firstSlot.push(selectedC3);
+} else if (selectedItlPrimary) {
+  firstSlot.push(selectedItlPrimary);
+}
+
+const remainingItlEvents = selectedItlPrimary
+  ? itlEvents.filter((e) => e.id !== selectedItlPrimary.id)
+  : [...itlEvents];
+const shuffledRemainingItl = [...remainingItlEvents];
+for (let i = shuffledRemainingItl.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [shuffledRemainingItl[i], shuffledRemainingItl[j]] = [
+    shuffledRemainingItl[j],
+    shuffledRemainingItl[i],
+  ];
+}
+
+const additionalEvents = shuffledRemainingItl.slice(0, 4);
+const officialEvents = [...firstSlot, ...additionalEvents];
+
+// extract tags assigned to 3 or more events from format/field ones
+const formatAndFieldTagMap = new Map<string, EventItem[]>();
+
+(events || []).forEach((e) => {
+  const currentTags = [
+    ...(e.tags?.format || []),
+    ...(e.tags?.field || []),
+  ].filter(Boolean);
+
+  const uniqueEventTags = new Set(currentTags);
+  uniqueEventTags.forEach((tag) => {
+    if (!formatAndFieldTagMap.has(tag)) {
+      formatAndFieldTagMap.set(tag, []);
+    }
+    formatAndFieldTagMap.get(tag)!.push(e);
+  });
+});
+
+const eligibleTags = Array.from(formatAndFieldTagMap.entries())
+  .filter(([_, evList]) => evList.length >= 3)
+  .map(([tag]) => tag);
+
+const shuffledEligibleTags = [...eligibleTags];
+for (let i = shuffledEligibleTags.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [shuffledEligibleTags[i], shuffledEligibleTags[j]] = [
+    shuffledEligibleTags[j],
+    shuffledEligibleTags[i],
+  ];
+}
+const selectedTags = shuffledEligibleTags.slice(0, 4);
+
+const tagSections = selectedTags.map((tag) => {
+  const matching = formatAndFieldTagMap.get(tag) || [];
+  const shuffled = [...matching];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return {
+    tag,
+    events: shuffled.slice(0, 6),
+  };
+});
 ---
 
-<Layout title={`${year}年度 ホーム｜学祭ポータル`} year={year}>
-  <Fragment slot="head">
-    <link
-      href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
-      rel="stylesheet"
-    />
-  </Fragment>
+<Layout title={pageTitle} year={year}>
+  <h1 id={isLatest ? "top-heading" : undefined}>
+    {isLatest ? initialDate : `${year}年度 学祭ポータル`}
+  </h1>
 
-  <h1>{year}年度 学祭ポータル</h1>
-  <h2>おすすめイベント</h2>
-
-  <div class="pc_top_pics_container">
-    <div class="pc_top_pics">
-      <a href="#"><img src="/img/test/test-1.png" alt="テスト1" /></a>
-      <a href="#"><img src="/img/test/test-2.png" alt="テスト2" /></a>
-      <a href="#"><img src="/img/test/test-3.png" alt="テスト3" /></a>
-    </div>
-  </div>
-
-  <div class="mobile_top_pics_container">
-    <section id="image-carousel" class="splide" aria-label="top_pics">
-      <div class="splide__track">
-        <ul class="splide__list">
-          <li class="splide__slide">
-            <a href="#">
-              <img src="/img/test/test-1.png" alt="テスト1" />
-            </a>
-          </li>
-          <li class="splide__slide">
-            <a href="#">
-              <img src="/img/test/test-2.png" alt="テスト2" />
-            </a>
-          </li>
-          <li class="splide__slide">
-            <a href="#">
-              <img src="/img/test/test-3.png" alt="テスト3" />
-            </a>
-          </li>
-        </ul>
+  {
+    shuffledTags.length > 0 && (
+      <div class="top_tags_container">
+        <section class="button-list top_tags_track" id="top-tags-track">
+          {shuffledTags.map((tag) => (
+            <button
+              type="button"
+              class={`main-btn ${getTagColorClass(tag)}`}
+              onclick={`location.href='${eventsBasePath}?tags=${encodeURIComponent(tag)}'`}
+            >
+              #{tag}
+            </button>
+          ))}
+        </section>
       </div>
-    </section>
-  </div>
+    )
+  }
 
-  <main>
-    <h2>#〇〇〇〇</h2>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-    <p>あいうえお</p>
-  </main>
+  {
+    (officialEvents.length > 0 || tagSections.length > 0) && (
+      <hr class="top-divider" />
+    )
+  }
 
-  <script
-    is:inline
-    src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"
-  ></script>
+  {
+    officialEvents.length > 0 && (
+      <section class="top_carousel_section">
+        <h2 class="section-title">公式コンテンツ</h2>
+
+        <div class="top_pics_container">
+          <div class="top_pics">
+            {officialEvents.map((ev) => (
+              <a href={`/${year}/events/${ev.id}/`} class="top_pic_item">
+                <img
+                  src={ev.image || "/img/events/events_hero_example.jpg"}
+                  alt={ev.name}
+                />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="top_pics_indicators">
+          <button
+            type="button"
+            class="main-btn top_pics_arrow_btn prev"
+            aria-label="前へスクロール"
+            disabled
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="main-btn top_pics_arrow_btn next"
+            aria-label="次へスクロール"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    tagSections.map(({ tag, events: sectionEvents }) => (
+      <section class="top_carousel_section">
+        <h2 class="section-title">#{tag}</h2>
+
+        <div class="top_pics_container">
+          <div class="top_pics">
+            {sectionEvents.map((ev) => (
+              <a href={`/${year}/events/${ev.id}/`} class="top_pic_item">
+                <img
+                  src={ev.image || "/img/events/events_hero_example.jpg"}
+                  alt={ev.name}
+                />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="top_pics_indicators">
+          <button
+            type="button"
+            class="main-btn top_pics_arrow_btn prev"
+            aria-label="前へスクロール"
+            disabled
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="main-btn top_pics_arrow_btn next"
+            aria-label="次へスクロール"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </section>
+    ))
+  }
 
   <script is:inline>
-    document.addEventListener("DOMContentLoaded", function () {
-      var el = document.querySelector(".splide");
-      if (el) {
-        new Splide(el, {
-          autoplay: true,
-          type: "loop",
-          pauseOnHover: false,
-          pauseOnFocus: false,
-          interval: 4000, // auto play interval
-          speed: 1000, // slider transition time
-        }).mount();
+    (function () {
+      var track = document.getElementById("top-tags-track");
+      if (track && track.children.length > 1) {
+        var items = Array.prototype.slice.call(track.children);
+        for (var i = items.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          track.appendChild(items[j]);
+        }
       }
-    });
+    })();
+
+    (function () {
+      var sections = document.querySelectorAll(".top_carousel_section");
+      sections.forEach(function (section) {
+        var container = section.querySelector(".top_pics_container");
+        var prevBtn = section.querySelector(".top_pics_arrow_btn.prev");
+        var nextBtn = section.querySelector(".top_pics_arrow_btn.next");
+        if (!container || !prevBtn || !nextBtn) return;
+
+        function updateIndicator() {
+          var maxScrollLeft = container.scrollWidth - container.clientWidth;
+          var currentLeft = container.scrollLeft;
+
+          if (maxScrollLeft <= 5) {
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            return;
+          }
+
+          var firstItem = container.querySelector(".top_pic_item");
+          var lastItem = container.querySelector(".top_pic_item:last-child");
+          var containerRect = container.getBoundingClientRect();
+
+          var canScrollLeft = currentLeft > 10;
+          if (firstItem) {
+            var firstRect = firstItem.getBoundingClientRect();
+            if (firstRect.left >= containerRect.left - 8) {
+              canScrollLeft = false;
+            }
+          }
+
+          var canScrollRight = currentLeft < maxScrollLeft - 10;
+          if (lastItem) {
+            var lastRect = lastItem.getBoundingClientRect();
+            if (lastRect.right <= containerRect.right + 8) {
+              canScrollRight = false;
+            }
+          }
+
+          prevBtn.disabled = !canScrollLeft;
+          nextBtn.disabled = !canScrollRight;
+        }
+
+        prevBtn.addEventListener("click", function () {
+          var scrollAmount = container.clientWidth * 0.75;
+          if (container.scrollLeft <= scrollAmount) {
+            container.scrollTo({ left: 0, behavior: "smooth" });
+          } else {
+            container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+          }
+        });
+
+        nextBtn.addEventListener("click", function () {
+          var scrollAmount = container.clientWidth * 0.75;
+          container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+        });
+
+        container.addEventListener("scroll", updateIndicator, { passive: true });
+        if ("onscrollend" in window) {
+          container.addEventListener("scrollend", updateIndicator);
+        }
+        window.addEventListener("resize", updateIndicator);
+
+        var images = container.querySelectorAll("img");
+        for (var k = 0; k < images.length; k++) {
+          if (images[k].complete) {
+            updateIndicator();
+          } else {
+            images[k].addEventListener("load", updateIndicator);
+          }
+        }
+
+        updateIndicator();
+        setTimeout(updateIndicator, 100);
+        setTimeout(updateIndicator, 500);
+      });
+    })();
   </script>
+
+
+  {isLatest && (
+    <script is:inline>
+      (function () {
+        function updateDate() {
+          var heading = document.getElementById("top-heading");
+          if (!heading) return;
+          try {
+            var formatter = new Intl.DateTimeFormat("en-US", {
+              timeZone: "Asia/Tokyo",
+              month: "2-digit",
+              day: "numeric",
+              weekday: "short",
+            });
+            var parts = formatter.formatToParts(new Date());
+            var month = "";
+            var day = "";
+            var weekday = "";
+            for (var i = 0; i < parts.length; i++) {
+              if (parts[i].type === "month") month = parts[i].value;
+              if (parts[i].type === "day") day = parts[i].value;
+              if (parts[i].type === "weekday") weekday = parts[i].value;
+            }
+            if (month && day && weekday) {
+              heading.textContent = month + "/" + day + " (" + weekday + ")";
+            }
+          } catch (e) {
+            console.error("Failed to update date", e);
+          }
+        }
+        updateDate();
+      })();
+    </script>
+  )}
 </Layout>

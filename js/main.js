@@ -5,7 +5,3 @@ $(document).ready(function(){
         $("footer").load("/asset/footer.html");
     });
 });
-document.addEventListener( 'DOMContentLoaded', function () {
-    new Splide(".splide").mount(window.splide.Extensions);
-    
-});

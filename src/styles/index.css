@@ -1,47 +1,189 @@
-/* top_pics switch start */
-@media (max-width: 767px) {
-    .mobile_top_pics_container {
-        display: block;
-    }
-  
-    .pc_top_pics_container {
-        display: none;
+/* desktop layout override for YearTop */
+@media (min-width: 940px) {
+    body {
+        max-width: none;
+        margin-left: 20px;
+        margin-right: 20px;
     }
 }
-@media (min-width: 768px) {
-    .pc_top_pics_container {
-        display: block;
-    }
-    
-    .mobile_top_pics_container {
-        display: none;
-    }
-}
-/* top_pics switch end */
 
-/* pc top_pics slider start */
-.pc_top_pics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3px; /* set space between each column */
+h1,
+h2,
+h3,
+h4,
+p,
+main {
+    text-align: left;
+}
+
+#top-heading {
+    margin-bottom: 16px;
+}
+
+/* tag scroll menu */
+.top_tags_container {
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin: 12px 0 20px 0;
+    padding-bottom: 1px;
 }
-.pc_top_pics a {
-    text-align: center;
-}
-.pc_top_pics a img {
-    width: 90%; /* set 3 pics */
-    height: auto;
-}
-/* pc top_pics slider end */
 
-/* mobile top_pics slider start */
-.splide__slide img {
-    width: 75%;
-    height: auto;
-    margin-left: 12%;
-    margin-right: 12%;
+.top_tags_container::-webkit-scrollbar {
+    display: none;
 }
-/* mobile top_pics slider end */
+
+.top_tags_track.button-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+    width: max-content;
+    padding: 0 2px;
+}
+
+.top_tags_track.button-list .main-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-bottom: 0;
+    height: 32px;
+    font-size: 14px;
+    padding: 0 14px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.top-divider {
+    margin-top: 0px;
+}
+
+
+/* top pics scroll menu */
+.top_pics_container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 8px;
+}
+
+.top_pics_container::-webkit-scrollbar {
+    display: none;
+}
+
+/* top pics scroll indicator */
+.top_pics_indicators {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 24px;
+}
+
+.top_pics_arrow_btn.main-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    padding: 0;
+    margin-bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    opacity: 1;
+}
+
+.top_pics_arrow_btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    display: block;
+}
+
+.top_pics_arrow_btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+
+.top_pics {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    width: max-content;
+    padding: 4px 6px;
+}
+
+.top_pics .top_pic_item {
+    position: relative;
+    flex: 0 0 280px;
+    width: 280px;
+    scroll-snap-align: start;
+    border-radius: 12px;
+    overflow: hidden;
+    display: block;
+    background-color: var(--color-btn-main, #eee);
+    cursor: pointer;
+}
+
+/* top pics white border */
+.top_pics .top_pic_item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.top_pics .top_pic_item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.top_pics .top_pic_item:active::before {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s ease;
+}
+
+@media (hover: hover) {
+    .top_pics .top_pic_item:hover::before {
+        opacity: 1;
+    }
+}
+
+
+.top_pics .top_pic_item img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+}
+
+@media (min-width: 768px) {
+    .top_pics .top_pic_item {
+        flex: 0 0 360px;
+        width: 360px;
+    }
+}
