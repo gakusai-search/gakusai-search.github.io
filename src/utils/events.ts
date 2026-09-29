@@ -93,6 +93,12 @@ export function getEventsByYear(year: string): EventItem[] {
         const organizerObj = getOrganizerById(organizerId);
         const organizerName = organizerObj?.name || ev.organizer || organizerId;
 
+        const defaultHeroImage = '/img/events/events_hero_example.png';
+        const image =
+          typeof ev.image === 'string' && ev.image.trim() !== ''
+            ? ev.image
+            : defaultHeroImage;
+
         events.push({
           ...ev,
           year,
@@ -100,6 +106,7 @@ export function getEventsByYear(year: string): EventItem[] {
           campusName,
           organizerId,
           organizerName,
+          image,
           tags: {
             ...ev.tags,
             campus: campusTags,

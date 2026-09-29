@@ -1,1 +1,29 @@
-[]
+[
+  {
+    "id": "festival_itl",
+    "name": "iTLFest.実行委員会",
+    "description": "中央大学国際情報学部「iTLFest.」の実行委員会です！",
+    "accounts": {
+      "Web": "https://itlfest.com",
+      "X": "@Festival_iTL",
+      "Instagram": "@festival_itl",
+      "Threads": "@festival_itl",
+      "LINE": "@513fripz",
+      "Mail": "itlfestdrive@gmail.com"
+    }
+  },
+  {
+    "id": "c3ofcl",
+    "name": "C3 | Creative Computing Club",
+    "description": "中央大学 市ヶ谷田町キャンパス（iTL）を拠点に、コンピュータをツールとして活用した創作活動を行うサークルです。本Webサイトの開発を担当しました。",
+    "accounts": {
+      "Web": "https://linktr.ee/c3ofcl",
+      "Instagram": "@c3.ofcl",
+      "Threads": "@c3.ofcl",
+      "X": "https://x.com/c3ofcl",
+      "TikTok": "@c3ofcl",
+      "YouTube": "@c3ofcl",
+      "LINE": "@112ebwax"
+    }
+  }
+]
