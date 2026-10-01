@@ -4,6 +4,12 @@ hr {
     margin-top: 0px;
 }
 
+a {
+    display: grid;
+    text-decoration: none;
+    color: inherit;
+}
+
 .info button {
     background-color: var(--color-btn-main);
     color: var(--color-text-main);
@@ -12,66 +18,83 @@ hr {
     border-radius: 20px;
 }
 
-.access-info1 {
+.access-info {
+    position: relative;
     background-color: var(--color-btn-main);
     color: var(--color-text-main);
-    padding: 3px 11px;
+    padding: 10px 10px;
     border: thin solid var(--color-border-main);
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    margin-bottom: 20px;
-    width: 100%;
+    margin-bottom: 30px;
 }
 
-.access-info1 .text1 span:first-child {
-    font-weight: bold;
-    font-size: 15px;
-    color: var(--color-text-main);
+.access-info::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
 }
 
-.access-info1 .text1 {
-    display: flex;
-    text-align: left;
-    flex-direction: column;
+.access-info:active::before {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s ease;
+}
+
+/* apply hover effect only on devices that support hover like PC */
+@media (hover: hover) {
+    .access-info:hover::before {
+        opacity: 1;
+    }
 }
 
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 11fr 1fr;
+    grid-template-columns: 36px 12fr 32px;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-/*.grid-item{
-    
-padding: 1px;
-text-align: center;
-font-size: 10px;
-}*/
-
-.access-info2 {
-    background-color: var(--color-btn-main);
-    color: var(--color-text-main);
-    padding: 3px 11px;
-    border: thin solid var(--color-border-main);
-    border-radius: 10px;
-    width: 100%;
+.access-info-icon {
+    display: block;
+    margin: 0 auto;
 }
 
-.access-info2 .grid-item .title {
+.arrow {
+    display: block;
+    margin: 0 auto;
+}
+
+.grid-item {
+    padding: 1px;
+}
+
+.grid-item-title {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 16px;
     color: var(--color-text-main);
-}
-
-.access-info2 .text2 {
-    display: flex;
     text-align: left;
-    flex-direction: column;
+    margin-top: 0px;
+    margin-bottom: 3px;
 }
 
+.grid-item-description {
+    font-size: 12px;
+    text-align: left;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.maps-image {
+    width: 100%;
+    margin-top: 10px;
+}
 
 @media (min-width: 940px) {
     body {

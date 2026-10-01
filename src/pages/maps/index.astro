@@ -18,37 +18,49 @@ import "../../styles/maps.css";
 
   <h2 class="section-title">ご来場の際のご案内</h2>
 
-  <button class="access-info1">
-    <img src="/img/maps/wheelchair.svg" />
-
-    <div class="text1">
-      <span>車いすスペース・優先席のご案内</span>
-      <span>バリアフリー設備・優先席のご案内をご確認いただけます</span>
-    </div>
-
-    <img src="/img/maps/arrow.svg" />
-  </button>
-
-  <hr />
-
-  <button class="access-info2">
+  <a class="access-info" href="#" target="_blank">
     <div class="grid-container">
       <div class="grid-item">
-        <img src="/img/maps/red-icon.svg" />
+        <img src="/img/maps/wheelchair.svg" class="access-info-icon" />
       </div>
 
       <div class="grid-item">
-        <p class="title">Ichigaya Town Lens by C3</p>
-        <p class="description">
+        <p class="grid-item-title">車いすスペース・優先席のご案内</p>
+        <p class="grid-item-description">
+          バリアフリー設備・優先席のご案内をご確認いただけます
+        </p>
+      </div>
+
+      <div class="grid-item">
+        <img src="/img/maps/arrow.svg" class="arrow" />
+      </div>
+    </div>
+  </a>
+
+  <hr />
+
+  <a class="access-info" href="#" target="_blank">
+    <div class="grid-container">
+      <div class="grid-item">
+        <img src="/img/maps/red-icon.svg" class="access-info-icon" />
+      </div>
+
+      <div class="grid-item">
+        <p class="grid-item-title">Ichigaya Town Lens by C3</p>
+        <p class="grid-item-description">
           市ヶ谷周辺の隠れた名所を巡るデジタルマップ、中大のサークル「C3」(本サイト開発元)が制作
         </p>
       </div>
 
       <div class="grid-item">
-        <img src="/img/maps/arrow.svg" />
+        <img src="/img/maps/arrow.svg" class="arrow" />
       </div>
     </div>
 
-    <img src="/img/maps/townlens.svg" alt="Ichigaya Town Lens" />
-  </button>
+    <img
+      src="/img/maps/townlens.svg"
+      alt="Ichigaya Town Lens"
+      class="maps-image"
+    />
+  </a>
 </Layout>
