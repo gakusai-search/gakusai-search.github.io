@@ -19,12 +19,37 @@ a {
 }
 
 .access-info {
+    position: relative;
     background-color: var(--color-btn-main);
     color: var(--color-text-main);
     padding: 10px 10px;
     border: thin solid var(--color-border-main);
     border-radius: 10px;
     margin-bottom: 30px;
+}
+
+.access-info::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.access-info:active::before {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s ease;
+}
+
+/* apply hover effect only on devices that support hover like PC */
+@media (hover: hover) {
+    .access-info:hover::before {
+        opacity: 1;
+    }
 }
 
 .grid-container {
@@ -66,7 +91,7 @@ a {
 
 .maps-image{
     width: 100%;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 @media (min-width: 940px) {
