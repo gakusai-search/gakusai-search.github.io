@@ -4,6 +4,12 @@ hr {
     margin-top: 0px;
 }
 
+a {
+    display: grid;
+    text-decoration: none;
+    color: inherit;
+}
+
 .info button{
     background-color: var(--color-btn-main);
     color: var(--color-text-main);
@@ -12,89 +18,55 @@ hr {
     border-radius: 20px;
 }
 
-.access-info1{
+.access-info {
     background-color: var(--color-btn-main);
     color: var(--color-text-main);
-    padding: 3px 11px;
+    padding: 10px 10px;
     border: thin solid var(--color-border-main);
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.wheelchair{
-    
-}
-
-.access-info1 .text1 span:first-child{
-    font-weight: bold;
-    font-size: 15px;
-    color: var(--color-text-main);
-}
-
-.access-info1 .text1{
-  display: flex;
-  text-align: left;
-  flex-direction: column;    
+    margin-bottom: 30px;
 }
 
 .grid-container {
-  display: grid;
-  grid-template-columns: 30px 11fr 30px;
-  align-items: center;
-  gap: 20px;
+    display: grid;
+    grid-template-columns: 36px 12fr 32px;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-.title{
-    text-align: left;
-    margin-bottom: 4px;
+.access-info-icon {
+    display: block;
+    margin: 0 auto;
 }
 
-.description{
-    text-align: left;
-    margin-top: -1px;
+.arrow {
+    display: block;
+    margin: 0 auto;
 }
 
-.grid-item{
+.grid-item {
     padding: 1px;
 }
-
-.access-info2{
-    background-color: var(--color-btn-main);
-    color: var(--color-text-main);
-    padding: 5px 5px;
-    border: thin solid var(--color-border-main);
-    border-radius: 5px;
-    width: 100%;
-}
-
-.access-info2 .grid-item .title{
+.grid-item-title {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 16px;
     color: var(--color-text-main);
+    text-align: left;
+    margin-top: 0px;
+    margin-bottom: 3px;
 }
-
-.red-icon{
-    display: block;
-    margin: 0 auto;
-}
-
-.arrow{
-    display: block;
-    margin: 0 auto;
-}
-
-.access-info2 .text2{
-  display: flex;
-  text-align: left;
-  flex-direction: column;    
+.grid-item-description {
+    font-size: 12px;
+    text-align: left;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .maps-image{
-    width: 99%;
+    width: 100%;
+    margin-top: 5px;
 }
 
 @media (min-width: 940px) {
