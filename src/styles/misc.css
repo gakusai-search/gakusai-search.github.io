@@ -7,7 +7,7 @@ hr {
 .setting-card {
     background-color: var(--color-btn-main);
     border: 1.5px solid var(--color-border-main);
-    border-radius: 14px;
+    border-radius: 10px;
     padding: 16px 20px;
     display: flex;
     flex-direction: column;
@@ -58,7 +58,7 @@ hr {
 .partner-card {
     background-color: var(--color-btn-main);
     border: 1.5px solid var(--color-border-main);
-    border-radius: 14px;
+    border-radius: 10px;
     padding: 18px 20px;
     display: flex;
     flex-direction: column;

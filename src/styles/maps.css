@@ -10,20 +10,12 @@ a {
     color: inherit;
 }
 
-.info button {
-    background-color: var(--color-btn-main);
-    color: var(--color-text-main);
-    padding: 3px 11px;
-    border: thin solid var(--color-border-main);
-    border-radius: 20px;
-}
-
 .access-info {
     position: relative;
     background-color: var(--color-btn-main);
     color: var(--color-text-main);
     padding: 10px 10px;
-    border: thin solid var(--color-border-main);
+    border: 1.5px solid var(--color-border-main);
     border-radius: 10px;
     margin-bottom: 30px;
 }

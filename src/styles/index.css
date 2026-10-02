@@ -130,7 +130,7 @@ main {
     flex: 0 0 280px;
     width: 280px;
     scroll-snap-align: start;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
     display: block;
     background-color: var(--color-btn-main, #eee);
