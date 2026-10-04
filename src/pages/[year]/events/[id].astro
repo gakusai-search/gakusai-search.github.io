@@ -36,6 +36,21 @@ const allProjectTags = [
 ];
 
 const campusIconSrc = project.campusIconSrc || getCampusIconSrc(project.campusId);
+
+const [univ, campus] = (project.campusId || "").split("-");
+const floorMatch = project.place?.room?.match(/(\d+)階/);
+const floor = floorMatch ? `floor-${floorMatch[1]}` : null;
+const building = "mb";
+const mapsQuery =
+  univ && campus && floor
+    ? new URLSearchParams({
+        univ,
+        campus,
+        building,
+        floor,
+      }).toString()
+    : "";
+const mapsUrl = mapsQuery ? `/roomguide/?${mapsQuery}` : "/roomguide/";
 ---
 
 <Layout title={`${project.name}｜学祭ポータル`} hideNav={true} year={year}>
@@ -110,7 +125,7 @@ const campusIconSrc = project.campusIconSrc || getCampusIconSrc(project.campusId
         <h2>場所</h2>
         <p>{project.campusName || project.place?.campus}</p>
         <p>{project.place?.room}</p>
-        <button class="main-btn" id="maps-btn">キャンパスマップ →</button>
+        <a href={mapsUrl} class="main-btn" id="maps-btn">キャンパスマップ →</a>
       </div>
       <hr />
       <div class="accounts">
@@ -195,6 +210,14 @@ const campusIconSrc = project.campusIconSrc || getCampusIconSrc(project.campusId
   .campus-icon {
     flex-shrink: 0;
     align-self: center;
+  }
+
+  #maps-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
   }
 
   @media screen and (max-width: 767px) {

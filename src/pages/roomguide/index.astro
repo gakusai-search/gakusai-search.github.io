@@ -198,6 +198,9 @@ import "../../styles/roomguide.css";
         };
         campusIconFile.src = iconSrc;
         roomguideMap.style.display = "block";
+        if (window.location.search) {
+          roomguideMap.scrollIntoView({ behavior: "smooth" });
+        }
       };
       tempImg.onerror = () => {
         img.src = "";
@@ -207,5 +210,38 @@ import "../../styles/roomguide.css";
       };
       tempImg.src = imageSrc;
     });
+
+    // URLで受け取ったら自動で選ぶよ
+    const params = new URLSearchParams(window.location.search);
+    const univParam = params.get("univ");
+    const campusParam = params.get("campus");
+    const buildingParam = params.get("building");
+    const floorParam = params.get("floor");
+
+    if (univParam && campusParam && buildingParam && floorParam) {
+      const setSelectValue = (select: HTMLSelectElement, val: string) => {
+        const optionExists = Array.from(select.options).some(
+          (opt) => opt.value === val,
+        );
+        if (optionExists) {
+          select.value = val;
+          select.disabled = false;
+          return true;
+        }
+        return false;
+      };
+
+      const univValid = setSelectValue(univSelect, univParam);
+      const campusValid =
+        univValid && setSelectValue(campusSelect, campusParam);
+      const buildingValid =
+        campusValid && setSelectValue(buildingsSelect, buildingParam);
+      const floorValid = buildingValid && setSelectValue(flSelect, floorParam);
+
+      if (univValid && campusValid && buildingValid && floorValid) {
+        updateSearchBtn();
+        searchBtn.click();
+      }
+    }
   }
 </script>
