@@ -26,27 +26,27 @@ import "../../styles/roomguide.css";
       <h2 class="section-title">場所を検索</h2>
       <select class="roomguide-btn" id="univ_select">
         <option value="none">大学を選択</option>
-        <option value="chudai">中央大学</option>
+        <option value="chuo">中央大学</option>
       </select>
       <select class="roomguide-btn" id="campus_select">
         <option value="none">キャンパスを選択</option>
-        <option value="chudai">市ヶ谷田町キャンパス</option>
+        <option value="itl">市ヶ谷田町キャンパス</option>
       </select>
       <select class="roomguide-btn" id="buildings_select">
         <option value="none">建物を選択</option>
-        <option value="chudai">ミドルブリッジ</option>
+        <option value="mb">ミドルブリッジ</option>
       </select>
       <select class="roomguide-btn" id="fl_select">
         <option value="none">階数を選択</option>
-        <option value="itl-1">1階</option>
-        <option value="itl-3">3階</option>
-        <option value="itl-4">4階</option>
-        <option value="itl-5">5階</option>
-        <option value="itl-6">6階</option>
-        <option value="itl-7">7階</option>
-        <option value="itl-8">8階</option>
-        <option value="itl-9">9階</option>
-        <option value="itl-10">10階</option>
+        <option value="floor-1">1階</option>
+        <option value="floor-3">3階</option>
+        <option value="floor-4">4階</option>
+        <option value="floor-5">5階</option>
+        <option value="floor-6">6階</option>
+        <option value="floor-7">7階</option>
+        <option value="floor-8">8階</option>
+        <option value="floor-9">9階</option>
+        <option value="floor-10">10階</option>
         <option value="none">2階、および11階は立入できません</option>
       </select>
       <button class="roomguide-search-btn" id="access-code">
@@ -57,7 +57,13 @@ import "../../styles/roomguide.css";
       <div class="map-card">
         <div class="grid-container">
           <div class="grid-item">
-            <img id="campus-icon" src=" " class="access-info-icon" />
+            <img
+              id="campus-icon"
+              src="/img/icons/campus-icon_test.svg"
+              class="access-info-icon"
+              alt="アイコン"
+              onerror="this.onerror=null; this.src='/img/icons/campus-icon_test.svg';"
+            />
           </div>
 
           <div class="grid-item">
@@ -65,129 +71,35 @@ import "../../styles/roomguide.css";
             <p class="grid-item-description" id="floor-sub"></p>
           </div>
         </div>
-        <img
-          id="display-image"
-          src=" "
-          alt="フロアマップ"
-          class="maps-image"
-        />
+        <img id="display-image" src="" alt="フロアマップ" class="maps-image" />
       </div>
     </div>
   </div>
 </Layout>
 
 <script>
-  /*教室選択のoptionを整理しよう！ */
-
-  /*
-const fl_classrooms = {
-  '1階': ['教室を選択', 'エントランスホール', 'コミュニケーションホール'],
-  '3階': ['教室を選択', '301'],
-  '4階': ['教室を選択', '401'],
-  '5階': ['教室を選択', '501', '502'],
-  '6階': ['教室を選択', '事務室'],
-  '7階': ['教室を選択', '701', '702'],
-  '8階': ['教室を選択', '801', '802'],
-  '9階': ['教室を選択', '901', '902'],
-  '10階': ['教室を選択', '1001', '1002', '1003', '1004', '1005'],
-};
-*/
-
-  /*フロアマップのoptionも整理しよう！※画像ファイルのタグは/img/roomguide/大学_キャンパス_建物_階数.png */
-
-  const floor_map = {
-    "itl-1": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-1.png",
-    "itl-3": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-3.png",
-    "itl-4": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-4.png",
-    "itl-5": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-5.png",
-    "itl-6": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-6.png",
-    "itl-7": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-7.png",
-    "itl-8": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-8.png",
-    "itl-9": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-9.png",
-    "itl-10": "/img/roomguide/chudai_ichigaya-tamachi_mb_floor-10.png",
-  };
-
-  /*フロアマップにつける補足説明のoptionも整理しよう！*/
-
-  const floor_labels = {
-    "itl-1": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 1階",
-    },
-    "itl-3": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 3階",
-    },
-    "itl-4": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 4階",
-    },
-    "itl-5": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 5階",
-    },
-    "itl-6": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 6階",
-    },
-    "itl-7": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 7階",
-    },
-    "itl-8": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 8階",
-    },
-    "itl-9": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 9階",
-    },
-    "itl-10": {
-      main: "中央大学 市ヶ谷田町キャンパス",
-      sub: "ミドルブリッジ 10階",
-    },
-  };
-
-  /*フロアマップにつけるアイコンのoptionも整理しよう！*/
-
-  const campus_icon = {
-    "itl-1": "/img/roomguide/icons/orange_icon.svg",
-    "itl-3": "/img/roomguide/icons/orange_icon.svg",
-    "itl-4": "/img/roomguide/icons/orange_icon.svg",
-    "itl-5": "/img/roomguide/icons/orange_icon.svg",
-    "itl-6": "/img/roomguide/icons/orange_icon.svg",
-    "itl-7": "/img/roomguide/icons/orange_icon.svg",
-    "itl-8": "/img/roomguide/icons/orange_icon.svg",
-    "itl-9": "/img/roomguide/icons/orange_icon.svg",
-    "itl-10": "/img/roomguide/icons/orange_icon.svg",
-  };
-
-  /*上から順に選ばないと次には進めないよ～ん */
-
   const selects = document.querySelectorAll(".roomguide-btn");
 
+  // 上から順に選ばないと次には進めない制御
   selects.forEach((select, index) => {
     if (index !== 0) {
       select.disabled = true;
     }
 
-    /*選択できるかどうかはこれで処理するよ */
     select.addEventListener("change", () => {
       const nextSelect = selects[index + 1];
-      const selectedvalue = select.value;
+      const selectedValue = select.value;
       if (nextSelect) {
-        if (selectedvalue === "none") {
+        if (selectedValue === "none") {
           nextSelect.disabled = true;
-        } else if (selectedvalue === "chudai") {
-          /*全部変更するのめんどくさいのでこれで行きます */
+        } else {
           nextSelect.disabled = false;
         }
       }
     });
   });
 
-  /*選択肢を変更した場合に実行する後続選択の初期化処理だよ */
-
+  // 選択肢を変更した場合に実行する後続選択の初期化処理
   selects.forEach((select, index) => {
     select.addEventListener("change", () => {
       for (let i = index + 2; i < selects.length; i++) {
@@ -199,17 +111,8 @@ const fl_classrooms = {
     });
   });
 
-  /*検索ボタンはデフォで押せない見た目の方が良さそうってイティエルが言ってた */
-
-  const flSelect = document.getElementById("fl_select");
-  const searchBtn = document.querySelector(".roomguide-search-btn");
-
-  flSelect.addEventListener("change", updateSearchBtn);
-  updateSearchBtn();
-
-  searchBtn.addEventListener("click", () => {
-    const floorNum = flSelect.value.replace("itl-", "");
-  });
+  // 検索ボタンの有効化・無効化制御
+  const searchBtn = document.getElementById("access-code");
 
   function updateSearchBtn() {
     const ready = [...selects].every((s) => s.value !== "none");
@@ -222,49 +125,58 @@ const fl_classrooms = {
   );
   updateSearchBtn();
 
-  searchBtn.addEventListener("click", () => {
-    const floorNum = flSelect.value.replace("itl-", "");
-  });
-
-  /*fl_selectのvalue値に応じて/img/nav/roomguideから画像を引っ張るシステムだったけど、テキスト等も引っ張れるように太らせたもの */
-
-  const access_floor_map = document.getElementById("access-code");
-  const map_search = document.getElementById("fl_select");
-  const roomguide_map = document.getElementById("roomguide-map");
+  // 取得したvalueからアイコン、テキスト、画像を動的に決定して表示する
+  const univSelect = document.getElementById("univ_select");
+  const campusSelect = document.getElementById("campus_select");
+  const buildingsSelect = document.getElementById("buildings_select");
+  const flSelect = document.getElementById("fl_select");
+  const roomguideMap = document.getElementById("roomguide-map");
   const img = document.getElementById("display-image");
-  const floor_main = document.getElementById("floor-main");
-  const floor_sub = document.getElementById("floor-sub");
-  const campus_icon_file = document.getElementById("campus-icon");
+  const floorMain = document.getElementById("floor-main");
+  const floorSub = document.getElementById("floor-sub");
+  const campusIconFile = document.getElementById("campus-icon");
 
-  access_floor_map.addEventListener("click", () => {
-    const selectedValue = map_search.value;
+  searchBtn.addEventListener("click", () => {
+    const univ = univSelect.value;
+    const campus = campusSelect.value;
+    const building = buildingsSelect.value;
+    const floor = flSelect.value;
 
-    const imageSrc = floor_map[selectedValue];
-    const labelinfo = floor_labels[selectedValue];
+    if (
+      univ === "none" ||
+      campus === "none" ||
+      building === "none" ||
+      floor === "none"
+    ) {
+      return;
+    }
 
-    if (imageSrc) {
+    const campusId = `${univ}-${campus}`;
+    const imageSrc = `/img/roomguide/${campusId}/${building}/${floor}.png`;
+    const iconSrc = `/img/icons/campus-icon_${campusId}.svg`;
+
+    const mainText = `${univSelect.options[univSelect.selectedIndex].text} ${campusSelect.options[campusSelect.selectedIndex].text}`;
+    const subText = `${buildingsSelect.options[buildingsSelect.selectedIndex].text} ${flSelect.options[flSelect.selectedIndex].text}`;
+
+    // 画像の存在を確認してからフロアマップカードを表示しよう
+    const tempImg = new Image();
+    tempImg.onload = () => {
       img.src = imageSrc;
-      roomguide_map.style.display = "block";
-      if (labelinfo) {
-        floor_main.textContent = labelinfo.main;
-        floor_sub.textContent = labelinfo.sub;
-      }
-    } else {
-      img.src = " ";
-      roomguide_map.style.display = "none";
+      floorMain.textContent = mainText;
+      floorSub.textContent = subText;
+      campusIconFile.onerror = function () {
+        this.onerror = null;
+        this.src = "/img/icons/campus-icon_test.svg";
+      };
+      campusIconFile.src = iconSrc;
+      roomguideMap.style.display = "block";
+    };
+    tempImg.onerror = () => {
+      img.src = "";
+      roomguideMap.style.display = "none";
       alert("この場所のフロアマップは現在準備中です");
-      console.warn(
-        "floor map is not prepared now. comming soon:",
-        selectedValue,
-      );
-    }
-
-    /*同一処理にしたらバグり散らかしたので、アイコンの処理だけ分けて記述します */
-
-    const iconSrc = campus_icon[selectedValue];
-
-    if (iconSrc) {
-      campus_icon_file.src = iconSrc;
-    }
+      console.warn("floor map is not prepared now. coming soon:", imageSrc);
+    };
+    tempImg.src = imageSrc;
   });
 </script>
