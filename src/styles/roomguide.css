@@ -64,36 +64,51 @@ hr {
     background-color: var(--color-btn-main);
     border: 1.5px solid var(--color-border-main);
     border-radius: 10px;
-    padding: 16px 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
     margin-top: 30px;
     margin-bottom: 30px;
 }
 
-.txt-guide {
-    display: flex;
+.grid-container {
+    display: grid;
+    grid-template-columns: 36px 12fr;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-#campus-icon {
-    width: 24px;
-    height: auto;
+.access-info-icon {
+    display: block;
+    margin: 0 auto;
+    width: 22px;
 }
 
-.floor-txt {
-    color: var(--color-text-main);
+.grid-item {
+    padding: 1px;
 }
 
-.fl-main {
-    font-size: 16px;
+.grid-item-title {
     font-weight: bold;
+    font-size: 16px;
+    color: var(--color-text-main);
+    text-align: left;
+    margin-top: 0px;
+    margin-bottom: 3px;
 }
 
-.fl-sub {
+.grid-item-description {
     font-size: 12px;
+    text-align: left;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.maps-image {
+    width: 100%;
+    margin-top: 10px;
 }
 
 @media (min-width: 940px) {

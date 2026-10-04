@@ -55,20 +55,22 @@ import "../../styles/roomguide.css";
     </div>
     <div class="roomguide-map" id="roomguide-map" style="display:none;">
       <div class="map-card">
-        <div class="txt-guide">
-          <div class="map-icon">
-            <img id="campus-icon" src=" " />
+        <div class="grid-container">
+          <div class="grid-item">
+            <img id="campus-icon" src=" " class="access-info-icon" />
           </div>
-          <div class="floor-txt">
-            <div class="fl-main">
-              <span id="floor-main"></span>
-            </div>
-            <div class="fl-sub">
-              <span id="floor-sub"></span>
-            </div>
+
+          <div class="grid-item">
+            <p class="grid-item-title" id="floor-main"></p>
+            <p class="grid-item-description" id="floor-sub"></p>
           </div>
         </div>
-        <img id="display-image" src=" " alt="フロアマップ" />
+        <img
+          id="display-image"
+          src=" "
+          alt="フロアマップ"
+          class="maps-image"
+        />
       </div>
     </div>
   </div>
