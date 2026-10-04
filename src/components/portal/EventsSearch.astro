@@ -137,7 +137,15 @@ const showCampusTag = uniqueCampuses.size > 1;
           >
             <img src={project.image} alt={project.name} loading="lazy" />
             <div class="event-card-content">
-              <h3>{project.name}</h3>
+              <h3>
+                <img
+                  class="campus-icon"
+                  src={project.campusIconSrc}
+                  alt="アイコン"
+                  onerror="this.onerror=null; this.src='/img/icons/campus-icon_test.svg';"
+                />
+                <span class="event-card-title-text">{project.name}</span>
+              </h3>
               <div class="event-card-tags">
                 {allTags.map((tag) => (
                   <span
@@ -168,7 +176,15 @@ const showCampusTag = uniqueCampuses.size > 1;
     <a href="" class="event-card">
       <img src="" alt="" loading="lazy" />
       <div class="event-card-content">
-        <h3></h3>
+        <h3>
+          <img
+            class="campus-icon"
+            src=""
+            alt="アイコン"
+            onerror="this.onerror=null; this.src='/img/icons/campus-icon_test.svg';"
+          />
+          <span class="event-card-title-text"></span>
+        </h3>
         <div class="event-card-tags"></div>
       </div>
     </a>
@@ -543,12 +559,33 @@ const showCampusTag = uniqueCampuses.size > 1;
           link.classList.add(cardColorClass);
         }
 
-        const img = clone.querySelector("img") as HTMLImageElement;
-        img.src = p.image;
-        img.alt = p.name;
+        const coverImg = (clone.querySelector(".event-card > img") ||
+          clone.querySelector("img:not(.campus-icon)")) as HTMLImageElement;
+        if (coverImg) {
+          coverImg.src = p.image;
+          coverImg.alt = p.name;
+        }
 
-        const title = clone.querySelector("h3") as HTMLElement;
-        title.textContent = p.name;
+        const iconImg = clone.querySelector(
+          ".campus-icon",
+        ) as HTMLImageElement;
+        if (iconImg) {
+          iconImg.src =
+            p.campusIconSrc ||
+            (p.campusId
+              ? `/img/icons/campus-icon_${p.campusId}.svg`
+              : "/img/icons/campus-icon_test.svg");
+        }
+
+        const titleText = clone.querySelector(
+          ".event-card-title-text",
+        ) as HTMLElement;
+        if (titleText) {
+          titleText.textContent = p.name;
+        } else {
+          const title = clone.querySelector("h3") as HTMLElement;
+          if (title) title.textContent = p.name;
+        }
 
         const tagsContainer = clone.querySelector(
           ".event-card-tags",

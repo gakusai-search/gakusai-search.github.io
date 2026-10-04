@@ -58,7 +58,9 @@ img.image-relative {
 }
 
 img.campus-icon {
-    padding-right: 8px;
+    padding-right: 12px;
+    width: 36px;
+    height: auto;
 }
 
 .title {

@@ -13,6 +13,7 @@ export interface EventItem {
   year: string;
   campusId: string;
   campusName: string;
+  campusIconSrc: string;
   name: string;
   organizerId: string;
   organizerName: string;
@@ -41,6 +42,21 @@ export interface Campus {
 // vite's import.meta.glob to load all JSON files under src/data/events/
 // eager: true forces Vite to load them immediately instead of dynamic imports
 const allDataModules = import.meta.glob('/src/data/events/*/*.json', { eager: true }) as Record<string, any>;
+
+const campusIcons = import.meta.glob('/public/img/icons/campus-icon_*.svg', { eager: true });
+
+/**
+ * get campus icon path based on campusId
+ * returns candidate icon path if exists, otherwise fallback to default campus-icon_test.svg
+ */
+export function getCampusIconSrc(campusId?: string): string {
+  if (!campusId) return '/img/icons/campus-icon_test.svg';
+  const targetKey = `/public/img/icons/campus-icon_${campusId}.svg`;
+  if (campusIcons[targetKey]) {
+    return `/img/icons/campus-icon_${campusId}.svg`;
+  }
+  return '/img/icons/campus-icon_test.svg';
+}
 
 /**
  * get all organizers from master
@@ -104,6 +120,7 @@ export function getEventsByYear(year: string): EventItem[] {
           year,
           campusId,
           campusName,
+          campusIconSrc: getCampusIconSrc(campusId),
           organizerId,
           organizerName,
           image,

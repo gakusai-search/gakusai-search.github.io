@@ -189,7 +189,15 @@ function getAccountHref(service: string, rawVal: string): string {
                     <span class="year-badge">{project.year}年度</span>
                   </div>
                   <div class="event-card-content">
-                    <h3>{project.name}</h3>
+                    <h3>
+                      <img
+                        class="campus-icon"
+                        src={project.campusIconSrc}
+                        alt="アイコン"
+                        onerror="this.onerror=null; this.src='/img/icons/campus-icon_test.svg';"
+                      />
+                      <span class="event-card-title-text">{project.name}</span>
+                    </h3>
                     <div class="event-card-tags">
                       {allTags.map((tag) => (
                         <span

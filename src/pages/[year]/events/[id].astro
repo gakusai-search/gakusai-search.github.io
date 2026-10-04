@@ -1,7 +1,7 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import "../../../styles/events.css";
-import { getAllEvents, getEventsByYear } from "../../../utils/events";
+import { getAllEvents, getEventsByYear, getCampusIconSrc } from "../../../utils/events";
 import { getTagColorClass } from "../../../utils/tags";
 import { CURRENT_YEAR } from "../../../config/site";
 
@@ -34,6 +34,8 @@ const allProjectTags = [
     ...(project.tags?.features || []),
   ]),
 ];
+
+const campusIconSrc = project.campusIconSrc || getCampusIconSrc(project.campusId);
 ---
 
 <Layout title={`${project.name}｜学祭ポータル`} hideNav={true} year={year}>
@@ -51,8 +53,9 @@ const allProjectTags = [
       <div class="title">
         <img
           class="campus-icon"
-          src="/img/icons/campus-icon_test.svg"
+          src={campusIconSrc}
           alt="アイコン"
+          onerror="this.onerror=null; this.src='/img/icons/campus-icon_test.svg';"
         />
         <h1 class="event-title">{project.name}</h1>
       </div>
