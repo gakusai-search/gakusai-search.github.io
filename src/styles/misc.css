@@ -59,7 +59,7 @@ hr {
     background-color: var(--color-btn-main);
     border: 1.5px solid var(--color-border-main);
     border-radius: 10px;
-    padding: 18px 20px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -75,9 +75,9 @@ hr {
 .partner-icon {
     width: 32px;
     height: 32px;
-    background: var(--color-main);
-    border-radius: 8px;
+    object-fit: contain;
     flex-shrink: 0;
+    display: block;
 }
 
 .partner-title-group {

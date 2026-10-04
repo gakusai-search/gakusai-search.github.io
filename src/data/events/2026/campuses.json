@@ -1,3 +1,7 @@
 [
-  { "id": "chuo-itl", "name": "中央大学 市ヶ谷田町キャンパス" }
+  {
+    "id": "chuo-itl",
+    "name": "中央大学 市ヶ谷田町キャンパス",
+    "festivalName": "iTLFest.2026"
+  }
 ]

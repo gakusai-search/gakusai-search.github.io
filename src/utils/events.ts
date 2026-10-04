@@ -37,6 +37,7 @@ export interface EventItem {
 export interface Campus {
   id: string;
   name: string;
+  festivalName?: string;
 }
 
 // vite's import.meta.glob to load all JSON files under src/data/events/
@@ -62,7 +63,7 @@ export function getCampusIconSrc(campusId?: string): string {
  * get all organizers from master
  */
 export function getAllOrganizers(): Organizer[] {
-  return rawOrganizers as Organizer[];
+  return rawOrganizers as unknown as Organizer[];
 }
 
 /**

@@ -1,11 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/misc.css";
+import { CURRENT_YEAR } from "../../config/site";
+import { getCampusesByYear, getCampusIconSrc } from "../../utils/events";
+
+const campuses = getCampusesByYear(CURRENT_YEAR);
 
 const partnerUniversities = [
   {
-    name: "中央大学 市ヶ谷田町キャンパス",
-    festivalName: "iTLFest.2026",
+    campusId: "chuo-itl",
     links: [
       {
         type: "web",
@@ -79,41 +82,55 @@ const partnerUniversities = [
   <h2 class="section-title">協力大学 学祭公式サイト</h2>
   <div class="partner-list">
     {
-      partnerUniversities.map((partner) => (
-        <div class="partner-card">
-          <div class="partner-header">
-            <div class="partner-icon" />
-            <div class="partner-title-group">
-              <div class="partner-name">{partner.name}</div>
-              <div class="partner-fest">{partner.festivalName}</div>
+      partnerUniversities.map((partner) => {
+        const campus = campuses.find((c) => c.id === partner.campusId);
+        const name = campus?.name || partner.campusId;
+        const festivalName = campus?.festivalName || "";
+        const iconSrc = getCampusIconSrc(partner.campusId);
+
+        return (
+          <div class="partner-card">
+            <div class="partner-header">
+              <img
+                class="partner-icon"
+                src={iconSrc}
+                alt="アイコン"
+                onerror="this.onerror=null; this.src='/img/icons/campus-icon_test.svg';"
+              />
+              <div class="partner-title-group">
+                <div class="partner-name">{name}</div>
+                {festivalName && (
+                  <div class="partner-fest">{festivalName}</div>
+                )}
+              </div>
             </div>
-          </div>
-          {partner.links && partner.links.length > 0 && (
-            <div class="partner-links">
-              {partner.links.map((link) => (
-                <div class="partner-link-row">
-                  <div class="link-label-group">
-                    <img
-                      src={`/img/icons/social-icon_${link.type}.svg`}
-                      alt={link.label}
-                      class="link-icon"
-                    />
-                    <span class="link-label-text">{link.label}</span>
+            {partner.links && partner.links.length > 0 && (
+              <div class="partner-links">
+                {partner.links.map((link) => (
+                  <div class="partner-link-row">
+                    <div class="link-label-group">
+                      <img
+                        src={`/img/icons/social-icon_${link.type}.svg`}
+                        alt={link.label}
+                        class="link-icon"
+                      />
+                      <span class="link-label-text">{link.label}</span>
+                    </div>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="link-url-text"
+                    >
+                      {link.text}
+                    </a>
                   </div>
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="link-url-text"
-                  >
-                    {link.text}
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ))
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })
     }
   </div>
   <hr />
