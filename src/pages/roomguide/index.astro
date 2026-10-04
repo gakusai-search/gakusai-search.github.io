@@ -78,9 +78,10 @@ import "../../styles/roomguide.css";
 </Layout>
 
 <script>
-  const selects = document.querySelectorAll(".roomguide-btn");
+  const selects =
+    document.querySelectorAll<HTMLSelectElement>(".roomguide-btn");
 
-  // 上から順に選ばないと次には進めない制御
+  // 上から順に選ばないと次には進めないよ
   selects.forEach((select, index) => {
     if (index !== 0) {
       select.disabled = true;
@@ -99,7 +100,7 @@ import "../../styles/roomguide.css";
     });
   });
 
-  // 選択肢を変更した場合に実行する後続選択の初期化処理
+  // 選択肢を変えた時にあとの選択肢は初期化しなきゃ
   selects.forEach((select, index) => {
     select.addEventListener("change", () => {
       for (let i = index + 2; i < selects.length; i++) {
@@ -111,10 +112,13 @@ import "../../styles/roomguide.css";
     });
   });
 
-  // 検索ボタンの有効化・無効化制御
-  const searchBtn = document.getElementById("access-code");
+  // 検索ボタンの有効化したり無効化したり
+  const searchBtn = document.getElementById(
+    "access-code",
+  ) as HTMLButtonElement | null;
 
   function updateSearchBtn() {
+    if (!searchBtn) return;
     const ready = [...selects].every((s) => s.value !== "none");
     searchBtn.disabled = !ready;
     searchBtn.classList.toggle("activated", ready);
@@ -125,58 +129,83 @@ import "../../styles/roomguide.css";
   );
   updateSearchBtn();
 
-  // 取得したvalueからアイコン、テキスト、画像を動的に決定して表示する
-  const univSelect = document.getElementById("univ_select");
-  const campusSelect = document.getElementById("campus_select");
-  const buildingsSelect = document.getElementById("buildings_select");
-  const flSelect = document.getElementById("fl_select");
+  // 取得したvalueからアイコン、テキスト、画像を次々と決める
+  const univSelect = document.getElementById(
+    "univ_select",
+  ) as HTMLSelectElement | null;
+  const campusSelect = document.getElementById(
+    "campus_select",
+  ) as HTMLSelectElement | null;
+  const buildingsSelect = document.getElementById(
+    "buildings_select",
+  ) as HTMLSelectElement | null;
+  const flSelect = document.getElementById(
+    "fl_select",
+  ) as HTMLSelectElement | null;
   const roomguideMap = document.getElementById("roomguide-map");
-  const img = document.getElementById("display-image");
+  const img = document.getElementById(
+    "display-image",
+  ) as HTMLImageElement | null;
   const floorMain = document.getElementById("floor-main");
   const floorSub = document.getElementById("floor-sub");
-  const campusIconFile = document.getElementById("campus-icon");
+  const campusIconFile = document.getElementById(
+    "campus-icon",
+  ) as HTMLImageElement | null;
 
-  searchBtn.addEventListener("click", () => {
-    const univ = univSelect.value;
-    const campus = campusSelect.value;
-    const building = buildingsSelect.value;
-    const floor = flSelect.value;
+  if (
+    searchBtn &&
+    univSelect &&
+    campusSelect &&
+    buildingsSelect &&
+    flSelect &&
+    roomguideMap &&
+    img &&
+    floorMain &&
+    floorSub &&
+    campusIconFile
+  ) {
+    searchBtn.addEventListener("click", () => {
+      const univ = univSelect.value;
+      const campus = campusSelect.value;
+      const building = buildingsSelect.value;
+      const floor = flSelect.value;
 
-    if (
-      univ === "none" ||
-      campus === "none" ||
-      building === "none" ||
-      floor === "none"
-    ) {
-      return;
-    }
+      if (
+        univ === "none" ||
+        campus === "none" ||
+        building === "none" ||
+        floor === "none"
+      ) {
+        return;
+      }
 
-    const campusId = `${univ}-${campus}`;
-    const imageSrc = `/img/roomguide/${campusId}/${building}/${floor}.png`;
-    const iconSrc = `/img/icons/campus-icon_${campusId}.svg`;
+      const campusId = `${univ}-${campus}`;
+      const imageSrc = `/img/roomguide/${campusId}/${building}/${floor}.png`;
+      const iconSrc = `/img/icons/campus-icon_${campusId}.svg`;
 
-    const mainText = `${univSelect.options[univSelect.selectedIndex].text} ${campusSelect.options[campusSelect.selectedIndex].text}`;
-    const subText = `${buildingsSelect.options[buildingsSelect.selectedIndex].text} ${flSelect.options[flSelect.selectedIndex].text}`;
+      const mainText = `${univSelect.options[univSelect.selectedIndex].text} ${campusSelect.options[campusSelect.selectedIndex].text}`;
+      const subText = `${buildingsSelect.options[buildingsSelect.selectedIndex].text} ${flSelect.options[flSelect.selectedIndex].text}`;
 
-    // 画像の存在を確認してからフロアマップカードを表示しよう
-    const tempImg = new Image();
-    tempImg.onload = () => {
-      img.src = imageSrc;
-      floorMain.textContent = mainText;
-      floorSub.textContent = subText;
-      campusIconFile.onerror = function () {
-        this.onerror = null;
-        this.src = "/img/icons/campus-icon_test.svg";
+      // 画像の存在を確認してからフロアマップカードを表示しよう
+      const tempImg = new Image();
+      tempImg.onload = () => {
+        img.src = imageSrc;
+        floorMain.textContent = mainText;
+        floorSub.textContent = subText;
+        campusIconFile.onerror = function () {
+          this.onerror = null;
+          this.src = "/img/icons/campus-icon_test.svg";
+        };
+        campusIconFile.src = iconSrc;
+        roomguideMap.style.display = "block";
       };
-      campusIconFile.src = iconSrc;
-      roomguideMap.style.display = "block";
-    };
-    tempImg.onerror = () => {
-      img.src = "";
-      roomguideMap.style.display = "none";
-      alert("この場所のフロアマップは現在準備中です");
-      console.warn("floor map is not prepared now. coming soon:", imageSrc);
-    };
-    tempImg.src = imageSrc;
-  });
+      tempImg.onerror = () => {
+        img.src = "";
+        roomguideMap.style.display = "none";
+        alert("この場所のフロアマップは現在準備中です");
+        console.warn("floor map is not prepared now. coming soon:", imageSrc);
+      };
+      tempImg.src = imageSrc;
+    });
+  }
 </script>
