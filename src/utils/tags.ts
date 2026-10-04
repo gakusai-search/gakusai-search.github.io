@@ -104,6 +104,23 @@ export interface CategoryGroup {
   subCategories?: SubCategoryGroup[];
 }
 
+export function sortDateTags(tags: string[]): string[] {
+  const parseScore = (str: string): number => {
+    const m = str.match(/(?:(\d+)\s*[月/])?\s*(\d+)/);
+    if (!m) return 0;
+    const month = m[1] ? parseInt(m[1], 10) : 0;
+    const day = parseInt(m[2], 10);
+    return month ? month * 100 + day : day;
+  };
+
+  return [...tags].sort((a, b) => {
+    const scoreA = parseScore(a);
+    const scoreB = parseScore(b);
+    if (scoreA !== scoreB) return scoreA - scoreB;
+    return a.localeCompare(b, "ja", { numeric: true });
+  });
+}
+
 export function getSearchFilterCategories(projects: any[]): CategoryGroup[] {
   const usedFieldTags = new Set(
     projects.flatMap((p) => p.tags?.field || []),
@@ -125,9 +142,9 @@ export function getSearchFilterCategories(projects: any[]): CategoryGroup[] {
   }
 
   // date
-  const dateTags = [
+  const dateTags = sortDateTags([
     ...new Set(projects.flatMap((p) => p.tags?.date || [])),
-  ] as string[];
+  ] as string[]);
   if (dateTags.length > 0) {
     groups.push({
       key: "date",
