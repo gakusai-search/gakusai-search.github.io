@@ -42,7 +42,7 @@ const [univ, campus] = (project.campusId || "").split("-");
 const floorMatch = project.place?.room?.match(/(\d+)階/);
 const floor = floorMatch ? `floor-${floorMatch[1]}` : null;
 const building = "mb";
-const mapsQuery =
+const roomguideQuery =
   univ && campus && floor
     ? new URLSearchParams({
         univ,
@@ -51,7 +51,7 @@ const mapsQuery =
         floor,
       }).toString()
     : "";
-const mapsUrl = mapsQuery ? `/roomguide/?${mapsQuery}` : "/roomguide/";
+const roomguideUrl = roomguideQuery ? `/roomguide/?${roomguideQuery}` : "/roomguide/";
 ---
 
 <Layout title={`${project.name}｜学祭ポータル`} hideNav={true} year={year}>
@@ -124,7 +124,7 @@ const mapsUrl = mapsQuery ? `/roomguide/?${mapsQuery}` : "/roomguide/";
         <h2>場所</h2>
         <p>{project.campusName || project.place?.campus}</p>
         <p>{project.place?.room}</p>
-        <a href={mapsUrl} class="main-btn" id="maps-btn">教室案内 →</a>
+        <a href={roomguideUrl} class="main-btn" id="roomguide-btn">教室案内 →</a>
       </div>
       <hr />
       <div class="accounts">
@@ -211,7 +211,7 @@ const mapsUrl = mapsQuery ? `/roomguide/?${mapsQuery}` : "/roomguide/";
     align-self: center;
   }
 
-  #maps-btn {
+  #roomguide-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
