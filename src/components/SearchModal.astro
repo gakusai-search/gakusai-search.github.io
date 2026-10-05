@@ -2,6 +2,7 @@
 import { getEventsByYear } from "../utils/events";
 import { getSearchFilterCategories } from "../utils/tags";
 import { CURRENT_YEAR } from "../config/site";
+import TutorialButton from "./TutorialButton.astro";
 
 export interface Props {
   year: string;
@@ -48,13 +49,11 @@ const categories = getSearchFilterCategories(projects);
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-      <button
-        type="button"
-        class="main-btn tutorial-btn modal-tutorial-btn"
+      <TutorialButton
+        pageKey="search-modal"
+        class="modal-tutorial-btn"
         id="modal-tutorial-btn"
-      >
-        このページの使い方
-      </button>
+      />
     </div>
 
     <hr class="modal-hr" />
@@ -183,6 +182,7 @@ const categories = getSearchFilterCategories(projects);
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    min-height: 32px;
   }
 
   /* top left: close button */
@@ -197,6 +197,8 @@ const categories = getSearchFilterCategories(projects);
     justify-content: center;
     cursor: pointer;
     padding: 0;
+    margin: 0;
+    outline: none;
     transition: background-color 0.2s ease;
     flex-shrink: 0;
   }
@@ -211,10 +213,13 @@ const categories = getSearchFilterCategories(projects);
   }
 
   /* top right: how to use */
-  .modal-tutorial-btn {
-    margin-bottom: 0;
+  :global(.modal-tutorial-btn) {
+    margin: 0 !important;
     font-size: 14px;
     height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
   }
 

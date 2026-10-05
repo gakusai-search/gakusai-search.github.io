@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import TutorialButton from "../TutorialButton.astro";
 import type { EventItem, Campus } from "../../utils/events";
 import {
   getSearchFilterCategories,
@@ -33,12 +34,7 @@ const showCampusTag = uniqueCampuses.size > 1;
       <h1>検索結果</h1>
     </div>
     <div class="events-header-bar">
-      <button
-        class="main-btn tutorial-btn"
-        id="tutorial-btn-event-introduction"
-      >
-        このページの使い方
-      </button>
+      <TutorialButton pageKey="events-search" />
       <div class="events-count" id="events-count">
         {projects.length}件
       </div>
@@ -201,15 +197,24 @@ const showCampusTag = uniqueCampuses.size > 1;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.8em;
+      min-height: 32px;
     }
 
-    .events-header-bar .tutorial-btn {
-      margin-bottom: 0;
+    .events-header-bar :global(.tutorial-btn) {
+      margin: 0 !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
     }
 
     .events-count {
       color: var(--color-main);
       font-size: 20px;
+      line-height: 1;
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
       text-align: right;
     }
 

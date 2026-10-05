@@ -1,0 +1,272 @@
+---
+import { TUTORIAL_DATA } from "../data/tutorials";
+---
+
+<dialog
+  id="tutorial-modal"
+  class="tutorial-modal"
+  aria-labelledby="tutorial-modal-title"
+  tabindex="-1"
+>
+  <div class="tutorial-modal-container">
+    <div class="tutorial-modal-header">
+      <button
+        type="button"
+        class="tutorial-close-btn"
+        id="tutorial-close-btn"
+        aria-label="閉じる"
+      >
+        <svg
+          class="tutorial-close-icon"
+          viewBox="0 0 24 24"
+          width="28"
+          height="28"
+          stroke="currentColor"
+          stroke-width="2.5"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h2 id="tutorial-modal-title" class="tutorial-modal-title">
+        このページの使い方
+      </h2>
+    </div>
+
+    <hr class="tutorial-modal-hr" />
+
+    <div class="tutorial-modal-body" id="tutorial-modal-body"></div>
+  </div>
+</dialog>
+
+<script>
+  import { TUTORIAL_DATA, type TutorialKey } from "../data/tutorials";
+
+  const dialog = document.getElementById(
+    "tutorial-modal",
+  ) as HTMLDialogElement | null;
+  const titleEl = document.getElementById("tutorial-modal-title");
+  const bodyEl = document.getElementById("tutorial-modal-body");
+  const closeBtn = document.getElementById("tutorial-close-btn");
+
+  function openTutorial(key: string) {
+    if (!dialog || !titleEl || !bodyEl) return;
+
+    const data = TUTORIAL_DATA[key as TutorialKey];
+    if (!data) {
+      titleEl.textContent = "このページの使い方";
+      bodyEl.innerHTML = `<p class="tutorial-text">このページの説明は準備中です。</p>`;
+    } else {
+      titleEl.textContent = data.title;
+      bodyEl.innerHTML = data.body
+        .map((paragraph) => `<p class="tutorial-text">${paragraph}</p>`)
+        .join("");
+    }
+
+    dialog.showModal();
+    // remove browser auto-focus from close button
+    closeBtn?.blur();
+    (document.activeElement as HTMLElement)?.blur();
+  }
+
+  function closeTutorial() {
+    if (!dialog || !dialog.open || dialog.classList.contains("is-closing"))
+      return;
+    dialog.classList.add("is-closing");
+    setTimeout(() => {
+      dialog.close();
+      dialog.classList.remove("is-closing");
+    }, 250);
+  }
+
+  // event delegation to capture clicks on any [data-tutorial-key]
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement | null;
+    const triggerBtn = target?.closest(
+      "[data-tutorial-key]",
+    ) as HTMLElement | null;
+    if (triggerBtn) {
+      const key = triggerBtn.getAttribute("data-tutorial-key");
+      if (key) {
+        e.preventDefault();
+        openTutorial(key);
+      }
+    }
+  });
+
+  // close triggers
+  closeBtn?.addEventListener("click", closeTutorial);
+
+  // close when clicking backdrop
+  dialog?.addEventListener("click", (e) => {
+    if (e.target === dialog) {
+      closeTutorial();
+    }
+  });
+
+  // handle ESC key to allow fade-out animation
+  dialog?.addEventListener("cancel", (e) => {
+    e.preventDefault();
+    closeTutorial();
+  });
+
+  // global helper for opening tutorial programmatically if needed
+  (window as unknown as { openTutorial: typeof openTutorial }).openTutorial =
+    openTutorial;
+</script>
+
+<style>
+  .tutorial-modal {
+    margin: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    max-width: 480px;
+    width: 90%;
+    color: var(--color-text-main);
+    outline: none;
+  }
+
+  .tutorial-modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: tutorialFadeIn 0.25s ease forwards;
+  }
+
+  .tutorial-modal.is-closing::backdrop {
+    animation: tutorialFadeOut 0.25s ease forwards;
+  }
+
+  .tutorial-modal-container {
+    background-color: var(--color-background-body);
+    border: 1.5px solid var(--color-border-main);
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    box-sizing: border-box;
+    animation: tutorialFadeIn 0.25s ease forwards;
+    outline: none;
+  }
+
+  .tutorial-modal.is-closing .tutorial-modal-container {
+    animation: tutorialFadeOut 0.25s ease forwards;
+  }
+
+  @keyframes tutorialFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes tutorialFadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .tutorial-modal-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 32px;
+  }
+
+  .tutorial-modal-title {
+    margin: 0;
+    padding: 0 36px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    line-height: 1.25;
+    text-align: center !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .tutorial-close-btn {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #dfdfdf;
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .tutorial-close-btn:hover {
+    background-color: #afafaf;
+  }
+
+  .tutorial-close-icon {
+    stroke: #272727;
+    display: block;
+  }
+
+  .tutorial-modal-hr {
+    border: none;
+    border-top: 1.5px solid var(--color-main);
+    margin: 16px 0;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .tutorial-modal-body {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+  }
+
+  :global(.tutorial-text) {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-main);
+    opacity: 0.9;
+    text-align: left;
+  }
+
+  @media (max-width: 480px) {
+    .tutorial-modal-container {
+      padding: 20px 16px;
+    }
+    .tutorial-modal-title {
+      font-size: 17px;
+      padding: 0 34px;
+      text-align: center !important;
+      justify-content: center !important;
+    }
+    :global(.tutorial-text) {
+      font-size: 14px;
+    }
+  }
+</style>

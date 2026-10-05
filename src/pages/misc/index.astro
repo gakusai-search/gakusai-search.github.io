@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import TutorialButton from "../../components/TutorialButton.astro";
 import "../../styles/misc.css";
 import { CURRENT_YEAR } from "../../config/site";
 import { getCampusesByYear, getCampusIconSrc } from "../../utils/events";
@@ -51,9 +52,7 @@ const partnerUniversities = [
       <img src="/img/misc/misc.svg" alt="その他アイコン" class="page-icon" />
       <h1>その他</h1>
     </div>
-    <button class="main-btn tutorial-btn" id="tutorial-btn-event-introduction">
-      このページの使い方
-    </button>
+    <TutorialButton pageKey="misc" />
   </div>
 
   <hr />

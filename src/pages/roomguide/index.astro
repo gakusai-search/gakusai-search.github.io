@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import TutorialButton from "../../components/TutorialButton.astro";
 import "../../styles/roomguide.css";
 ---
 
@@ -14,12 +15,7 @@ import "../../styles/roomguide.css";
         />
         <h1>教室案内</h1>
       </div>
-      <button
-        class="main-btn tutorial-btn"
-        id="tutorial-btn-event-introduction"
-      >
-        このページの使い方
-      </button>
+      <TutorialButton pageKey="roomguide" />
       <hr />
     </div>
     <div class="roomguide-middle-col">

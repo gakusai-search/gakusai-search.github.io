@@ -1,0 +1,28 @@
+---
+import type { TutorialKey } from "../data/tutorials";
+
+interface Props {
+  pageKey: TutorialKey;
+  class?: string;
+  label?: string;
+  id?: string;
+}
+
+const {
+  pageKey,
+  class: className = "",
+  label = "このページの使い方",
+  id,
+} = Astro.props;
+---
+
+<button
+  type="button"
+  class={`main-btn tutorial-btn ${className}`}
+  data-tutorial-key={pageKey}
+  id={id}
+  aria-haspopup="dialog"
+  aria-controls="tutorial-modal"
+>
+  {label}
+</button>

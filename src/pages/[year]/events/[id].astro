@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+import TutorialButton from "../../../components/TutorialButton.astro";
 import "../../../styles/events.css";
 import { getAllEvents, getEventsByYear, getCampusIconSrc } from "../../../utils/events";
 import { getTagColorClass } from "../../../utils/tags";
@@ -74,9 +75,7 @@ const mapsUrl = mapsQuery ? `/roomguide/?${mapsQuery}` : "/roomguide/";
         />
         <h1 class="event-title">{project.name}</h1>
       </div>
-      <button class="main-btn" id="tutorial-btn-event-introduction">
-        このページの使い方
-      </button>
+      <TutorialButton pageKey="event-detail" />
     </div>
 
     <div class="event-right-col">

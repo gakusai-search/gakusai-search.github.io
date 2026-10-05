@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import TutorialButton from "../../components/TutorialButton.astro";
 import "../../styles/maps.css";
 ---
 
@@ -9,9 +10,7 @@ import "../../styles/maps.css";
       <img src="/img/maps/maps.svg" alt="地図アイコン" class="page-icon" />
       <h1>キャンパスマップ</h1>
     </div>
-    <button class="main-btn tutorial-btn" id="tutorial-btn-event-introduction">
-      このページの使い方
-    </button>
+    <TutorialButton pageKey="maps" />
   </div>
 
   <hr />
