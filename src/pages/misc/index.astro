@@ -46,7 +46,10 @@ const partnerUniversities = [
 ];
 ---
 
-<Layout title="その他｜学祭ポータル">
+<Layout
+  title="その他｜学祭ポータル"
+  description="サイトの設定、協力大学のリンク、お問い合わせ等をご案内するページです。"
+>
   <div class="page-header">
     <div class="page-title">
       <img src="/img/misc/misc.svg" alt="その他アイコン" class="page-icon" />
@@ -98,9 +101,7 @@ const partnerUniversities = [
               />
               <div class="partner-title-group">
                 <div class="partner-name">{name}</div>
-                {festivalName && (
-                  <div class="partner-fest">{festivalName}</div>
-                )}
+                {festivalName && <div class="partner-fest">{festivalName}</div>}
               </div>
             </div>
             {partner.links && partner.links.length > 0 && (

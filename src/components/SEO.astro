@@ -1,0 +1,51 @@
+---
+import {
+  SITE_NAME,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_IMAGE,
+} from "../config/site";
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  ogType?: "website" | "article";
+}
+
+const {
+  title,
+  description = DEFAULT_DESCRIPTION,
+  image = DEFAULT_OG_IMAGE,
+  ogType = "website",
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL("https://gakusai-search.github.io");
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+
+const resolvedImageURL =
+  image.startsWith("http://") || image.startsWith("https://")
+    ? image
+    : new URL(image, siteUrl).toString();
+---
+
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+<!-- open graph / facebook -->
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={resolvedImageURL} />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:locale" content="ja_JP" />
+
+<!-- twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={resolvedImageURL} />

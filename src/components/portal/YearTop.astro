@@ -138,9 +138,13 @@ const tagSections = selectedTags.map((tag) => {
     events: shuffled.slice(0, 6),
   };
 });
+
+const pageDescription = isLatest
+  ? undefined
+  : `${year}年度の学園祭の企画・イベント検索やキャンパスマップ・教室案内など、学園祭を楽しむのに役立つWebサイトです。`;
 ---
 
-<Layout title={pageTitle} year={year}>
+<Layout title={pageTitle} description={pageDescription} year={year}>
   <h1 id={isLatest ? "top-heading" : undefined}>
     {isLatest ? initialDate : `${year}年度 学祭ポータル`}
   </h1>

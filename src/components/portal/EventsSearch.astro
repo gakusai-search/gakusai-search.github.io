@@ -17,13 +17,16 @@ interface Props {
 
 const { year, projects, campuses, isLatest } = Astro.props;
 const categories = getSearchFilterCategories(projects);
-const uniqueCampuses = new Set(
-  projects.flatMap((p) => p.tags?.campus || []),
-);
+const uniqueCampuses = new Set(projects.flatMap((p) => p.tags?.campus || []));
 const showCampusTag = uniqueCampuses.size > 1;
+const searchDescription = `${year}年度の学祭の企画をご紹介します。日時、会場、キーワードから企画を検索・絞り込みができます。`;
 ---
 
-<Layout title={`${year}年度 検索結果｜学祭ポータル`} year={year}>
+<Layout
+  title={`${year}年度 検索結果｜学祭ポータル`}
+  description={searchDescription}
+  year={year}
+>
   <div class="page-header" data-year={year} id="events-page-root">
     <div class="page-title">
       <img
@@ -118,7 +121,7 @@ const showCampusTag = uniqueCampuses.size > 1;
     {
       projects.slice(0, 24).map((project) => {
         const allTags = [
-          ...(showCampusTag ? (project.tags?.campus || []) : []),
+          ...(showCampusTag ? project.tags?.campus || [] : []),
           ...(project.tags?.date || []),
           ...(project.tags?.format || []),
           ...(project.tags?.field || []),
@@ -441,7 +444,11 @@ const showCampusTag = uniqueCampuses.size > 1;
     }
   </style>
 
-  <script id="projects-data" type="application/json" set:html={JSON.stringify(projects)}></script>
+  <script
+    id="projects-data"
+    type="application/json"
+    set:html={JSON.stringify(projects)}
+  />
 
   <!-- JS code for filtering: miniSearch fuzzy search + multiple tag selection + infinite scrolling -->
   <script>
@@ -451,8 +458,10 @@ const showCampusTag = uniqueCampuses.size > 1;
     type ProjectType = any;
 
     const initFilter = () => {
-      const projectsElement = document.getElementById('projects-data');
-      const projects: ProjectType[] = projectsElement ? JSON.parse(projectsElement.textContent || '[]') : [];
+      const projectsElement = document.getElementById("projects-data");
+      const projects: ProjectType[] = projectsElement
+        ? JSON.parse(projectsElement.textContent || "[]")
+        : [];
       const year =
         document
           .getElementById("events-page-root")
@@ -528,7 +537,14 @@ const showCampusTag = uniqueCampuses.size > 1;
       });
 
       const miniSearch = new MiniSearch({
-        fields: ["name", "organizerName", "tagsText", "description", "campus", "room"],
+        fields: [
+          "name",
+          "organizerName",
+          "tagsText",
+          "description",
+          "campus",
+          "room",
+        ],
         storeFields: ["id"],
         searchOptions: {
           boost: {
@@ -571,9 +587,7 @@ const showCampusTag = uniqueCampuses.size > 1;
           coverImg.alt = p.name;
         }
 
-        const iconImg = clone.querySelector(
-          ".campus-icon",
-        ) as HTMLImageElement;
+        const iconImg = clone.querySelector(".campus-icon") as HTMLImageElement;
         if (iconImg) {
           iconImg.src =
             p.campusIconSrc ||
@@ -596,7 +610,7 @@ const showCampusTag = uniqueCampuses.size > 1;
           ".event-card-tags",
         ) as HTMLElement;
         const allTags = [
-          ...(showCampusTagClient ? (p.tags?.campus || []) : []),
+          ...(showCampusTagClient ? p.tags?.campus || [] : []),
           ...(p.tags?.date || []),
           ...(p.tags?.format || []),
           ...(p.tags?.field || []),

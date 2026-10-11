@@ -80,9 +80,17 @@ function getAccountHref(service: string, rawVal: string): string {
 
   return "";
 }
+
+const organizerDescription =
+  organizer.description || `企画者 ${organizer.name}の詳細情報はこちらです。`;
 ---
 
-<Layout title={`${organizer.name}｜企画者紹介｜学祭ポータル`} hideNav={true}>
+<Layout
+  title={`${organizer.name}｜企画者紹介｜学祭ポータル`}
+  description={organizerDescription}
+  ogType="article"
+  hideNav={true}
+>
   <button
     onclick="if (window.history.length > 1 && document.referrer && document.referrer.startsWith(window.location.origin)) { history.back(); } else { location.href='/organizers/'; }"
     class="back-button">←戻る</button
