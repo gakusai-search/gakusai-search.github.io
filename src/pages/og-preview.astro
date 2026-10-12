@@ -1,9 +1,18 @@
 ---
-import { getAllEvents } from "../utils/events";
+import {
+  getAllEvents,
+  getAllOrganizers,
+  getEventsByOrganizer,
+} from "../utils/events";
 import EventOgCard from "../components/og/EventOgCard.astro";
+import OrganizerOgCard from "../components/og/OrganizerOgCard.astro";
 import "../styles/main.css";
 
 const allEvents = getAllEvents();
+const allOrganizers = getAllOrganizers().map((org) => ({
+  organizer: org,
+  events: getEventsByOrganizer(org.id),
+}));
 ---
 
 <!doctype html>
@@ -240,12 +249,31 @@ const allEvents = getAllEvents();
       <div class="toolbar-left">
         <div class="title-label">OGPプレビュー (1200 x 630)</div>
 
-        <span class="select-label">対象イベント</span>
+        <span class="select-label">種別</span>
+        <select id="type-select" class="event-select" style="min-width: 130px;">
+          <option value="event" selected>企画 (イベント)</option>
+          <option value="organizer">企画者</option>
+        </select>
+
+        <span class="select-label">対象</span>
         <select id="event-select" class="event-select">
           {
             allEvents.map((ev, index) => (
               <option value={ev.id} selected={index === 0}>
                 {ev.name} ({ev.place?.room || "場所未定"})
+              </option>
+            ))
+          }
+        </select>
+        <select
+          id="organizer-select"
+          class="event-select"
+          style="display: none;"
+        >
+          {
+            allOrganizers.map((item, index) => (
+              <option value={item.organizer.id} selected={index === 0}>
+                {item.organizer.name}
               </option>
             ))
           }
@@ -282,10 +310,26 @@ const allEvents = getAllEvents();
           allEvents.map((ev, index) => (
             <div
               class="card-viewport event-card-item"
-              data-event-id={ev.id}
+              data-card-type="event"
+              data-id={ev.id}
               style={index === 0 ? "display: block;" : "display: none;"}
             >
               <EventOgCard event={ev} />
+            </div>
+          ))
+        }
+        {
+          allOrganizers.map((item) => (
+            <div
+              class="card-viewport event-card-item"
+              data-card-type="organizer"
+              data-id={item.organizer.id}
+              style="display: none;"
+            >
+              <OrganizerOgCard
+                organizer={item.organizer}
+                events={item.events}
+              />
             </div>
           ))
         }
@@ -295,7 +339,9 @@ const allEvents = getAllEvents();
     <footer class="guide-panel">
       <div class="guide-header">
         <strong>編集対象:</strong>
-        <span class="guide-code">src/components/og/EventOgCard.astro</span>
+        <span class="guide-code" id="guide-code"
+          >src/components/og/EventOgCard.astro</span
+        >
       </div>
       <div class="guide-grid">
         <div class="guide-box">
@@ -323,8 +369,14 @@ const allEvents = getAllEvents();
     </footer>
 
     <script>
-      const select = document.getElementById(
+      const typeSelect = document.getElementById(
+        "type-select",
+      ) as HTMLSelectElement;
+      const eventSelect = document.getElementById(
         "event-select",
+      ) as HTMLSelectElement;
+      const organizerSelect = document.getElementById(
+        "organizer-select",
       ) as HTMLSelectElement;
       const stage = document.getElementById("card-stage") as HTMLElement;
       const container = document.getElementById(
@@ -334,31 +386,88 @@ const allEvents = getAllEvents();
         document.querySelectorAll<HTMLButtonElement>(".scale-btn");
       const cardItems =
         document.querySelectorAll<HTMLElement>(".event-card-item");
+      const guideCode = document.getElementById("guide-code") as HTMLElement;
 
       let currentMode: string = "fit";
 
-      function switchEvent(id: string) {
+      function updateVisibleCard(type: string, id: string) {
         cardItems.forEach((card) => {
-          if (card.dataset.eventId === id) {
+          if (card.dataset.cardType === type && card.dataset.id === id) {
             card.style.display = "block";
           } else {
             card.style.display = "none";
           }
         });
-      }
 
-      // if URL has a query parameter, select it
-      const urlParams = new URLSearchParams(window.location.search);
-      const initialId = urlParams.get("id");
-      if (initialId && select) {
-        const hasOption = Array.from(select.options).some(
-          (opt) => opt.value === initialId,
-        );
-        if (hasOption) {
-          select.value = initialId;
-          switchEvent(initialId);
+        if (guideCode) {
+          guideCode.textContent =
+            type === "organizer"
+              ? "src/components/og/OrganizerOgCard.astro"
+              : "src/components/og/EventOgCard.astro";
         }
       }
+
+      function handleTypeChange() {
+        const type = typeSelect.value;
+        if (type === "organizer") {
+          eventSelect.style.display = "none";
+          organizerSelect.style.display = "inline-block";
+          updateVisibleCard("organizer", organizerSelect.value);
+        } else {
+          eventSelect.style.display = "inline-block";
+          organizerSelect.style.display = "none";
+          updateVisibleCard("event", eventSelect.value);
+        }
+        syncUrl();
+      }
+
+      function syncUrl() {
+        const type = typeSelect.value;
+        const id =
+          type === "organizer" ? organizerSelect.value : eventSelect.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set("type", type);
+        url.searchParams.set("id", id);
+        window.history.replaceState({}, "", url.toString());
+      }
+
+      // initial URL params
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialType = urlParams.get("type");
+      const initialId = urlParams.get("id");
+
+      if (initialType === "organizer") {
+        typeSelect.value = "organizer";
+        if (initialId) {
+          const hasOption = Array.from(organizerSelect.options).some(
+            (opt) => opt.value === initialId,
+          );
+          if (hasOption) {
+            organizerSelect.value = initialId;
+          }
+        }
+        handleTypeChange();
+      } else {
+        if (initialId) {
+          const hasOption = Array.from(eventSelect.options).some(
+            (opt) => opt.value === initialId,
+          );
+          if (hasOption) {
+            eventSelect.value = initialId;
+            updateVisibleCard("event", initialId);
+          }
+        }
+      }
+
+      typeSelect?.addEventListener("change", handleTypeChange);
+      eventSelect?.addEventListener("change", () => {
+        updateVisibleCard("event", eventSelect.value);
+        syncUrl();
+      });
+      organizerSelect?.addEventListener("change", () => {
+        updateVisibleCard("organizer", organizerSelect.value);
+        syncUrl();
+      });
 
       function updateScale() {
         if (!stage || !container) return;
@@ -377,14 +486,6 @@ const allEvents = getAllEvents();
         scale = Math.max(scale, 0.1);
         stage.style.setProperty("--current-scale", scale.toString());
       }
-
-      select?.addEventListener("change", () => {
-        const id = select.value;
-        switchEvent(id);
-        const url = new URL(window.location.href);
-        url.searchParams.set("id", id);
-        window.history.replaceState({}, "", url.toString());
-      });
 
       scaleBtns.forEach((btn) => {
         btn.addEventListener("click", () => {

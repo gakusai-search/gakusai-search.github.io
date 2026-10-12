@@ -3,7 +3,7 @@ import { html } from 'satori-html';
 import { Resvg } from '@resvg/resvg-js';
 import fs from 'node:fs';
 import path from 'node:path';
-import type { EventItem } from './events';
+import type { EventItem, Organizer } from './events';
 
 let fontDataCache: Buffer | null = null;
 
@@ -74,6 +74,13 @@ function decodeVNodeText(node: any): any {
   return node;
 }
 
+function truncateText(str: string, maxLen: number): string {
+  if (!str) return '';
+  const normalized = str.replace(/\r?\n+/g, ' ').trim();
+  if (normalized.length <= maxLen) return normalized;
+  return normalized.slice(0, maxLen - 1) + '…';
+}
+
 function getTitleFontSize(len: number): string {
   if (len > 32) return '42px';
   if (len > 24) return '50px';
@@ -84,7 +91,8 @@ function getTitleFontSize(len: number): string {
 export async function generateEventOgImage(event: EventItem): Promise<Uint8Array> {
   const fontData = getFontData();
 
-  const eventName = normalizeText(event.name || '');
+  const rawEventName = normalizeText(event.name || '');
+  const eventName = truncateText(rawEventName, 45);
   const campusName = normalizeText(event.campusName || event.place?.campus || '');
   const organizerName = normalizeText(event.organizerName || '');
   const roomName = normalizeText(event.place?.room || '');
@@ -234,4 +242,110 @@ export async function generateEventOgImage(event: EventItem): Promise<Uint8Array
 
   const pngData = resvg.render().asPng();
   return pngData;
+}
+
+function getOrganizerTitleFontSize(len: number): string {
+  if (len > 28) return '44px';
+  if (len > 20) return '52px';
+  return '64px';
+}
+
+export async function generateOrganizerOgImage(
+  organizer: Organizer,
+  events: EventItem[] = []
+): Promise<Uint8Array> {
+  const fontData = getFontData();
+
+  const rawOrganizerName = normalizeText(organizer.name || '');
+  const organizerName = truncateText(rawOrganizerName, 36);
+
+  const rawDescription = normalizeText(organizer.description || '');
+  const description = truncateText(rawDescription, 90);
+  const descFontSize = description.length > 55 ? '30px' : '34px';
+  const eventCount = events.length;
+
+  const titleFontSize = getOrganizerTitleFontSize(organizerName.length);
+
+  const descriptionHtml = description
+    ? `<p style="font-size: ${descFontSize}; font-weight: 500; line-height: 1.5; opacity: 0.95; margin: 0; padding: 0 20px; max-width: 1040px; text-align: center;">
+         ${escapeForHtml(description)}
+       </p>`
+    : '';
+
+  const eventsCountHtml =
+    eventCount > 0
+      ? `<div style="display: flex; flex-direction: row; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin-top: 6px;">
+           <div style="display: flex; flex-direction: row; align-items: center; gap: 10px; background: rgba(0,0,0,0.22); padding: 8px 22px; border-radius: 10px;">
+             <span style="font-size: 19px; opacity: 0.85; font-weight: 700;">出展企画</span>
+             <span>${eventCount} 件</span>
+           </div>
+         </div>`
+      : '';
+
+  const rawHtml = `
+    <div
+      style="display: flex; flex-direction: column; width: 1200px; height: 630px; box-sizing: border-box; padding: 56px 64px; background: linear-gradient(90deg, #FF1B13, #FF914D); color: #ffffff; position: relative; overflow: hidden; font-family: 'Noto Sans JP';"
+    >
+      <!-- background decoration -->
+      <div
+        style="position: absolute; right: -80px; bottom: -80px; width: 360px; height: 360px; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);"
+      ></div>
+      <div
+        style="position: absolute; left: 40%; top: -100px; width: 400px; height: 400px; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%);"
+      ></div>
+
+      <!-- header -->
+      <div
+        style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; z-index: 1;"
+      >
+        <div style="display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.28); color: #ffffff; font-weight: 700; font-size: 20px; padding: 6px 16px; border-radius: 6px;">
+          <span>企画者紹介</span>
+        </div>
+
+        <div
+          style="display: flex; align-items: center; font-size: 20px; font-weight: 700; opacity: 0.85; letter-spacing: 0.5px;"
+        >
+          <span>gakusai-search.github.io</span>
+        </div>
+      </div>
+
+      <!-- main content (headerより下の領域の高さ方向中央) -->
+      <div
+        style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; width: 100%; z-index: 1; flex: 1;"
+      >
+        <h1
+          style="font-size: ${titleFontSize}; font-weight: 800; line-height: 1.25; margin: 0; padding: 0; text-align: center;"
+        >
+          ${escapeForHtml(organizerName)}
+        </h1>
+
+        ${descriptionHtml}
+        ${eventsCountHtml}
+      </div>
+    </div>
+  `;
+
+  const vnode = decodeVNodeText(html(rawHtml));
+
+  const svg = await satori(vnode as any, {
+    width: 1200,
+    height: 630,
+    fonts: [
+      {
+        name: 'Noto Sans JP',
+        data: fontData,
+        weight: 700,
+        style: 'normal',
+      },
+    ],
+  });
+
+  const resvg = new Resvg(svg, {
+    fitTo: {
+      mode: 'width',
+      value: 1200,
+    },
+  });
+
+  return resvg.render().asPng();
 }

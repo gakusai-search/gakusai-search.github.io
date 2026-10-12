@@ -1,0 +1,126 @@
+---
+import type { Organizer, EventItem } from "../../utils/events";
+import fontUrl from "../../../assets/fonts/NotoSansJP-VariableFont_wght.ttf?url";
+
+export interface Props {
+  organizer: Organizer;
+  events?: EventItem[];
+}
+
+const { organizer, events = [] } = Astro.props;
+
+// display data
+const eventCount = events.length;
+
+// normalize and truncate name
+const rawName = (organizer.name || "").trim();
+const maxNameLen = 36;
+const displayName =
+  rawName.length > maxNameLen
+    ? rawName.slice(0, maxNameLen - 1) + "…"
+    : rawName;
+
+const titleLength = displayName.length;
+const titleFontSize =
+  titleLength > 28 ? "44px" : titleLength > 20 ? "52px" : "64px";
+
+// normalize and truncate description
+const rawDescription = (organizer.description || "")
+  .replace(/\r?\n+/g, " ")
+  .trim();
+const maxDescLen = 90;
+const description =
+  rawDescription.length > maxDescLen
+    ? rawDescription.slice(0, maxDescLen - 1) + "…"
+    : rawDescription;
+
+const descFontSize = description.length > 55 ? "30px" : "34px";
+---
+
+<style define:vars={{ fontUrl: `url("${fontUrl}")` }}>
+  @font-face {
+    font-family: "Noto Sans JP Custom";
+    src:
+      var(--fontUrl) format("truetype-variations"),
+      var(--fontUrl) format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  .og-card-container {
+    font-family: "Noto Sans JP Custom", "Noto Sans JP", sans-serif;
+  }
+</style>
+
+<div
+  class="og-card-container"
+  style="display: flex; flex-direction: column; width: 1200px; height: 630px; box-sizing: border-box; padding: 56px 64px; background: var(--main-gradient); color: #ffffff; position: relative; overflow: hidden;"
+>
+  <!-- background decoration -->
+  <div
+    style="position: absolute; right: -80px; bottom: -80px; width: 360px; height: 360px; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%); pointer-events: none;"
+  >
+  </div>
+  <div
+    style="position: absolute; left: 40%; top: -100px; width: 400px; height: 400px; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%); pointer-events: none;"
+  >
+  </div>
+
+  <!-- header -->
+  <div
+    style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; z-index: 1;"
+  >
+    <div
+      style="display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.28); color: #ffffff; font-weight: 700; font-size: 20px; padding: 6px 16px; border-radius: 6px;"
+    >
+      企画者紹介
+    </div>
+
+    <!-- url -->
+    <div
+      style="display: flex; align-items: center; font-size: 20px; font-weight: 700; opacity: 0.85; letter-spacing: 0.5px;"
+    >
+      gakusai-search.github.io
+    </div>
+  </div>
+
+  <!-- main content (headerより下の領域の高さ方向中央) -->
+  <div
+    style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; width: 100%; z-index: 1; flex: 1;"
+  >
+    <!-- organizer name -->
+    <h1
+      style={`font-size: ${titleFontSize}; font-weight: 800; line-height: 1.25; margin: 0; padding: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-align: center;`}
+    >
+      {displayName}
+    </h1>
+
+    <!-- description -->
+    {
+      description && (
+        <p
+          style={`font-size: ${descFontSize}; font-weight: 500; line-height: 1.5; opacity: 0.95; margin: 0; padding: 0 20px; max-width: 1040px; text-align: center; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;`}
+        >
+          {description}
+        </p>
+      )
+    }
+
+    <!-- events count badge -->
+    {
+      eventCount > 0 && (
+        <div
+          style="display: flex; flex-direction: row; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin-top: 6px;"
+        >
+          <div
+            style="display: flex; flex-direction: row; align-items: center; gap: 10px; background: rgba(0,0,0,0.22); padding: 8px 22px; border-radius: 10px;"
+          >
+            <span style="font-size: 19px; opacity: 0.85; font-weight: 700;">出展企画</span>
+            <span>{eventCount} 件</span>
+          </div>
+        </div>
+      )
+    }
+  </div>
+</div>
