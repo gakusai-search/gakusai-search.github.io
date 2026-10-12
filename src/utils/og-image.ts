@@ -149,14 +149,6 @@ export async function generateEventOgImage(event: EventItem): Promise<Uint8Array
     <div
       style="display: flex; flex-direction: column; justify-content: space-between; width: 1200px; height: 630px; box-sizing: border-box; padding: 56px 64px; background: linear-gradient(90deg, #FF1B13, #FF914D); color: #ffffff; position: relative; overflow: hidden; font-family: 'Noto Sans JP';"
     >
-      <!-- background decoration -->
-      <div
-        style="position: absolute; right: -80px; bottom: -80px; width: 360px; height: 360px; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);"
-      ></div>
-      <div
-        style="position: absolute; left: 40%; top: -100px; width: 400px; height: 400px; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%);"
-      ></div>
-
       <!-- header -->
       <div
         style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; z-index: 1;"
@@ -286,14 +278,6 @@ export async function generateOrganizerOgImage(
     <div
       style="display: flex; flex-direction: column; width: 1200px; height: 630px; box-sizing: border-box; padding: 56px 64px; background: linear-gradient(90deg, #FF1B13, #FF914D); color: #ffffff; position: relative; overflow: hidden; font-family: 'Noto Sans JP';"
     >
-      <!-- background decoration -->
-      <div
-        style="position: absolute; right: -80px; bottom: -80px; width: 360px; height: 360px; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);"
-      ></div>
-      <div
-        style="position: absolute; left: 40%; top: -100px; width: 400px; height: 400px; border-radius: 9999px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%);"
-      ></div>
-
       <!-- header -->
       <div
         style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; z-index: 1;"
