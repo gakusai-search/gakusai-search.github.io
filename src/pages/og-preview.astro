@@ -1,0 +1,407 @@
+---
+import { getAllEvents } from "../utils/events";
+import EventOgCard from "../components/og/EventOgCard.astro";
+import "../styles/main.css";
+
+const allEvents = getAllEvents();
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>リンクカードプレビュー｜学祭ポータル</title>
+    <script is:inline>
+      (function () {
+        const theme = localStorage.getItem("theme");
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.setAttribute("data-theme", theme);
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+        }
+      })();
+    </script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden;
+      }
+
+      body {
+        background-color: var(--color-background-body);
+        color: var(--color-text-main);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* toolbar */
+      .toolbar {
+        background-color: var(--color-background-body);
+        border-bottom: 1px solid var(--color-border-main);
+        padding: 12px 20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        width: 100%;
+      }
+
+      .toolbar-left,
+      .toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .title-label {
+        font-weight: 700;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--color-text-main);
+      }
+
+      .select-label {
+        font-size: 13px;
+        color: var(--color-text-main);
+      }
+
+      select.event-select {
+        background-color: var(--color-btn-main);
+        color: var(--color-text-main);
+        border: 1px solid var(--color-border-main);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        min-width: 240px;
+        outline: none;
+        height: 32px;
+      }
+
+      select.event-select:focus {
+        border-color: var(--color-main);
+      }
+
+      .scale-buttons {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .scale-btn.main-btn {
+        margin-bottom: 0;
+        font-size: 13px;
+        height: 28px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 14px;
+        cursor: pointer;
+      }
+
+      .scale-btn.main-btn.active {
+        background-color: var(--color-main);
+        color: #ffffff;
+        border-color: var(--color-main);
+      }
+
+      /* preview container */
+      .preview-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 16px;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+
+      :root[data-theme="dark"] .preview-container {
+        background-color: #0a0a0a;
+      }
+
+      .card-stage {
+        position: relative;
+        width: calc(1200px * var(--current-scale, 1));
+        height: calc(630px * var(--current-scale, 1));
+        max-width: 100%;
+        flex-shrink: 0;
+        transition:
+          width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .card-viewport {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1200px;
+        height: 630px;
+        transform-origin: 0 0;
+        transform: scale(var(--current-scale, 1));
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow:
+          0 16px 36px rgba(0, 0, 0, 0.25),
+          0 0 0 1px var(--color-border-main);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      /* guide panel */
+      .guide-panel {
+        background-color: var(--color-btn-main);
+        border-top: 1px solid var(--color-border-main);
+        padding: 16px 20px;
+        font-size: 13px;
+        color: var(--color-text-main);
+        line-height: 1.6;
+        width: 100%;
+      }
+
+      .guide-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--color-text-main);
+      }
+
+      .guide-header strong {
+        color: var(--color-text-main);
+      }
+
+      .guide-code {
+        background: var(--color-background-body);
+        color: var(--color-text-main);
+        border: 1px solid var(--color-border-main);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 12px;
+      }
+
+      .guide-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .guide-box {
+        background-color: var(--color-background-body);
+        border: 1px solid var(--color-border-main);
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        color: var(--color-text-main);
+      }
+
+      .guide-box strong {
+        color: var(--color-text-main);
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .guide-desc {
+        color: var(--color-text-main);
+        display: block;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <div class="title-label">OGPプレビュー (1200 x 630)</div>
+
+        <span class="select-label">対象イベント</span>
+        <select id="event-select" class="event-select">
+          {
+            allEvents.map((ev, index) => (
+              <option value={ev.id} selected={index === 0}>
+                {ev.name} ({ev.place?.room || "場所未定"})
+              </option>
+            ))
+          }
+        </select>
+      </div>
+
+      <div class="toolbar-right">
+        <span class="select-label">表示倍率</span>
+        <div class="scale-buttons">
+          <button type="button" class="scale-btn main-btn" data-scale="0.5"
+            >50%</button
+          >
+          <button type="button" class="scale-btn main-btn" data-scale="0.67"
+            >67%</button
+          >
+          <button type="button" class="scale-btn main-btn" data-scale="0.75"
+            >75%</button
+          >
+          <button type="button" class="scale-btn main-btn" data-scale="1.0"
+            >100%</button
+          >
+          <button
+            type="button"
+            class="scale-btn main-btn active"
+            data-scale="fit">Fit</button
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="preview-container" id="preview-container">
+      <div class="card-stage" id="card-stage">
+        {
+          allEvents.map((ev, index) => (
+            <div
+              class="card-viewport event-card-item"
+              data-event-id={ev.id}
+              style={index === 0 ? "display: block;" : "display: none;"}
+            >
+              <EventOgCard event={ev} />
+            </div>
+          ))
+        }
+      </div>
+    </main>
+
+    <footer class="guide-panel">
+      <div class="guide-header">
+        <strong>編集対象:</strong>
+        <span class="guide-code">src/components/og/EventOgCard.astro</span>
+      </div>
+      <div class="guide-grid">
+        <div class="guide-box">
+          <strong>基本仕様</strong>
+          <span class="guide-desc">
+            外枠サイズは 1200px x 630px
+            固定です。背景・余白・配色は自由に編集可能です。
+          </span>
+        </div>
+        <div class="guide-box">
+          <strong>Satori 互換ルール (Flexbox 必須)</strong>
+          <span class="guide-desc">
+            要素配置は display: flex を使用してください（display: grid や float
+            は非対応です）。
+          </span>
+        </div>
+        <div class="guide-box">
+          <strong>フォント設定</strong>
+          <span class="guide-desc">
+            assets/fonts/NotoSansJP-VariableFont_wght.ttf
+            がプレビュー表示に適用されています。
+          </span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const select = document.getElementById(
+        "event-select",
+      ) as HTMLSelectElement;
+      const stage = document.getElementById("card-stage") as HTMLElement;
+      const container = document.getElementById(
+        "preview-container",
+      ) as HTMLElement;
+      const scaleBtns =
+        document.querySelectorAll<HTMLButtonElement>(".scale-btn");
+      const cardItems =
+        document.querySelectorAll<HTMLElement>(".event-card-item");
+
+      let currentMode: string = "fit";
+
+      function switchEvent(id: string) {
+        cardItems.forEach((card) => {
+          if (card.dataset.eventId === id) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      }
+
+      // if URL has a query parameter, select it
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialId = urlParams.get("id");
+      if (initialId && select) {
+        const hasOption = Array.from(select.options).some(
+          (opt) => opt.value === initialId,
+        );
+        if (hasOption) {
+          select.value = initialId;
+          switchEvent(initialId);
+        }
+      }
+
+      function updateScale() {
+        if (!stage || !container) return;
+
+        let scale = 1.0;
+        if (currentMode === "fit") {
+          const availWidth = container.clientWidth - 32;
+          const availHeight = container.clientHeight - 40;
+          const scaleX = availWidth / 1200;
+          const scaleY = availHeight / 630;
+          scale = Math.min(scaleX, scaleY, 1.0);
+        } else {
+          scale = parseFloat(currentMode) || 1.0;
+        }
+
+        scale = Math.max(scale, 0.1);
+        stage.style.setProperty("--current-scale", scale.toString());
+      }
+
+      select?.addEventListener("change", () => {
+        const id = select.value;
+        switchEvent(id);
+        const url = new URL(window.location.href);
+        url.searchParams.set("id", id);
+        window.history.replaceState({}, "", url.toString());
+      });
+
+      scaleBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          scaleBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentMode = btn.dataset.scale || "1.0";
+          updateScale();
+        });
+      });
+
+      window.addEventListener("resize", () => {
+        if (currentMode === "fit") {
+          updateScale();
+        }
+      });
+
+      updateScale();
+    </script>
+  </body>
+</html>
