@@ -12,10 +12,8 @@ const { event } = Astro.props;
 const campusName = event.campusName || event.place?.campus || "";
 const roomName = event.place?.room || "";
 const dateText = event.tags?.date?.join(" / ") || event.datetime || "";
-const tags = [
-  ...(event.tags?.field || []),
-  ...(event.tags?.features || []).slice(0, 3),
-];
+const rawTags = [...(event.tags?.field || []), ...(event.tags?.features || [])];
+const tags = [...new Set(rawTags)].slice(0, 12);
 ---
 
 <style define:vars={{ fontUrl: `url("${fontUrl}")` }}>

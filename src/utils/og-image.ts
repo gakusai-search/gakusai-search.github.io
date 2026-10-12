@@ -20,8 +20,27 @@ function getFontData(): Buffer {
   return fontDataCache;
 }
 
-function escapeHtml(str: string): string {
-  return str
+/**
+ * unescape any HTML entities potentially already present in the source data back to plain text
+ */
+function normalizeText(str: string): string {
+  if (!str) return '';
+  return String(str)
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .trim();
+}
+
+/**
+ * escape special characters (e.g., <, >) to prevent HTML tag syntax breakage before passing to satori-html (ultrahtml)
+ */
+function escapeForHtml(str: string): string {
+  if (!str) return '';
+  return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -29,24 +48,64 @@ function escapeHtml(str: string): string {
     .replace(/'/g, '&#39;');
 }
 
+/**
+ * satori-html parser does not decode HTML entities (e.g., &amp;, &lt;) inside text nodes
+ * decode these HTML entities in the VNode tree by traversing it recursively
+ */
+function decodeVNodeText(node: any): any {
+  if (!node) return node;
+  if (typeof node === 'string') {
+    return node
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&nbsp;/g, ' ');
+  }
+  if (Array.isArray(node)) {
+    return node.map(decodeVNodeText);
+  }
+  if (typeof node === 'object' && node.props) {
+    if (node.props.children !== undefined) {
+      node.props.children = decodeVNodeText(node.props.children);
+    }
+  }
+  return node;
+}
+
+function getTitleFontSize(len: number): string {
+  if (len > 32) return '42px';
+  if (len > 24) return '50px';
+  if (len > 18) return '56px';
+  return '64px';
+}
+
 export async function generateEventOgImage(event: EventItem): Promise<Uint8Array> {
   const fontData = getFontData();
 
-  const eventName = escapeHtml(event.name || '');
-  const campusName = escapeHtml(event.campusName || event.place?.campus || '');
-  const organizerName = escapeHtml(event.organizerName || '');
-  const roomName = escapeHtml(event.place?.room || '');
-  const dateText = escapeHtml(event.tags?.date?.join(' / ') || event.datetime || '');
-  const tags = [
+  const eventName = normalizeText(event.name || '');
+  const campusName = normalizeText(event.campusName || event.place?.campus || '');
+  const organizerName = normalizeText(event.organizerName || '');
+  const roomName = normalizeText(event.place?.room || '');
+  const dateText = normalizeText(event.tags?.date?.join(' / ') || event.datetime || '');
+  const yearText = normalizeText(event.year || '');
+
+  // limit tags to less than 12 to prevent layout breakage
+  const rawTags = [
     ...(event.tags?.field || []),
-    ...(event.tags?.features || []).slice(0, 3),
-  ].map(escapeHtml);
+    ...(event.tags?.features || []),
+  ];
+  const tags = [...new Set(rawTags)].slice(0, 12).map(normalizeText);
+
+  // font size adjustment based on character count to prevent overflow
+  const titleFontSize = getTitleFontSize(eventName.length);
 
   const tagsHtml = tags
     .map(
       (tag) => `
         <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.22); border: 1.5px solid rgba(255, 255, 255, 0.4); padding: 6px 16px; border-radius: 9999px; font-size: 24px; font-weight: 600;">
-          <span>#${tag}</span>
+          <span>#${escapeForHtml(tag)}</span>
         </div>`
     )
     .join('');
@@ -54,27 +113,27 @@ export async function generateEventOgImage(event: EventItem): Promise<Uint8Array
   const organizerHtml = organizerName
     ? `<div style="display: flex; flex-direction: row; align-items: center; justify-content: center; font-size: 28px; font-weight: 600; opacity: 0.95; width: 100%;">
          <span style="margin-right: 8px;">出展:</span>
-         <span>${organizerName}</span>
+         <span>${escapeForHtml(organizerName)}</span>
        </div>`
     : '';
 
   const campusHtml = campusName
     ? `<div style="display: flex; justify-content: center; font-size: 28px; font-weight: 500; opacity: 0.92; letter-spacing: 0.5px; text-align: center;">
-         <span>${campusName}</span>
+         <span>${escapeForHtml(campusName)}</span>
        </div>`
     : '';
 
   const dateHtml = dateText
     ? `<div style="display: flex; flex-direction: row; align-items: center; gap: 10px; background: rgba(0,0,0,0.18); padding: 8px 18px; border-radius: 10px;">
          <span style="font-size: 20px; opacity: 0.85; font-weight: 700;">日時</span>
-         <span>${dateText}</span>
+         <span>${escapeForHtml(dateText)}</span>
        </div>`
     : '';
 
   const roomHtml = roomName
     ? `<div style="display: flex; flex-direction: row; align-items: center; gap: 10px; background: rgba(0,0,0,0.18); padding: 8px 18px; border-radius: 10px;">
          <span style="font-size: 20px; opacity: 0.85; font-weight: 700;">場所</span>
-         <span>${roomName}</span>
+         <span>${escapeForHtml(roomName)}</span>
        </div>`
     : '';
 
@@ -98,7 +157,7 @@ export async function generateEventOgImage(event: EventItem): Promise<Uint8Array
           <div
             style="display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.24); color: #ffffff; font-weight: 700; font-size: 20px; padding: 6px 14px; border-radius: 6px;"
           >
-            <span>${escapeHtml(event.year)}年度</span>
+            <span>${escapeForHtml(yearText)}年度</span>
           </div>
         </div>
 
@@ -115,9 +174,9 @@ export async function generateEventOgImage(event: EventItem): Promise<Uint8Array
       >
         <!-- event name -->
         <h1
-          style="font-size: 64px; font-weight: 800; line-height: 1.2; margin: 0; padding: 0; text-align: center;"
+          style="font-size: ${titleFontSize}; font-weight: 800; line-height: 1.2; margin: 0; padding: 0; text-align: center;"
         >
-          ${eventName}
+          ${escapeForHtml(eventName)}
         </h1>
 
         <!-- organizer & campus info -->
@@ -150,7 +209,8 @@ export async function generateEventOgImage(event: EventItem): Promise<Uint8Array
     </div>
   `;
 
-  const vnode = html(rawHtml);
+  const vnode = decodeVNodeText(html(rawHtml));
+
 
   const svg = await satori(vnode as any, {
     width: 1200,
