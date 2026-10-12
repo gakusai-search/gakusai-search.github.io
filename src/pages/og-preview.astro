@@ -94,6 +94,20 @@ const allOrganizers = getAllOrganizers().map((org) => ({
         color: var(--color-text-main);
       }
 
+      .toolbar-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .select-type {
+        min-width: 140px;
+      }
+
+      .select-target {
+        min-width: 240px;
+      }
+
       select.event-select {
         background-color: var(--color-btn-main);
         color: var(--color-text-main);
@@ -102,13 +116,62 @@ const allOrganizers = getAllOrganizers().map((org) => ({
         border-radius: 8px;
         font-size: 14px;
         cursor: pointer;
-        min-width: 240px;
         outline: none;
         height: 32px;
       }
 
       select.event-select:focus {
         border-color: var(--color-main);
+      }
+
+      @media screen and (max-width: 767px) {
+        .toolbar {
+          flex-direction: column;
+          align-items: stretch;
+          padding: 12px 16px;
+          gap: 10px;
+        }
+
+        .toolbar-left {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+          width: 100%;
+        }
+
+        .toolbar-right {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+          width: 100%;
+        }
+
+        .toolbar-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+        }
+
+        .toolbar-item .select-label {
+          min-width: 36px;
+          flex-shrink: 0;
+        }
+
+        .toolbar-item select.event-select {
+          flex: 1;
+          width: 100%;
+          min-width: 0;
+        }
+
+        .toolbar-item.scale-item .select-label {
+          min-width: auto;
+        }
+
+        .scale-buttons {
+          flex-wrap: wrap;
+          gap: 4px;
+        }
       }
 
       .scale-buttons {
@@ -249,40 +312,45 @@ const allOrganizers = getAllOrganizers().map((org) => ({
       <div class="toolbar-left">
         <div class="title-label">OGPプレビュー (1200 x 630)</div>
 
-        <span class="select-label">種別</span>
-        <select id="type-select" class="event-select" style="min-width: 130px;">
-          <option value="event" selected>企画 (イベント)</option>
-          <option value="organizer">企画者</option>
-        </select>
+        <div class="toolbar-item">
+          <span class="select-label">種別</span>
+          <select id="type-select" class="event-select select-type">
+            <option value="event" selected>企画 (イベント)</option>
+            <option value="organizer">企画者</option>
+          </select>
+        </div>
 
-        <span class="select-label">対象</span>
-        <select id="event-select" class="event-select">
-          {
-            allEvents.map((ev, index) => (
-              <option value={ev.id} selected={index === 0}>
-                {ev.name} ({ev.place?.room || "場所未定"})
-              </option>
-            ))
-          }
-        </select>
-        <select
-          id="organizer-select"
-          class="event-select"
-          style="display: none;"
-        >
-          {
-            allOrganizers.map((item, index) => (
-              <option value={item.organizer.id} selected={index === 0}>
-                {item.organizer.name}
-              </option>
-            ))
-          }
-        </select>
+        <div class="toolbar-item">
+          <span class="select-label">対象</span>
+          <select id="event-select" class="event-select select-target">
+            {
+              allEvents.map((ev, index) => (
+                <option value={ev.id} selected={index === 0}>
+                  {ev.name} ({ev.place?.room || "場所未定"})
+                </option>
+              ))
+            }
+          </select>
+          <select
+            id="organizer-select"
+            class="event-select select-target"
+            style="display: none;"
+          >
+            {
+              allOrganizers.map((item, index) => (
+                <option value={item.organizer.id} selected={index === 0}>
+                  {item.organizer.name}
+                </option>
+              ))
+            }
+          </select>
+        </div>
       </div>
 
       <div class="toolbar-right">
-        <span class="select-label">表示倍率</span>
-        <div class="scale-buttons">
+        <div class="toolbar-item scale-item">
+          <span class="select-label">表示倍率</span>
+          <div class="scale-buttons">
           <button type="button" class="scale-btn main-btn" data-scale="0.5"
             >50%</button
           >
@@ -302,7 +370,8 @@ const allOrganizers = getAllOrganizers().map((org) => ({
           >
         </div>
       </div>
-    </header>
+    </div>
+  </header>
 
     <main class="preview-container" id="preview-container">
       <div class="card-stage" id="card-stage">
@@ -411,10 +480,10 @@ const allOrganizers = getAllOrganizers().map((org) => ({
         const type = typeSelect.value;
         if (type === "organizer") {
           eventSelect.style.display = "none";
-          organizerSelect.style.display = "inline-block";
+          organizerSelect.style.display = "block";
           updateVisibleCard("organizer", organizerSelect.value);
         } else {
-          eventSelect.style.display = "inline-block";
+          eventSelect.style.display = "block";
           organizerSelect.style.display = "none";
           updateVisibleCard("event", eventSelect.value);
         }
