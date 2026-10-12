@@ -61,7 +61,15 @@ const roomguideUrl = roomguideQuery
   : "/roomguide/";
 const pageDescription =
   project.description || `${project.name}の詳細情報はこちらです。`;
-const pageImage = project.image || undefined;
+
+const isDefaultPlaceholder =
+  !project.image ||
+  project.image.trim() === "" ||
+  project.image.includes("events_hero_example.png");
+
+const pageImage = isDefaultPlaceholder
+  ? `/${year}/events/${project.id}/og.png`
+  : project.image;
 ---
 
 <Layout
