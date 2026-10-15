@@ -1,30 +1,26 @@
 export function setupShareButton() {
-  const shareBtn = document.querySelector<HTMLButtonElement>(".share-button");
-  if (!shareBtn) return;
+  const shareBtns = document.querySelectorAll<HTMLButtonElement>(".share-button");
+  if (shareBtns.length === 0) return;
 
-  if (!(shareBtn as any)._hasShareListener) {
-    (shareBtn as any)._hasShareListener = true;
-    shareBtn.addEventListener("click", async () => {
-      const url = window.location.href;
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(url);
+  shareBtns.forEach((shareBtn) => {
+    if (!(shareBtn as any)._hasShareListener) {
+      (shareBtn as any)._hasShareListener = true;
+      shareBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (typeof (window as any).openShareModal === "function") {
+          (window as any).openShareModal();
         } else {
-          const textarea = document.createElement("textarea");
-          textarea.value = url;
-          textarea.style.position = "fixed";
-          textarea.style.opacity = "0";
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand("copy");
-          document.body.removeChild(textarea);
+          // fallback if modal script hasn't loaded yet
+          const backdrop = document.getElementById("share-modal-backdrop");
+          if (backdrop) {
+            backdrop.classList.add("is-open");
+            backdrop.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+          }
         }
-        alert("URLをコピーしました! 貼り付けて共有することができます。");
-      } catch (e) {
-        console.error("Failed to copy URL:", e);
-      }
-    });
-  }
+      });
+    }
+  });
 }
 
 export function initShareButton() {

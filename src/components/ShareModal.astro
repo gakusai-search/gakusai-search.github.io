@@ -1,0 +1,444 @@
+---
+// src/components/ShareModal.astro
+---
+
+<div
+  id="share-modal-backdrop"
+  class="share-modal-backdrop"
+  aria-hidden="true"
+>
+  <div
+    class="share-modal-container"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="share-modal-title"
+  >
+    <!-- Header: Left close button, Center "シェア" title -->
+    <div class="share-modal-header">
+      <button
+        type="button"
+        class="modal-close-btn"
+        id="share-modal-close-btn"
+        aria-label="閉じる"
+      >
+        <svg
+          class="modal-close-icon"
+          viewBox="0 0 24 24"
+          width="28"
+          height="28"
+          stroke="currentColor"
+          stroke-width="2.5"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div id="share-modal-title" class="share-modal-title">シェア</div>
+    </div>
+
+    <!-- 3 Rounded square buttons: X(Twitter), LINE, URLコピー -->
+    <div class="share-channels">
+      <button
+        type="button"
+        class="share-channel-btn"
+        id="share-btn-x"
+        aria-label="X(Twitter)でシェア"
+      >
+        <span class="share-channel-icon" aria-hidden="true">𝕏</span>
+        <span class="share-channel-label">X(Twitter)</span>
+      </button>
+      <button
+        type="button"
+        class="share-channel-btn"
+        id="share-btn-line"
+        aria-label="LINEでシェア"
+      >
+        <span class="share-channel-icon" aria-hidden="true">💬</span>
+        <span class="share-channel-label">LINE</span>
+      </button>
+      <button
+        type="button"
+        class="share-channel-btn"
+        id="share-btn-copy-box"
+        aria-label="URLコピー"
+      >
+        <span class="share-channel-icon" id="share-box-icon" aria-hidden="true">📋</span>
+        <span class="share-channel-label" id="share-box-label">URLコピー</span>
+      </button>
+    </div>
+
+    <!-- Bottom URL copy button styled identically to active floor map button -->
+    <button
+      type="button"
+      class="share-url-full-btn"
+      id="share-btn-copy-full"
+    >
+      URLをコピー
+    </button>
+  </div>
+</div>
+
+<style>
+  .share-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 100000;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s ease;
+    padding: 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    box-sizing: border-box;
+  }
+
+  .share-modal-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .share-modal-container {
+    background-color: var(--color-background-body);
+    border: 1.5px solid var(--color-border-main);
+    border-radius: 18px;
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 20px 20px;
+    box-sizing: border-box;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    transform: translateY(24px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .share-modal-backdrop.is-open .share-modal-container {
+    transform: translateY(0);
+  }
+
+  /* Header */
+  .share-modal-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 32px;
+    margin-bottom: 20px;
+  }
+
+  .modal-close-btn {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #dfdfdf;
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .modal-close-btn:hover {
+    background-color: #afafaf;
+  }
+
+  .modal-close-icon {
+    stroke: #272727;
+    display: block;
+  }
+
+  .share-modal-title {
+    display: block;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    margin: 0;
+    text-align: center;
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  /* 3 square channel buttons */
+  .share-channels {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .share-channel-btn {
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    background-color: var(--color-btn-main);
+    border: 1.5px solid var(--color-border-main);
+    border-radius: 5px;
+    color: var(--color-text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 4px;
+    cursor: pointer;
+    box-sizing: border-box;
+    outline: none;
+  }
+
+  .share-channel-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .share-channel-btn:active::before {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s ease;
+  }
+
+  @media (hover: hover) {
+    .share-channel-btn:hover::before {
+      opacity: 1;
+    }
+  }
+
+  .share-channel-icon {
+    font-size: 28px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  .share-channel-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--color-text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    user-select: none;
+  }
+
+  /* Bottom URL copy button (matches .roomguide-search-btn.activated) */
+  .share-url-full-btn {
+    position: relative;
+    overflow: hidden;
+    font-size: 18px;
+    background: var(--main-gradient);
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 42px;
+    padding: 5px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  .share-url-full-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .share-url-full-btn:active::before {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s ease;
+  }
+
+  @media (hover: hover) {
+    .share-url-full-btn:hover::before {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  function setupShareModal() {
+    const backdrop = document.getElementById("share-modal-backdrop");
+    if (!backdrop) return;
+
+    if ((backdrop as any)._hasInitialized) return;
+    (backdrop as any)._hasInitialized = true;
+
+    const closeBtn = document.getElementById("share-modal-close-btn");
+    const xBtn = document.getElementById("share-btn-x");
+    const lineBtn = document.getElementById("share-btn-line");
+    const copyBoxBtn = document.getElementById("share-btn-copy-box");
+    const copyFullBtn = document.getElementById("share-btn-copy-full");
+
+    const copyBoxIcon = document.getElementById("share-box-icon");
+    const copyBoxLabel = document.getElementById("share-box-label");
+
+    let currentUrl = window.location.href;
+    let currentTitle = document.title;
+    let resetTimer: ReturnType<typeof setTimeout> | null = null;
+
+    function openModal(options?: { title?: string; url?: string }) {
+      currentUrl = options?.url || window.location.href;
+      currentTitle = options?.title || document.title;
+      backdrop.classList.add("is-open");
+      backdrop.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      backdrop.classList.remove("is-open");
+      backdrop.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    (window as any).openShareModal = openModal;
+    (window as any).closeShareModal = closeModal;
+
+    // Click outside backdrop to close
+    backdrop.addEventListener("click", (e) => {
+      if (e.target === backdrop) {
+        closeModal();
+      }
+    });
+
+    // Close on button click
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeModal);
+    }
+
+    // Close on Escape key
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && backdrop.classList.contains("is-open")) {
+        closeModal();
+      }
+    });
+
+    // Share to X (Twitter)
+    if (xBtn) {
+      xBtn.addEventListener("click", () => {
+        const text = `${currentTitle}\n`;
+        const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(currentUrl)}`;
+        window.open(xUrl, "_blank", "noopener,noreferrer,width=550,height=450");
+      });
+    }
+
+    // Share to LINE
+    if (lineBtn) {
+      lineBtn.addEventListener("click", () => {
+        const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}`;
+        window.open(lineUrl, "_blank", "noopener,noreferrer,width=550,height=520");
+      });
+    }
+
+    // Clipboard copy logic with UI feedback
+    async function copyUrlToClipboard() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(currentUrl);
+        } else {
+          const textarea = document.createElement("textarea");
+          textarea.value = currentUrl;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+        }
+
+        if (copyFullBtn) {
+          copyFullBtn.textContent = "コピーしました！";
+        }
+        if (copyBoxLabel) {
+          copyBoxLabel.textContent = "コピー完了！";
+        }
+        if (copyBoxIcon) {
+          copyBoxIcon.textContent = "✓";
+        }
+
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => {
+          if (copyFullBtn) {
+            copyFullBtn.textContent = "URLをコピー";
+          }
+          if (copyBoxLabel) {
+            copyBoxLabel.textContent = "URLコピー";
+          }
+          if (copyBoxIcon) {
+            copyBoxIcon.textContent = "📋";
+          }
+        }, 2000);
+      } catch (e) {
+        console.error("Failed to copy URL:", e);
+      }
+    }
+
+    if (copyBoxBtn) {
+      copyBoxBtn.addEventListener("click", copyUrlToClipboard);
+    }
+    if (copyFullBtn) {
+      copyFullBtn.addEventListener("click", copyUrlToClipboard);
+    }
+  }
+
+  // Global event delegation for .share-button click
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement | null;
+    const shareBtn = target?.closest<HTMLButtonElement>(".share-button");
+    if (shareBtn) {
+      e.preventDefault();
+      if (typeof (window as any).openShareModal === "function") {
+        (window as any).openShareModal();
+      }
+    }
+  });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupShareModal);
+  } else {
+    setupShareModal();
+  }
+  document.addEventListener("astro:page-load", setupShareModal);
+</script>
