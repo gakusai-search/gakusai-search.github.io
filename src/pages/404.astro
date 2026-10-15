@@ -1,0 +1,66 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="404 Not Found｜学祭ポータル"
+  description="お探しのページは見つかりませんでした。"
+>
+  <main class="error-container">
+    <div class="error-code">404</div>
+    <h1 class="error-title">ページが見つかりません</h1>
+    <p class="error-message">
+      お探しのページは削除されたか、URLが変更された可能性があります。
+    </p>
+    <a href="/" class="main-btn home-btn">トップページへ戻る</a>
+  </main>
+</Layout>
+
+<style>
+  .error-container {
+    min-height: calc(100vh - 220px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 16px;
+    box-sizing: border-box;
+  }
+
+  .error-code {
+    font-size: 72px;
+    font-weight: bold;
+    line-height: 1;
+    background: var(--color-text-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+
+  .error-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--color-text-main);
+    margin: 0 0 12px 0;
+  }
+
+  .error-message {
+    font-size: 14px;
+    color: var(--color-text-main);
+    opacity: 0.8;
+    max-width: 400px;
+    line-height: 1.6;
+    margin: 0 0 28px 0;
+  }
+
+  .home-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    height: 36px;
+    padding: 0 18px;
+    border-radius: 18px;
+  }
+</style>
