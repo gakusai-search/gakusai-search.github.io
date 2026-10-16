@@ -1,0 +1,36 @@
+---
+export interface Props {
+  size?: number | string;
+  width?: number | string;
+  height?: number | string;
+  color?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  size = 24,
+  width = size,
+  height = size,
+  color = "currentColor",
+  class: className = "",
+  ...rest
+} = Astro.props;
+---
+
+<svg
+  width={width}
+  height={height}
+  viewBox="0 0 24 24"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  class={className}
+  {...rest}
+>
+  <path
+    d="M4.16487 21L10.1002 13.3361L3 3H8.6302L13.0955 9.5042L18.1156 3H19.9183L13.9276 10.7395L21 21H15.3698L10.9599 14.5966L5.96764 21H4.16487ZM16.1741 19.6639H18.3652L7.82589 4.33613H5.63482L16.1741 19.6639Z"
+    fill={color}
+    stroke={color}
+    stroke-width="0.5"
+  />
+</svg>

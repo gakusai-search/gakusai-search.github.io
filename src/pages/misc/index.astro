@@ -1,11 +1,20 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import TutorialButton from "../../components/TutorialButton.astro";
+import Icon from "../../components/icons/Icon.astro";
 import "../../styles/misc.css";
 import { CURRENT_YEAR } from "../../config/site";
 import { getCampusesByYear, getCampusIconSrc } from "../../utils/events";
 
 const campuses = getCampusesByYear(CURRENT_YEAR);
+
+const socialIconColors: Record<string, string> = {
+  web: "#FF623E",
+  instagram: "#D80077",
+  x: "#008CFF",
+  line: "#03E68B",
+  threads: "var(--color-text-main)",
+};
 
 const partnerUniversities = [
   {
@@ -110,9 +119,10 @@ const partnerUniversities = [
                 {partner.links.map((link) => (
                   <div class="partner-link-row">
                     <div class="link-label-group">
-                      <img
-                        src={`/img/icons/social-icon_${link.type}.svg`}
-                        alt={link.label}
+                      <Icon
+                        name={link.type as any}
+                        size={17}
+                        color={socialIconColors[link.type] ?? "currentColor"}
                         class="link-icon"
                       />
                       <span class="link-label-text">{link.label}</span>
