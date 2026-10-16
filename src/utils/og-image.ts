@@ -372,6 +372,29 @@ async function getImageBase64(imagePath?: string): Promise<string | null> {
 }
 
 /**
+ * Optical alignment style for Japanese punctuation/brackets to visually center text.
+ * Japanese fonts (Noto Sans JP) use full-width cells for punctuation like '）' or '。',
+ * leaving ~0.5em whitespace on the right (or left for '（').
+ * This shifts the visual center when punctuation is present at boundaries.
+ */
+function getOpticalAlignmentStyle(text: string): string {
+  if (!text) return '';
+  const trimmed = text.trim();
+  const closingPunct = /[）\)\」\』\】\］\]\｝\}\＞\>\〉\》\〕\、\，\,\。\．\.]/;
+  const openingPunct = /[（\(\「\『\【\［\[\｛\{\＜\<\〈\《\〔]/;
+
+  const endsWithClosing = closingPunct.test(trimmed.slice(-1));
+  const startsWithOpening = openingPunct.test(trimmed.slice(0, 1));
+
+  if (endsWithClosing && !startsWithOpening) {
+    return 'margin-left: 0.38em;';
+  } else if (startsWithOpening && !endsWithClosing) {
+    return 'margin-right: 0.38em;';
+  }
+  return '';
+}
+
+/**
  * generate 1:1 square share image for event (1200x1200)
  * - top: event.image (image-relative) with year badge
  * - bottom: Event info with title, organizer, campus, datetime, room, tags (no URL element)
@@ -386,6 +409,7 @@ export async function generateEventSquareImage(event: EventItem): Promise<Uint8A
   const roomName = normalizeText(event.place?.room || '');
   const dateText = normalizeText(event.tags?.date?.join(' / ') || event.datetime || '');
   const yearText = normalizeText(event.year || '');
+  const titleOpticalStyle = getOpticalAlignmentStyle(eventName);
 
   // Base64 image of event.image (image-relative)
   const imageBase64 =
@@ -470,24 +494,22 @@ export async function generateEventSquareImage(event: EventItem): Promise<Uint8A
 
       <!-- Bottom: Event Info content with large legible typography -->
       <div
-        style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 1200px; height: 702px; box-sizing: border-box; padding: 32px 64px 48px; position: relative; z-index: 1;"
+        style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; width: 1200px; height: 702px; box-sizing: border-box; padding: 24px 64px 36px; position: relative; z-index: 1;"
       >
-        <!-- Event Name -->
-        <h1
-          style="font-size: ${titleFontSize}; font-weight: 800; line-height: 1.25; margin: 0; padding: 0; text-align: center; max-width: 1080px;"
-        >
-          ${escapeForHtml(eventName)}
-        </h1>
-
-        <!-- Organizer & Campus Info -->
+        <!-- Group 1: Event Name & Organizer & Campus Info -->
         <div
-          style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;"
+          style="display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%;"
         >
+          <h1
+            style="font-size: ${titleFontSize}; font-weight: 800; line-height: 1.25; margin: 0; padding: 0; text-align: center; max-width: 1080px; ${titleOpticalStyle}"
+          >
+            ${escapeForHtml(eventName)}
+          </h1>
           ${organizerHtml}
           ${campusHtml}
         </div>
 
-        <!-- Year & Date & Place in one row -->
+        <!-- Group 2: Year & Date & Place in one row -->
         <div
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; width: 100%;"
         >
@@ -496,7 +518,7 @@ export async function generateEventSquareImage(event: EventItem): Promise<Uint8A
           ${roomHtml}
         </div>
 
-        <!-- Tags -->
+        <!-- Group 3: Tags -->
         <div
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; max-width: 1080px;"
         >
@@ -568,6 +590,7 @@ export async function generateOrganizerSquareImage(
 
   const titleFontSize =
     organizerName.length > 24 ? '80px' : organizerName.length > 16 ? '92px' : '104px';
+  const titleOpticalStyle = getOpticalAlignmentStyle(organizerName);
 
   const descriptionHtml = description
     ? `<p style="font-size: ${descFontSize}; font-weight: 500; line-height: 1.65; opacity: 0.95; margin: 0; padding: 0 20px; max-width: 1060px; text-align: center;">
@@ -594,7 +617,7 @@ export async function generateOrganizerSquareImage(
         style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 52px; width: 100%; z-index: 1;"
       >
         <h1
-          style="font-size: ${titleFontSize}; font-weight: 800; line-height: 1.25; margin: 0; padding: 0; text-align: center; max-width: 1080px;"
+          style="font-size: ${titleFontSize}; font-weight: 800; line-height: 1.25; margin: 0; padding: 0; text-align: center; max-width: 1080px; ${titleOpticalStyle}"
         >
           ${escapeForHtml(organizerName)}
         </h1>
