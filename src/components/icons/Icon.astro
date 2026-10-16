@@ -1,12 +1,13 @@
 ---
 import IconInstagram from "./IconInstagram.astro";
 import IconLine from "./IconLine.astro";
+import IconPhotos from "./IconPhotos.astro";
 import IconThreads from "./IconThreads.astro";
 import IconWeb from "./IconWeb.astro";
 import IconX from "./IconX.astro";
 import IconXSymbol from "./IconXSymbol.astro";
 
-export type IconName = "instagram" | "line" | "threads" | "web" | "x" | "x-symbol" | "𝕏";
+export type IconName = "instagram" | "line" | "photos" | "threads" | "web" | "x" | "x-symbol" | "𝕏";
 
 export interface Props {
   name: IconName;
@@ -23,6 +24,7 @@ const { name, ...props } = Astro.props;
 
 {name === "instagram" && <IconInstagram {...props} />}
 {name === "line" && <IconLine {...props} />}
+{name === "photos" && <IconPhotos {...props} />}
 {name === "threads" && <IconThreads {...props} />}
 {name === "web" && <IconWeb {...props} />}
 {name === "x" && <IconX {...props} />}

@@ -1,5 +1,8 @@
 ---
 // src/components/ShareModal.astro
+import IconPhotos from "./icons/IconPhotos.astro";
+import IconX from "./icons/IconX.astro";
+import IconLine from "./icons/IconLine.astro";
 ---
 
 <div id="share-modal-backdrop" class="share-modal-backdrop" aria-hidden="true">
@@ -43,7 +46,9 @@
         id="share-btn-x"
         aria-label="X(Twitter)でシェア"
       >
-        <span class="share-channel-icon" aria-hidden="true">𝕏</span>
+        <span class="share-channel-icon" aria-hidden="true">
+          <IconX size={36} color="var(--color-text-main)" />
+        </span>
         <span class="share-channel-label">X(Twitter)</span>
       </button>
       <button
@@ -52,7 +57,9 @@
         id="share-btn-line"
         aria-label="LINEでシェア"
       >
-        <span class="share-channel-icon" aria-hidden="true">💬</span>
+        <span class="share-channel-icon" aria-hidden="true">
+          <IconLine size={36} color="var(--color-text-main)" />
+        </span>
         <span class="share-channel-label">LINE (スマホ版)</span>
       </button>
       <button
@@ -64,8 +71,10 @@
         <span
           class="share-channel-icon"
           id="share-image-icon"
-          aria-hidden="true">🖼️</span
+          aria-hidden="true"
         >
+          <IconPhotos size={36} color="var(--color-text-main)" />
+        </span>
         <span class="share-channel-label" id="share-image-label"
           >画像でシェア</span
         >
@@ -275,7 +284,7 @@
   }
 
   .share-channel-icon {
-    font-size: 28px;
+    font-size: 32px;
     line-height: 1;
     display: flex;
     align-items: center;
@@ -680,7 +689,6 @@
       } finally {
         if (imageResetTimer) clearTimeout(imageResetTimer);
         imageResetTimer = setTimeout(() => {
-          if (imageIcon) imageIcon.textContent = "🖼️";
           if (imageLabel) imageLabel.textContent = "画像でシェア";
         }, 600);
       }
