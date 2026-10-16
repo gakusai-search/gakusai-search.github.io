@@ -79,6 +79,50 @@
   </div>
 </div>
 
+<dialog
+  id="image-download-modal"
+  class="image-download-modal"
+  aria-labelledby="image-download-modal-title"
+  tabindex="-1"
+>
+  <div class="image-download-modal-container">
+    <div class="image-download-modal-header">
+      <button
+        type="button"
+        class="image-download-close-btn"
+        id="image-download-close-btn"
+        aria-label="閉じる"
+      >
+        <svg
+          class="image-download-close-icon"
+          viewBox="0 0 24 24"
+          width="28"
+          height="28"
+          stroke="currentColor"
+          stroke-width="2.5"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h2 id="image-download-modal-title" class="image-download-modal-title">
+        画像でシェアしよう！
+      </h2>
+    </div>
+
+    <hr class="image-download-modal-hr" />
+
+    <div class="image-download-modal-body">
+      <p class="image-download-text">
+        ダウンロードした画像はお使いの端末本体に保存されます。InstagramやTikTok、X(Twitter)、Threadsなど、画像投稿ができるSNSでの投稿にぜひお使いください。
+      </p>
+    </div>
+  </div>
+</dialog>
+
 <style>
   .share-modal-backdrop {
     position: fixed;
@@ -294,6 +338,158 @@
       opacity: 1;
     }
   }
+
+  /* image download guide modal */
+  .image-download-modal {
+    margin: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    max-width: 480px;
+    width: 90%;
+    color: var(--color-text-main);
+    outline: none;
+  }
+
+  .image-download-modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: imageDownloadFadeIn 0.25s ease forwards;
+  }
+
+  .image-download-modal.is-closing::backdrop {
+    animation: imageDownloadFadeOut 0.25s ease forwards;
+  }
+
+  .image-download-modal-container {
+    background-color: var(--color-background-body);
+    border: 1.5px solid var(--color-border-main);
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    box-sizing: border-box;
+    animation: imageDownloadFadeIn 0.25s ease forwards;
+    outline: none;
+  }
+
+  .image-download-modal.is-closing .image-download-modal-container {
+    animation: imageDownloadFadeOut 0.25s ease forwards;
+  }
+
+  @keyframes imageDownloadFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes imageDownloadFadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .image-download-modal-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 32px;
+  }
+
+  .image-download-modal-title {
+    margin: 0;
+    padding: 0 36px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    line-height: 1.25;
+    text-align: center !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .image-download-close-btn {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #dfdfdf;
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .image-download-close-btn:hover {
+    background-color: #afafaf;
+  }
+
+  .image-download-close-icon {
+    stroke: #272727;
+    display: block;
+  }
+
+  .image-download-modal-hr {
+    border: none;
+    border-top: 1.5px solid var(--color-main);
+    margin: 16px 0;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .image-download-modal-body {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+  }
+
+  .image-download-text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-main);
+    opacity: 0.9;
+    text-align: left;
+  }
+
+  @media (max-width: 480px) {
+    .image-download-modal-container {
+      padding: 20px 16px;
+    }
+    .image-download-modal-title {
+      font-size: 17px;
+      padding: 0 34px;
+      text-align: center !important;
+      justify-content: center !important;
+    }
+    .image-download-text {
+      font-size: 14px;
+    }
+  }
 </style>
 
 <script>
@@ -312,6 +508,50 @@
 
     const imageIcon = document.getElementById("share-image-icon");
     const imageLabel = document.getElementById("share-image-label");
+
+    const downloadModal = document.getElementById(
+      "image-download-modal",
+    ) as HTMLDialogElement | null;
+    const downloadCloseBtn = document.getElementById(
+      "image-download-close-btn",
+    );
+
+    function openDownloadModal() {
+      if (!downloadModal) return;
+      downloadModal.showModal();
+      downloadCloseBtn?.blur();
+      (document.activeElement as HTMLElement)?.blur();
+    }
+
+    function closeDownloadModal() {
+      if (
+        !downloadModal ||
+        !downloadModal.open ||
+        downloadModal.classList.contains("is-closing")
+      )
+        return;
+      downloadModal.classList.add("is-closing");
+      setTimeout(() => {
+        downloadModal.close();
+        downloadModal.classList.remove("is-closing");
+      }, 250);
+    }
+
+    if (downloadCloseBtn) {
+      downloadCloseBtn.addEventListener("click", closeDownloadModal);
+    }
+
+    if (downloadModal) {
+      downloadModal.addEventListener("click", (e) => {
+        if (e.target === downloadModal) {
+          closeDownloadModal();
+        }
+      });
+      downloadModal.addEventListener("cancel", (e) => {
+        e.preventDefault();
+        closeDownloadModal();
+      });
+    }
 
     let currentUrl = window.location.href;
     let currentTitle = document.title;
@@ -419,6 +659,9 @@
         a.click();
         document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+
+        closeModal();
+        openDownloadModal();
       } catch (e) {
         console.warn(
           "Direct blob download failed, falling back to link download:",
@@ -431,6 +674,9 @@
         document.body.appendChild(fallbackA);
         fallbackA.click();
         document.body.removeChild(fallbackA);
+
+        closeModal();
+        openDownloadModal();
       } finally {
         if (imageResetTimer) clearTimeout(imageResetTimer);
         imageResetTimer = setTimeout(() => {
