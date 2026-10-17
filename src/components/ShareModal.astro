@@ -125,6 +125,15 @@ import IconLine from "./icons/IconLine.astro";
     <hr class="image-download-modal-hr" />
 
     <div class="image-download-modal-body">
+      <div class="image-download-banner-wrapper">
+        <img
+          src="/img/share/share-modal_image-share-banner.png"
+          alt=""
+          class="image-download-banner"
+          width="900"
+          height="900"
+        />
+      </div>
       <p class="image-download-text">
         ダウンロードした画像はお使いの端末本体に保存されます。InstagramやTikTok、X(Twitter)、Threadsなど、画像投稿ができるSNSでの投稿にぜひお使いください。
       </p>
@@ -294,7 +303,7 @@ import IconLine from "./icons/IconLine.astro";
 
   .share-channel-label {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
     text-align: center;
     color: var(--color-text-main);
     white-space: nowrap;
@@ -302,6 +311,12 @@ import IconLine from "./icons/IconLine.astro";
     text-overflow: ellipsis;
     max-width: 100%;
     user-select: none;
+  }
+
+  @media (max-width: 375px) {
+    .share-channel-label {
+      font-size: 10px;
+    }
   }
 
   /* bottom URL copy button */
@@ -472,8 +487,23 @@ import IconLine from "./icons/IconLine.astro";
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
+    align-items: center;
     text-align: left;
+  }
+
+  .image-download-banner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .image-download-banner {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
 
   .image-download-text {
@@ -483,6 +513,7 @@ import IconLine from "./icons/IconLine.astro";
     color: var(--color-text-main);
     opacity: 0.9;
     text-align: left;
+    width: 100%;
   }
 
   @media (max-width: 480px) {
