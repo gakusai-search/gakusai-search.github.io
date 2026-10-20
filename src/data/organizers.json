@@ -25,5 +25,77 @@
       "YouTube": "@c3ofcl",
       "LINE": "@112ebwax"
     }
+  },
+  {
+    "id": "itl_pokemonclub",
+    "name": "iTLポケモン部",
+    "description": "",
+    "accounts": {}
+  },
+  {
+    "id": "itlpiano",
+    "name": "iTLピアノサークル",
+    "description": "ピアノを中心に、学祭や主催コンサートにてクラシック音楽の演奏を行っています🎶",
+    "accounts": {
+      "Instagram": "@itlpiano"
+    }
+  },
+  {
+    "id": "gdgoc-chuo",
+    "name": "GDGoC Chuo",
+    "description": "サークル GDGoC Chuo は、プログラミングを中心にデジタル技術によるものづくりを行っています！ Google Developers のサポートを受けているサークルであり、国際情報学部を中心に全学部で活動しています！",
+    "accounts": {
+      "Web": "https://gdgoc-chuo.com/",
+      "X": "@gdgs_chuo",
+      "Instagram": "@gdgs_chuo"
+    }
+  },
+  {
+    "id": "gimmeacue",
+    "name": "cue 宮",
+    "description": "DJサークルのcue 宮 (キュー)です。\n中央大学生を中心に活動しています。",
+    "accounts": {
+      "Instagram": "@gimmeacue",
+      "X": "@gimmeacue"
+    }
+  },
+  {
+    "id": "itl_keion",
+    "name": "iTL軽音楽サークル",
+    "description": "",
+    "accounts": {}
+  },
+  {
+    "id": "itlglobal",
+    "name": "GMC",
+    "description": "",
+    "accounts": {}
+  },
+  {
+    "id": "kilig_itl_si2",
+    "name": "KiLIG",
+    "description": "国際情報学部を拠点としたダンスサークルですପଓ ·.¸¸.·´´¯`·._.·",
+    "accounts": {
+      "Instagram": "@kilig.itl_si2"
+    }
+  },
+  {
+    "id": "itl_photoclub",
+    "name": "iTL写真部",
+    "description": "iTL写真部は、市ヶ谷田町キャンパスを拠点に、写真を撮る・学ぶ・共有するサークルです。授業前後や空き時間にも参加しやすい環境を整え、撮影会や講評、展示を通して技術と感性を磨き、学年を越えた交流を行いながら、iTL内での写真文化の発展を目指して活動しています。",
+    "accounts": {
+      "X": "@iTL_photoclub",
+      "Instagram": "@itl_photoclub",
+      "Web": "https://itlphotoclub.com"
+    }
+  },
+  {
+    "id": "ithiel_sokushin",
+    "name": "イティエル促進委員会",
+    "description": "学部の非公式マスコットキャラクター「イティエル」の活用を通じて、学部内外での認知向上と定着を目指す団体です。学部の特色を象徴するキャラクターとして、SNSや企画、広報活動などを通じて魅力を発信し、学生や学外の人々との新たな接点づくりに取り組みます。",
+    "accounts": {
+      "X": "@iThieL_Diary",
+      "Web": "https://sites.google.com/view/ithiel-diary"
+    }
   }
 ]
