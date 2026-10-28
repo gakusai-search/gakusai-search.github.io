@@ -92,7 +92,8 @@ for (let i = shuffledRemainingItl.length - 1; i > 0; i--) {
 }
 
 const additionalEvents = shuffledRemainingItl.slice(0, 4);
-const officialEvents = [...firstSlot, ...additionalEvents];
+const initialOfficialEvents = [...firstSlot, ...additionalEvents];
+const initialOfficialIds = new Set(initialOfficialEvents.map((e) => e.id));
 
 // extract tags assigned to 3 or more events from format/field ones
 const formatAndFieldTagMap = new Map<string, EventItem[]>();
@@ -124,20 +125,7 @@ for (let i = shuffledEligibleTags.length - 1; i > 0; i--) {
     shuffledEligibleTags[i],
   ];
 }
-const selectedTags = shuffledEligibleTags.slice(0, 4);
-
-const tagSections = selectedTags.map((tag) => {
-  const matching = formatAndFieldTagMap.get(tag) || [];
-  const shuffled = [...matching];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return {
-    tag,
-    events: shuffled.slice(0, 6),
-  };
-});
+const initialSelectedTags = shuffledEligibleTags.slice(0, 4);
 
 const pageDescription = isLatest
   ? undefined
@@ -168,26 +156,63 @@ const pageDescription = isLatest
   }
 
   {
-    (officialEvents.length > 0 || tagSections.length > 0) && (
+    (initialOfficialEvents.length > 0 || eligibleTags.length > 0) && (
       <hr class="top-divider" />
     )
   }
 
   {
-    officialEvents.length > 0 && (
-      <section class="top_carousel_section">
+    (c3Events.length > 0 || itlEvents.length > 0) && (
+      <section class="top_carousel_section" id="official-carousel-section">
         <h2 class="section-title">公式コンテンツ</h2>
 
         <div class="top_pics_container">
-          <div class="top_pics">
-            {officialEvents.map((ev) => (
-              <a href={`/${year}/events/${ev.id}/`} class="top_pic_item">
+          <div class="top_pics" id="official-pics">
+            {initialOfficialEvents.map((ev) => (
+              <a
+                href={`/${year}/events/${ev.id}/`}
+                class="top_pic_item"
+                data-organizer={ev.organizerId}
+                data-id={ev.id}
+              >
                 <img
-                  src={ev.image || "/img/events/events_hero_example.jpg"}
+                  src={ev.image || "/img/events/events_hero_example.png"}
                   alt={ev.name}
                 />
               </a>
             ))}
+            {c3Events
+              .filter((ev) => !initialOfficialIds.has(ev.id))
+              .map((ev) => (
+                <a
+                  href={`/${year}/events/${ev.id}/`}
+                  class="top_pic_item"
+                  data-organizer="c3ofcl"
+                  data-id={ev.id}
+                  style="display: none;"
+                >
+                  <img
+                    src={ev.image || "/img/events/events_hero_example.png"}
+                    alt={ev.name}
+                  />
+                </a>
+              ))}
+            {itlEvents
+              .filter((ev) => !initialOfficialIds.has(ev.id))
+              .map((ev) => (
+                <a
+                  href={`/${year}/events/${ev.id}/`}
+                  class="top_pic_item"
+                  data-organizer="festival_itl"
+                  data-id={ev.id}
+                  style="display: none;"
+                >
+                  <img
+                    src={ev.image || "/img/events/events_hero_example.png"}
+                    alt={ev.name}
+                  />
+                </a>
+              ))}
           </div>
         </div>
 
@@ -230,62 +255,77 @@ const pageDescription = isLatest
     )
   }
 
-  {
-    tagSections.map(({ tag, events: sectionEvents }) => (
-      <section class="top_carousel_section">
-        <h2 class="section-title">#{tag}</h2>
-
-        <div class="top_pics_container">
-          <div class="top_pics">
-            {sectionEvents.map((ev) => (
-              <a href={`/${year}/events/${ev.id}/`} class="top_pic_item">
-                <img
-                  src={ev.image || "/img/events/events_hero_example.jpg"}
-                  alt={ev.name}
-                />
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div class="top_pics_indicators">
-          <button
-            type="button"
-            class="main-btn top_pics_arrow_btn prev"
-            aria-label="前へスクロール"
-            disabled
+  <div id="tag-sections-container">
+    {
+      eligibleTags.map((tag) => {
+        const matching = formatAndFieldTagMap.get(tag) || [];
+        const isInitiallyVisible = initialSelectedTags.includes(tag);
+        return (
+          <section
+            class="top_carousel_section tag_carousel_section"
+            data-tag={tag}
+            style={isInitiallyVisible ? undefined : "display: none;"}
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-          <button
-            type="button"
-            class="main-btn top_pics_arrow_btn next"
-            aria-label="次へスクロール"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-        </div>
-      </section>
-    ))
-  }
+            <h2 class="section-title">#{tag}</h2>
+
+            <div class="top_pics_container">
+              <div class="top_pics">
+                {matching.map((ev, idx) => (
+                  <a
+                    href={`/${year}/events/${ev.id}/`}
+                    class="top_pic_item"
+                    data-id={ev.id}
+                    style={idx < 6 ? undefined : "display: none;"}
+                  >
+                    <img
+                      src={ev.image || "/img/events/events_hero_example.png"}
+                      alt={ev.name}
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div class="top_pics_indicators">
+              <button
+                type="button"
+                class="main-btn top_pics_arrow_btn prev"
+                aria-label="前へスクロール"
+                disabled
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="main-btn top_pics_arrow_btn next"
+                aria-label="次へスクロール"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
 
   <script is:inline>
     (function () {
@@ -295,6 +335,118 @@ const pageDescription = isLatest
         for (var i = items.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
           track.appendChild(items[j]);
+        }
+      }
+    })();
+
+    (function () {
+      // 1. official contents cards
+      var officialPics = document.getElementById("official-pics");
+      if (officialPics) {
+        var c3Items = Array.prototype.slice.call(
+          officialPics.querySelectorAll('[data-organizer="c3ofcl"]')
+        );
+        var itlItems = Array.prototype.slice.call(
+          officialPics.querySelectorAll('[data-organizer="festival_itl"]')
+        );
+
+        if (c3Items.length > 0 || itlItems.length > 0) {
+          var selectedC3 =
+            c3Items.length > 0
+              ? c3Items[Math.floor(Math.random() * c3Items.length)]
+              : null;
+          var selectedItlPrimary =
+            itlItems.length > 0
+              ? itlItems[Math.floor(Math.random() * itlItems.length)]
+              : null;
+
+          var firstSlot = [];
+          if (selectedC3 && selectedItlPrimary) {
+            if (Math.random() < 0.5) {
+              firstSlot.push(selectedC3, selectedItlPrimary);
+            } else {
+              firstSlot.push(selectedItlPrimary, selectedC3);
+            }
+          } else if (selectedC3) {
+            firstSlot.push(selectedC3);
+          } else if (selectedItlPrimary) {
+            firstSlot.push(selectedItlPrimary);
+          }
+
+          var remainingItl = itlItems.filter(function (item) {
+            return item !== selectedItlPrimary;
+          });
+
+          for (var i = remainingItl.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = remainingItl[i];
+            remainingItl[i] = remainingItl[j];
+            remainingItl[j] = temp;
+          }
+
+          var additionalEvents = remainingItl.slice(0, 4);
+          var chosenOfficial = firstSlot.concat(additionalEvents);
+
+          var allOfficial = c3Items.concat(itlItems);
+          for (var k = 0; k < allOfficial.length; k++) {
+            allOfficial[k].style.display = "none";
+          }
+
+          for (var m = 0; m < chosenOfficial.length; m++) {
+            chosenOfficial[m].style.display = "";
+            officialPics.appendChild(chosenOfficial[m]);
+          }
+        }
+      }
+
+      // 2. tag section
+      var tagSectionsContainer = document.getElementById("tag-sections-container");
+      if (tagSectionsContainer) {
+        var sectionNodes = Array.prototype.slice.call(
+          tagSectionsContainer.querySelectorAll(".tag_carousel_section")
+        );
+
+        if (sectionNodes.length > 0) {
+          var shuffledSections = sectionNodes.slice();
+          for (var si = shuffledSections.length - 1; si > 0; si--) {
+            var sj = Math.floor(Math.random() * (si + 1));
+            var sTemp = shuffledSections[si];
+            shuffledSections[si] = shuffledSections[sj];
+            shuffledSections[sj] = sTemp;
+          }
+
+          var selectedSections = shuffledSections.slice(0, 4);
+
+          for (var sk = 0; sk < sectionNodes.length; sk++) {
+            sectionNodes[sk].style.display = "none";
+          }
+
+          for (var sn = 0; sn < selectedSections.length; sn++) {
+            var sec = selectedSections[sn];
+            sec.style.display = "";
+            tagSectionsContainer.appendChild(sec);
+
+            var picsEl = sec.querySelector(".top_pics");
+            if (picsEl) {
+              var cardItems = Array.prototype.slice.call(
+                picsEl.querySelectorAll(".top_pic_item")
+              );
+              for (var ci = cardItems.length - 1; ci > 0; ci--) {
+                var cj = Math.floor(Math.random() * (ci + 1));
+                var cTemp = cardItems[ci];
+                cardItems[ci] = cardItems[cj];
+                cardItems[cj] = cTemp;
+              }
+              for (var ca = 0; ca < cardItems.length; ca++) {
+                cardItems[ca].style.display = "none";
+              }
+              var visibleCards = cardItems.slice(0, 6);
+              for (var cb = 0; cb < visibleCards.length; cb++) {
+                visibleCards[cb].style.display = "";
+                picsEl.appendChild(visibleCards[cb]);
+              }
+            }
+          }
         }
       }
     })();
