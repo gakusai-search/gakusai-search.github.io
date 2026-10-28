@@ -92,7 +92,7 @@
   {
     "id": "c3-playlab",
     "name": "C3 PlayLab",
-    "image": "",
+    "image": "/img/events/c3playlab2026.png",
     "organizerId": "c3ofcl",
     "tags": {
       "date": [
@@ -122,7 +122,7 @@
     "place": {
       "room": "7階 702教室"
     },
-    "description": "AI、ゲーム・アプリ制作、映像展示、そして動画や音楽制作。私たちが日頃の創作活動と作品をご紹介します。作り方にまで触れられる体験をお楽しみください。",
+    "description": "創作×コンピュータで遊ぼう！SwitchのJoy-Conで遊ぶ自作ゲーム、動画・音楽制作体験、かわいいAIキャラとおしゃべり、AIで葉書制作、メディアアート、自作アプリを展示。",
     "accounts": {}
   },
   {
@@ -186,7 +186,7 @@
   {
     "id": "itl-ennichi",
     "name": "縁日企画",
-    "image": "",
+    "image": "/img/events/itl-ennichi2026.png",
     "organizerId": "festival_itl",
     "tags": {
       "date": [
@@ -250,7 +250,7 @@
   {
     "id": "itl-casino",
     "name": "カジノ企画",
-    "image": "",
+    "image": "/img/events/itl-casino-club2026.png",
     "organizerId": "festival_itl",
     "tags": {
       "date": [
@@ -405,7 +405,7 @@
   {
     "id": "itlpiano",
     "name": "クラシック音楽演奏企画",
-    "image": "",
+    "image": "/img/events/itl-classic-music2026.png",
     "organizerId": "itlpiano",
     "tags": {
       "date": [
@@ -498,7 +498,7 @@
   {
     "id": "gdgoc-programming-art",
     "name": "体で創る！ プログラミングアート",
-    "image": "",
+    "image": "/img/events/gdgoc-chuo-itl2026.png",
     "organizerId": "gdgoc-chuo",
     "tags": {
       "date": [
@@ -529,7 +529,7 @@
   {
     "id": "cue-diorama",
     "name": "diorama",
-    "image": "",
+    "image": "/img/events/cue-diorama2026.png",
     "organizerId": "gimmeacue",
     "tags": {
       "date": [
@@ -560,7 +560,7 @@
   {
     "id": "itl-music",
     "name": "iTL MUSiC FESTiVAL 2026",
-    "image": "",
+    "image": "/img/events/itl-musicfest2026.png",
     "organizerId": "itl_keion",
     "tags": {
       "date": [
@@ -678,7 +678,7 @@
   {
     "id": "ithiel-sokushin",
     "name": "イティエル促進企画",
-    "image": "",
+    "image": "/img/events/ithiel2026.png",
     "organizerId": "ithiel_sokushin",
     "tags": {
       "date": [
