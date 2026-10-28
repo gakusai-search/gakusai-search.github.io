@@ -252,13 +252,22 @@ hr {
 .header-logo {
     display: flex;
     align-items: center;
+    height: 100%;
+}
+
+.header-logo a {
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .header-logo .logo-img {
-    height: 25px;
+    height: 52px;
+    max-height: calc(100% - 8px);
     width: auto;
     max-width: 100%;
     display: block;
+    object-fit: contain;
 }
 
 .header-search {
