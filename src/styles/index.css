@@ -181,6 +181,33 @@ main {
     display: block;
 }
 
+.top_pics .top_pic_title {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@media (min-width: 768px) {
+    .top_pics .top_pic_title {
+        font-size: 18px;
+        padding: 16px 20px;
+    }
+}
+
 @media (min-width: 768px) {
     .top_pics .top_pic_item {
         flex: 0 0 360px;

@@ -4,7 +4,7 @@ hr {
     margin-top: 0px;
 }
 
-a {
+a.access-info {
     display: grid;
     text-decoration: none;
     color: inherit;

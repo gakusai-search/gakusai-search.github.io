@@ -1,0 +1,27 @@
+{
+  "name": "フェスぽ SCHOOL FES PORTAL",
+  "short_name": "フェスぽ",
+  "description": "学園祭の企画・イベント検索やキャンパスマップ・教室案内など、学園祭を楽しむのに役立つWebサイトです。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1c87ed",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48 32x32 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/ogp.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ]
+}

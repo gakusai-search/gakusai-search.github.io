@@ -168,51 +168,63 @@ const pageDescription = isLatest
 
         <div class="top_pics_container">
           <div class="top_pics" id="official-pics">
-            {initialOfficialEvents.map((ev) => (
-              <a
-                href={`/${year}/events/${ev.id}/`}
-                class="top_pic_item"
-                data-organizer={ev.organizerId}
-                data-id={ev.id}
-              >
-                <img
-                  src={ev.image || "/img/events/events_hero_example.png"}
-                  alt={ev.name}
-                />
-              </a>
-            ))}
+            {initialOfficialEvents.map((ev) => {
+              const isDefault = !ev.image || ev.image.includes("events_hero_example.png");
+              return (
+                <a
+                  href={`/${year}/events/${ev.id}/`}
+                  class="top_pic_item"
+                  data-organizer={ev.organizerId}
+                  data-id={ev.id}
+                >
+                  <img
+                    src={ev.image || "/img/events/events_hero_example.png"}
+                    alt={ev.name}
+                  />
+                  {isDefault && <span class="top_pic_title">{ev.name}</span>}
+                </a>
+              );
+            })}
             {c3Events
               .filter((ev) => !initialOfficialIds.has(ev.id))
-              .map((ev) => (
-                <a
-                  href={`/${year}/events/${ev.id}/`}
-                  class="top_pic_item"
-                  data-organizer="c3ofcl"
-                  data-id={ev.id}
-                  style="display: none;"
-                >
-                  <img
-                    src={ev.image || "/img/events/events_hero_example.png"}
-                    alt={ev.name}
-                  />
-                </a>
-              ))}
+              .map((ev) => {
+                const isDefault = !ev.image || ev.image.includes("events_hero_example.png");
+                return (
+                  <a
+                    href={`/${year}/events/${ev.id}/`}
+                    class="top_pic_item"
+                    data-organizer="c3ofcl"
+                    data-id={ev.id}
+                    style="display: none;"
+                  >
+                    <img
+                      src={ev.image || "/img/events/events_hero_example.png"}
+                      alt={ev.name}
+                    />
+                    {isDefault && <span class="top_pic_title">{ev.name}</span>}
+                  </a>
+                );
+              })}
             {itlEvents
               .filter((ev) => !initialOfficialIds.has(ev.id))
-              .map((ev) => (
-                <a
-                  href={`/${year}/events/${ev.id}/`}
-                  class="top_pic_item"
-                  data-organizer="festival_itl"
-                  data-id={ev.id}
-                  style="display: none;"
-                >
-                  <img
-                    src={ev.image || "/img/events/events_hero_example.png"}
-                    alt={ev.name}
-                  />
-                </a>
-              ))}
+              .map((ev) => {
+                const isDefault = !ev.image || ev.image.includes("events_hero_example.png");
+                return (
+                  <a
+                    href={`/${year}/events/${ev.id}/`}
+                    class="top_pic_item"
+                    data-organizer="festival_itl"
+                    data-id={ev.id}
+                    style="display: none;"
+                  >
+                    <img
+                      src={ev.image || "/img/events/events_hero_example.png"}
+                      alt={ev.name}
+                    />
+                    {isDefault && <span class="top_pic_title">{ev.name}</span>}
+                  </a>
+                );
+              })}
           </div>
         </div>
 
@@ -270,19 +282,23 @@ const pageDescription = isLatest
 
             <div class="top_pics_container">
               <div class="top_pics">
-                {matching.map((ev, idx) => (
-                  <a
-                    href={`/${year}/events/${ev.id}/`}
-                    class="top_pic_item"
-                    data-id={ev.id}
-                    style={idx < 6 ? undefined : "display: none;"}
-                  >
-                    <img
-                      src={ev.image || "/img/events/events_hero_example.png"}
-                      alt={ev.name}
-                    />
-                  </a>
-                ))}
+                {matching.map((ev, idx) => {
+                  const isDefault = !ev.image || ev.image.includes("events_hero_example.png");
+                  return (
+                    <a
+                      href={`/${year}/events/${ev.id}/`}
+                      class="top_pic_item"
+                      data-id={ev.id}
+                      style={idx < 6 ? undefined : "display: none;"}
+                    >
+                      <img
+                        src={ev.image || "/img/events/events_hero_example.png"}
+                        alt={ev.name}
+                      />
+                      {isDefault && <span class="top_pic_title">{ev.name}</span>}
+                    </a>
+                  );
+                })}
               </div>
             </div>
 

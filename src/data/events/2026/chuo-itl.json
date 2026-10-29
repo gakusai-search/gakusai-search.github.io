@@ -218,7 +218,7 @@
   {
     "id": "itl-karaoke",
     "name": "カラオケ企画",
-    "image": "",
+    "image": "/img/events/itl-karaoke2026.png",
     "organizerId": "festival_itl",
     "tags": {
       "date": [
@@ -280,7 +280,7 @@
   {
     "id": "itl-obake",
     "name": "お化け屋敷企画",
-    "image": "",
+    "image": "/img/events/itl-obake2026.png",
     "organizerId": "festival_itl",
     "tags": {
       "date": [
@@ -368,7 +368,7 @@
   {
     "id": "itl-pokemon",
     "name": "iTLポケモン部〜全人類ポケモントレーナー計画〜",
-    "image": "",
+    "image": "/img/events/itl-pokemon2026.png",
     "organizerId": "itl_pokemonclub",
     "tags": {
       "date": [
