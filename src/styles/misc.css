@@ -148,6 +148,22 @@ hr {
     opacity: 0.8;
 }
 
+.contact-form-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.contact-form-container iframe {
+    width: 100%;
+    max-width: 640px;
+    height: 645px;
+    border: none;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
 @media (min-width: 768px) {
     .partner-list {
         display: grid;
